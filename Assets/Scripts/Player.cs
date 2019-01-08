@@ -39,24 +39,47 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private LayerMask groundLayers;
 
+
     private float lastGroundedTime;
     private float groundedLossTime = 0.1f;
     private float airMoveSpeed = 6;
 
 
+    //Animator matching targets
+    Vector3 matchingLocation;
+    Quaternion matchingRotation;
 
 
-	void Start () {
+    //interaction variables
+    float vaultDistance = 0.8f;
+    float vaultRayHeight = 1;
+
+    [SerializeField]
+    private LayerMask interactLayers;
+
+    void Start () {
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
         input = GetComponent<MyInputManager>();
         lastGroundedTime = 1;
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
+    // Update is called once per frame
+    void MatchAnimator()
+    {
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+
+        if (anim.IsInTransition(0))
+            return;
+
+        if (info.IsName("VaultMedium"))
+        {
+            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0, 0.2f);
+        }
+    }
+    void Locomotion()
+    {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         Vector3 camForward = mainCam.transform.forward;
         camForward.y = 0;
@@ -75,11 +98,11 @@ public class Player : MonoBehaviour {
 
         isRunning = input.RunButtonHold;
 
-        if(moveVector.magnitude > 0.1f && !info.IsTag("rootmotion"))
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
+        if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion"))
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
 
-        if(isRunning == false)
-        anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z*100, dampTime, Time.deltaTime);
+        if (isRunning == false)
+            anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
         else
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 150, dampTime, Time.deltaTime);
 
@@ -88,7 +111,7 @@ public class Player : MonoBehaviour {
             canTransitionToStop = true;
             lastJogTime = Time.time;
         }
-            
+
 
         if (!info.IsTag("rootmotion") && anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && Time.time < lastJogTime + stoppingWindow && !info.IsName("jogStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
         {
@@ -96,16 +119,41 @@ public class Player : MonoBehaviour {
             anim.CrossFadeInFixedTime("jogStop", 0.05f);
         }
 
+
         if (isGrounded)
             gravity = 1;
         else
             gravity = Mathf.MoveTowards(gravity, 20, Time.deltaTime * 30);
+    }
+	void Update () {
 
+
+
+        Locomotion();
         checkGrounded();
-
+        CheckInteractions();
+        MatchAnimator();
     
 	}
+    void CheckInteractions()
+    {
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
+        if (isGrounded && !info.IsTag("rootmotion"))
+        {
+            if (input.JumpButtonDown)
+            {
+                RaycastHit hit;
+                Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
+                if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Ignore))
+                {
+                    matchingLocation = hit.point+hit.normal*0.1f+Vector3.up*0.085f;
+                    matchingRotation = Quaternion.LookRotation(-hit.normal);
+                    anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
+                }
+            }
+        }
+    }
   
    
     void checkGrounded()
@@ -144,13 +192,28 @@ public class Player : MonoBehaviour {
            
  
         
-
-        if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y <= -1)
+        
+        if (Time.time > lastGroundedTime + groundedLossTime)
         {
             if (!Physics.SphereCast(sphereRay, controller.radius, out hit, 0.8f, groundLayers, QueryTriggerInteraction.Ignore))
             {
-                isGrounded = false;
-                anim.SetBool("Grounded", isGrounded);
+                if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
+                {
+                    gravity = 3;
+                    isGrounded = false;
+                    anim.SetBool("Grounded", isGrounded);
+                }
+                else
+                {
+                if(controller.velocity.y <= -1)
+                    {
+                        isGrounded = false;
+                        anim.SetBool("Grounded", isGrounded);
+                    }
+                }
+                
+
+               
             }
              
         }
@@ -181,6 +244,12 @@ public class Player : MonoBehaviour {
 
         deltaMovement.y = gravity * Time.deltaTime*-1;
 
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
+        {
+            transform.position = anim.rootPosition;
+            return;
+        }
+           
 
         controller.Move(deltaMovement);
 
