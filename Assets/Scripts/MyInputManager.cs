@@ -85,6 +85,21 @@ public class MyInputManager : MonoBehaviour {
             }
         }
     }
+    public bool RunButtonHold
+    {
+        get
+        {
+            if (controllerType == ControllerType.Keyboard)
+                return Input.GetButton(controllerType.ToString() + "Run");
+            else
+            {
+                if (device == null)
+                    return false;
+
+                return device.RightStick;
+            }
+        }
+    }
 
     public Vector2 cameraInput
     {
