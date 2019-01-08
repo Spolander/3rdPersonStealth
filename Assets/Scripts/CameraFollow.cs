@@ -73,6 +73,8 @@ public class CameraFollow : MonoBehaviour {
     private void Start()
     {
         player = GameObject.FindWithTag("Player").transform;
+        rotationAngleX = -transform.localEulerAngles.x;
+        rotationAngleY = transform.localEulerAngles.y-180;
     }
     // Update is called once per frame
     void LateUpdate () {

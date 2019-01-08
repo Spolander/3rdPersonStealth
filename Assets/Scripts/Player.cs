@@ -57,6 +57,7 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         Vector3 camForward = mainCam.transform.forward;
         camForward.y = 0;
         camForward.Normalize();
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour {
 
         isRunning = input.RunButtonHold;
 
-        if(moveVector.magnitude > 0.1f && !anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
+        if(moveVector.magnitude > 0.1f && !info.IsTag("rootmotion"))
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
 
         if(isRunning == false)
@@ -89,7 +90,7 @@ public class Player : MonoBehaviour {
         }
             
 
-        if (anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && Time.time < lastJogTime + stoppingWindow && !anim.GetCurrentAnimatorStateInfo(0).IsName("jogStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
+        if (!info.IsTag("rootmotion") && anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && Time.time < lastJogTime + stoppingWindow && !info.IsName("jogStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
         {
             canTransitionToStop = false;
             anim.CrossFadeInFixedTime("jogStop", 0.05f);
