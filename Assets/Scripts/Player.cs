@@ -27,7 +27,6 @@ public class Player : MonoBehaviour {
     bool canTransitionToStop = false;
     bool isRunning = false;
     bool isGrounded = true;
-    private float lastJumpTime;
 
     float gravity;
 
@@ -44,14 +43,15 @@ public class Player : MonoBehaviour {
     private float groundedLossTime = 0.1f;
     private float airMoveSpeed = 6;
 
-    Vector3 groundNormal = Vector3.up;
+
+
 
 	void Start () {
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
         input = GetComponent<MyInputManager>();
-        lastJumpTime = -0.2f;
+        lastGroundedTime = 1;
 	}
 	
 	// Update is called once per frame
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour {
 
         isRunning = input.RunButtonHold;
 
-        if(moveVector.magnitude > 0.1f)
+        if(moveVector.magnitude > 0.1f && !anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
 
         if(isRunning == false)
@@ -101,8 +101,12 @@ public class Player : MonoBehaviour {
             gravity = Mathf.MoveTowards(gravity, 20, Time.deltaTime * 30);
 
         checkGrounded();
+
+    
 	}
 
+  
+   
     void checkGrounded()
     {
    
@@ -114,13 +118,14 @@ public class Player : MonoBehaviour {
 
 
 
-        if (Time.time > lastJumpTime + 0.2f)
-        {
+       
             if (Physics.SphereCast(sphereRay, controller.radius, out hit, groundCheckDistance, groundLayers, QueryTriggerInteraction.Ignore))
             {
                 if (hit.normal.y > 0.7f)
                 {
-                    groundNormal = hit.normal;
+                if (Time.time > lastGroundedTime + 0.7f)
+                    anim.CrossFadeInFixedTime("LandingHard", 0.05f);
+
                     isGrounded = true;
                     lastGroundedTime = Time.time;
                     anim.SetBool("Grounded", isGrounded);
@@ -137,13 +142,16 @@ public class Player : MonoBehaviour {
 
            
  
-        }
+        
 
-        if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
+        if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y <= -1)
         {
             if (!Physics.SphereCast(sphereRay, controller.radius, out hit, 0.8f, groundLayers, QueryTriggerInteraction.Ignore))
+            {
                 isGrounded = false;
-            anim.SetBool("Grounded", isGrounded);
+                anim.SetBool("Grounded", isGrounded);
+            }
+             
         }
 
      
@@ -154,7 +162,7 @@ public class Player : MonoBehaviour {
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.normal.y > 0.7f && Time.time > lastJumpTime+0.2f)
+        if (hit.normal.y > 0.7f)
         {
             isGrounded = true;
             anim.SetBool("Grounded", isGrounded);
@@ -172,10 +180,8 @@ public class Player : MonoBehaviour {
 
         deltaMovement.y = gravity * Time.deltaTime*-1;
 
-       // deltaMovement = Vector3.ProjectOnPlane(deltaMovement, groundNormal);
 
         controller.Move(deltaMovement);
 
-        print(controller.velocity.magnitude);
     }
 }
