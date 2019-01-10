@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fdc39e3202ebc4d4a8a473fd95fcff55
+guid: a00ef70451f08bc42b7ede9818669757
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -157,8 +157,7 @@ ModelImporter:
     400148: Spine
     400150: TongueBack
     400152: TongueTip
-    7400000: jogStop
-    7400002: walkStop
+    7400000: Walk2Idle
     9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
@@ -192,47 +191,19 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: jogStop
-      takeName: _12_a_U1_M_P_JogForward_NtrlFaceFwd__Fb_p0_No_0_PJ_3
-      firstFrame: 472
-      lastFrame: 511
+      name: Walk2Idle
+      takeName: _89_90B_a_U1_M_P_Walk2Idle_Idle2WalkBackward_Fb_p0_No_0_0
+      firstFrame: 105
+      lastFrame: 147
       wrapMode: 0
-      orientationOffsetY: 3.35
+      orientationOffsetY: -0.85
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: walkStop
-      takeName: _12_a_U1_M_P_JogForward_NtrlFaceFwd__Fb_p0_No_0_PJ_3
-      firstFrame: 483
-      lastFrame: 511
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0

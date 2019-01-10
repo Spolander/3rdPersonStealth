@@ -1,40 +1,21 @@
 fileFormatVersion: 2
-guid: cadf88b643a3f1d41a5c95bdda84f5d5
+guid: 04fbbefc85e31814abf8269d9304ed63
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: eyebrow012Mesh
-    100002: high-polyMesh
-    100004: motorcyclejacketMesh
-    100006: short04Mesh
-    100008: Sun
-    100010: //RootNode
-    400000: eyebrow012Mesh
-    400002: high-polyMesh
-    400004: motorcyclejacketMesh
-    400006: short04Mesh
-    400008: Sun
-    400010: //RootNode
-    2100000: motorcyclejacket
-    2100002: m_trousers_02
-    2100004: shoes03
-    2100006: guy
-    2100008: eyebrow012
-    2100010: high-poly
-    2100012: short04
-    2300000: eyebrow012Mesh
-    2300002: high-polyMesh
-    2300004: motorcyclejacketMesh
-    2300006: short04Mesh
-    3300000: eyebrow012Mesh
-    3300002: high-polyMesh
-    3300004: motorcyclejacketMesh
-    3300006: short04Mesh
-    4300000: motorcyclejacketMesh
-    4300002: eyebrow012Mesh
-    4300004: high-polyMesh
-    4300006: short04Mesh
-    10800000: Sun
+    100000: Cube
+    100002: Cube.001
+    100004: //RootNode
+    400000: Cube
+    400002: Cube.001
+    400004: //RootNode
+    2100000: No Name
+    2300000: Cube
+    2300002: Cube.001
+    3300000: Cube
+    3300002: Cube.001
+    4300000: Cube.001
+    4300002: Cube
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -66,7 +47,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1.2015
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -74,7 +55,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0

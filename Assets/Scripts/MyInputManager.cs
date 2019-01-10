@@ -96,7 +96,7 @@ public class MyInputManager : MonoBehaviour {
                 if (device == null)
                     return false;
 
-                return device.RightStick;
+                return device.RightTrigger;
             }
         }
     }

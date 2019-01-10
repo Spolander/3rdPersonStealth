@@ -60,10 +60,13 @@ public class CameraFollow : MonoBehaviour {
 
     [SerializeField]
     private LayerMask cameraBlockingLayers;
+
+    MyInputManager input;
 	// Use this for initialization
 
     private void Awake()
     {
+        input = FindObjectOfType(typeof(MyInputManager)) as MyInputManager;
         playerCam = this;
        // rotationAngleY = transform.eulerAngles.y;
 
@@ -85,8 +88,16 @@ public class CameraFollow : MonoBehaviour {
 
         if (player)
         {
-            rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X")*sensitivityX;
-            rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;
+            if (input == null)
+            {
+                rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X") * sensitivityX;
+                rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;
+            }
+            else
+            {
+                rotationAngleY += Time.deltaTime * input.cameraInput.x * sensitivityX;
+                rotationAngleX += Time.deltaTime * input.cameraInput.y * sensitivityY;
+            }
 
             ClampRotationX();
             Quaternion rotation = Quaternion.Euler(rotationAngleX, rotationAngleY, 0);
