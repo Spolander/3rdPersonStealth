@@ -88,7 +88,8 @@ public class CameraFollow : MonoBehaviour {
 
         if (player)
         {
-            if (input == null)
+            if (input != null)
+                if(input.controllerType == MyInputManager.ControllerType.Keyboard)
             {
                 rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X") * sensitivityX;
                 rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;

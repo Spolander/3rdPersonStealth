@@ -44,6 +44,8 @@ public class Player : MonoBehaviour {
     private float lastGroundedTime;
     private float groundedLossTime = 0.1f;
     private float airMoveSpeed = 6;
+    private float groundLossHeight;
+    Vector3 slopeNormal;
 
 
     //Animator matching targets
@@ -107,7 +109,13 @@ public class Player : MonoBehaviour {
         isRunning = input.RunButtonHold;
 
         if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion"))
+        {
+            if(anim.GetBool("Grounded"))
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
+            else
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed*0.5f);
+        }
+           
 
         if (isRunning == false)
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
@@ -173,22 +181,25 @@ public class Player : MonoBehaviour {
                 Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
                 if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Ignore))
                 {
-                    ray = new Ray(transform.TransformPoint(0, obstacleHeight, 0), -hit.normal);
-
-                    if (Physics.Raycast(ray,obstacleDistance, groundLayers, QueryTriggerInteraction.Ignore))
-                        return;
-
-                    matchingLocation = hit.point+hit.normal*0.1f+Vector3.up*0.085f;
-                    matchingRotation = Quaternion.LookRotation(-hit.normal);
-
-                    ray = new Ray(hit.point - hit.normal * 0.01f + Vector3.up, Vector3.down);
-                    if (Physics.Raycast(ray, out hit, 1, interactLayers, QueryTriggerInteraction.Ignore))
+                    if (hit.collider.tag == "mediumVault")
                     {
-                        matchingLocation.y = hit.point.y;
-                    }
+                        ray = new Ray(transform.TransformPoint(0, obstacleHeight, 0), -hit.normal);
 
-                    originalRotation = transform.rotation;
+                        if (Physics.Raycast(ray, obstacleDistance, groundLayers, QueryTriggerInteraction.Ignore))
+                            return;
+
+                        matchingLocation = hit.point + hit.normal * 0.1f + Vector3.up * 0.085f;
+                        matchingRotation = Quaternion.LookRotation(-hit.normal);
+
+                        ray = new Ray(hit.point - hit.normal * 0.01f + Vector3.up, Vector3.down);
+                        if (Physics.Raycast(ray, out hit, 1, interactLayers, QueryTriggerInteraction.Ignore))
+                        {
+                            matchingLocation.y = hit.point.y;
+                        }
+
+                        originalRotation = transform.rotation;
                         anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
+                    }
                 }
             }
         }
@@ -197,7 +208,7 @@ public class Player : MonoBehaviour {
    
     void checkGrounded()
     {
-   
+        
         RaycastHit hit;
 
         Ray ray = new Ray(transform.TransformPoint(0f, 0.1f, 0f), Vector3.down);
@@ -214,6 +225,7 @@ public class Player : MonoBehaviour {
                 if (Time.time > lastGroundedTime + 0.7f)
                     anim.CrossFadeInFixedTime("LandingHard", 0.05f);
 
+                slopeNormal = Vector3.up;
                 isGrounded = true;
                 lastGroundedTime = Time.time;
                 anim.SetBool("Grounded", isGrounded);
@@ -221,18 +233,23 @@ public class Player : MonoBehaviour {
             }
             else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
             {
+                if (isGrounded)
+                    groundLossHeight = transform.position.y;
                 isGrounded = false;
+                slopeNormal = hit.normal;
                 anim.SetBool("Grounded", isGrounded);
                 return;
             }
+            else
+                slopeNormal = hit.normal;
         }
         else if (Physics.Raycast(ray, out hit, groundCheckDistance*2, groundLayers, QueryTriggerInteraction.Ignore))
         {
             if (hit.normal.y > 0.7f)
             {
-                if (Time.time > lastGroundedTime + 0.7f)
+                if (Time.time > lastGroundedTime + 0.7f && transform.position.y < groundLossHeight-4)
                     anim.CrossFadeInFixedTime("LandingHard", 0.05f);
-
+                slopeNormal = Vector3.up;
                 isGrounded = true;
                 lastGroundedTime = Time.time;
                 anim.SetBool("Grounded", isGrounded);
@@ -240,10 +257,15 @@ public class Player : MonoBehaviour {
             }
             else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
             {
+                if (isGrounded)
+                    groundLossHeight = transform.position.y;
+                slopeNormal = hit.normal;
                 isGrounded = false;
                 anim.SetBool("Grounded", isGrounded);
                 return;
             }
+            else
+                slopeNormal = hit.normal;
         }
 
 
@@ -259,17 +281,27 @@ public class Player : MonoBehaviour {
                 if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
                 {
                     gravity = 3;
+                    if (isGrounded)
+                        groundLossHeight = transform.position.y;
                     isGrounded = false;
+                    slopeNormal = Vector3.up;
                     anim.SetBool("Grounded", isGrounded);
                 }
                 else
                 {
                 if(controller.velocity.y <= -1)
                     {
+                        if (isGrounded)
+                            groundLossHeight = transform.position.y;
                         isGrounded = false;
+                        slopeNormal = hit.normal;
+
                         anim.SetBool("Grounded", isGrounded);
                     }
+                    else
+                        slopeNormal = hit.normal;
                 }
+               
                 
 
                
@@ -298,7 +330,7 @@ public class Player : MonoBehaviour {
 
         if (!isGrounded)
         {
-            deltaMovement = moveVector * Time.deltaTime*airMoveSpeed;
+            deltaMovement = Vector3.MoveTowards(deltaMovement, moveVector * Time.deltaTime*airMoveSpeed*anim.GetFloat("Forward")/100,Time.deltaTime*5);
         }
 
         deltaMovement.y = gravity * Time.deltaTime*-1;
@@ -315,12 +347,19 @@ public class Player : MonoBehaviour {
         Ray ray = new Ray(transform.TransformPoint(0,0.1f,0.5f), Vector3.down);
         float checkDistance = 1f;
         Debug.DrawRay(ray.origin, ray.direction.normalized * checkDistance, Color.black);
-        if (Physics.Raycast(ray, out hit, checkDistance, groundLayers, QueryTriggerInteraction.Ignore))
+
+        if (Physics.Raycast(ray, out hit, checkDistance, groundLayers, QueryTriggerInteraction.Ignore) && isGrounded)
         {
             if (hit.point.y < transform.position.y)
                 deltaMovement.y = -hit.distance;
         }
 
+        if (!isGrounded)
+            deltaMovement = Vector3.ProjectOnPlane(deltaMovement, slopeNormal);
+
+        Debug.DrawRay(transform.position, deltaMovement, Color.green);
+
+        //controller.SimpleMove(deltaMovement / Time.deltaTime);
         controller.Move(deltaMovement);
 
     }

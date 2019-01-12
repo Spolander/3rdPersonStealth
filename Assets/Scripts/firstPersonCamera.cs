@@ -52,6 +52,7 @@ public class firstPersonCamera : MonoBehaviour {
 
         if(rotationAngles == rotAngles.y)
         angles.y = transform.eulerAngles.y;
+        Application.targetFrameRate = 60;
     }
     // Update is called once per frame
     void LateUpdate () {

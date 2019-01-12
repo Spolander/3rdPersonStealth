@@ -33,8 +33,16 @@ public class MyInputManager : MonoBehaviour {
         if(InputManager.Devices.Count > 0)
         device = (InputManager.Devices.Count >= controllerNumber) ? InputManager.Devices[controllerNumber - 1] : null;
     }
+    private void Update()
+    {
+        if (device != null)
+            if (device.Action1)
+                controllerType = ControllerType.Gamepad1;
 
-  
+        if (Input.GetKeyDown(KeyCode.Space))
+            controllerType = ControllerType.Keyboard;
+    }
+
 
     public Vector2 inputVector
     {
