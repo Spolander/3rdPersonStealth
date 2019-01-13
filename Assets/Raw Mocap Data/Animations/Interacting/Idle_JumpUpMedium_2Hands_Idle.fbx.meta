@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: feed21943329b8d4c8ea10fb5dcfe582
+guid: 18e99e62704d51a41aacf573458a3956
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -157,7 +157,7 @@ ModelImporter:
     400148: Spine
     400150: TongueBack
     400152: TongueTip
-    7400000: JogJump_ToLeft_1
+    7400000: ClimbUpLow
     9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
@@ -191,10 +191,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: JogJump_ToLeft_1
-      takeName: _16_B_a_U1_M_P_JogJump_ToLeft_R_Fb_p0_No_0_1
-      firstFrame: 256
-      lastFrame: 349
+      name: ClimbUpLow
+      takeName: _203_Idle_JumpUpMedium_2Hands_Idle
+      firstFrame: 152
+      lastFrame: 204
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

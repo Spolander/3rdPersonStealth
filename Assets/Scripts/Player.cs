@@ -87,6 +87,27 @@ public class Player : MonoBehaviour {
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
+        else if (info.IsName("ClimbUpMedium"))
+        {
+            lastGroundedTime = Time.time;
+            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0.0f, 0.3f);
+
+            transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
+        }
+        else if (info.IsName("ClimbUpLow"))
+        {
+            lastGroundedTime = Time.time;
+            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.15f);
+
+            transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
+        }
+        else if (info.IsName("ClimbUpHigh"))
+        {
+            lastGroundedTime = Time.time;
+            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.185f);
+
+            transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
+        }
     }
     void Locomotion()
     {
@@ -173,6 +194,8 @@ public class Player : MonoBehaviour {
         Debug.DrawRay(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward*vaultDistance,Color.cyan);
         Debug.DrawRay(transform.TransformPoint(0, obstacleHeight, 0), transform.forward * obstacleDistance, Color.red);
 
+        Vector3 wallNormal = Vector3.zero;
+        Vector3 wallPoint = Vector3.zero;
         if (isGrounded && !info.IsTag("rootmotion"))
         {
             if (input.JumpButtonDown)
@@ -181,6 +204,8 @@ public class Player : MonoBehaviour {
                 Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
                 if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Ignore))
                 {
+                    wallNormal = hit.normal;
+                    wallPoint = hit.point;
                     if (hit.collider.tag == "mediumVault")
                     {
                         ray = new Ray(transform.TransformPoint(0, obstacleHeight, 0), -hit.normal);
@@ -199,6 +224,53 @@ public class Player : MonoBehaviour {
 
                         originalRotation = transform.rotation;
                         anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
+                    }
+                    else
+                    {
+                        //check downwards to determine distance and collision
+                        Ray downRay = new Ray(hit.point+Vector3.up*2.5f - hit.normal * 0.5f, Vector3.down);
+                        Debug.DrawRay(downRay.origin, downRay.direction, Color.red);
+                        if (Physics.Raycast(downRay, out hit, 2.5f, interactLayers, QueryTriggerInteraction.Ignore))
+                        {
+                            if (hit.normal.y < 0.7f)
+                                return;
+
+                            Vector3 directionX = Vector3.Cross(Vector3.up, wallNormal);
+                            Vector3 originPos = wallPoint + wallNormal * 0.2f;
+                            originPos.y = hit.point.y + 0.2f;
+
+                            wallNormal.y = 0;
+                            //horizontal checks to determine if there's something blocking the player from getting up
+                            for(int i = -1; i < 2; i++)
+                            {
+                                if (Physics.Linecast(originPos - directionX * (i * 0.3f), originPos - directionX * (i * 0.3f) - wallNormal * 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
+                                    return;
+                                
+                               
+                            }
+
+                            //no obstacles horizontally
+                            matchingLocation = wallPoint+transform.right*0.2f;
+                            matchingLocation.y = hit.point.y+0.05f;
+                            matchingRotation = Quaternion.LookRotation(-wallNormal);
+                            originalRotation = transform.rotation;
+
+                            float heightDistance = hit.point.y - transform.position.y;
+
+                            if (heightDistance < 1.9f)
+                            {
+                                anim.CrossFadeInFixedTime("ClimbUpLow", 0.1f);
+                            }
+                            else if (heightDistance > 1.9f && heightDistance < 2.9f)
+                            {
+                                anim.CrossFadeInFixedTime("ClimbUpMedium", 0.1f);
+                            }
+                            else if (heightDistance > 2.9f)
+                            {
+                                anim.CrossFadeInFixedTime("ClimbUpHigh", 0.1f);
+                            }
+                            
+                        }
                     }
                 }
             }
@@ -281,6 +353,9 @@ public class Player : MonoBehaviour {
                 if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
                 {
                     gravity = 3;
+                    if (Physics.Raycast(transform.TransformPoint(0, 0.1f, 0), Vector3.down, 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
+                        return;
+                    
                     if (isGrounded)
                         groundLossHeight = transform.position.y;
                     isGrounded = false;

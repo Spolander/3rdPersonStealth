@@ -127,47 +127,7 @@ public class MyInputManager : MonoBehaviour {
         }
     }
 
-    public bool KnifeButtonDown
-    {
-        get
-        {
-            if (controllerType == ControllerType.Keyboard)
-                return Input.GetButtonDown(controllerType.ToString() + "Knife");
-            else
-            {
-                if (device == null)
-                    return false;
-
-                if (device.RightTrigger.IsPressed && rightTriggerPressed == false)
-                {
-                    rightTriggerPressed = true;
-                    return true;
-                }
-               
-                return false;
-            }
-        }
-    }
-
-    public bool KnifeButtonUp
-    {
-        get
-        {
-            if (controllerType == ControllerType.Keyboard)
-                return Input.GetButtonUp(controllerType.ToString() + "Knife");
-            else
-            {
-
-                if (device.RightTrigger.IsPressed == false && rightTriggerPressed)
-                {
-                    rightTriggerPressed = false;
-                    return true;
-                }
-            }
-            return false;
-        
-        }
-    }
+  
 
     public bool InteractButtonDown
     {

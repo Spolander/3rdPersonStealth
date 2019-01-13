@@ -62,7 +62,15 @@ public class CameraFollow : MonoBehaviour {
     private LayerMask cameraBlockingLayers;
 
     MyInputManager input;
-	// Use this for initialization
+    // Use this for initialization
+
+    //Distance at wich the camera is from the close up target object
+    private float closeUpDistance = 0.5f;
+    private float closeUpStartDistance = 0.6f;
+    private Vector3 closeUpTarget;
+    private Vector3 closeUpDirection;
+    private bool closeUp;
+    private float closeUpStartTime;
 
     private void Awake()
     {
@@ -86,40 +94,45 @@ public class CameraFollow : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 
-        if (player)
+        if (player && !closeUp)
         {
             if (input != null)
-                if(input.controllerType == MyInputManager.ControllerType.Keyboard)
-            {
-                rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X") * sensitivityX;
-                rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;
-            }
-            else
-            {
-                rotationAngleY += Time.deltaTime * input.cameraInput.x * sensitivityX;
-                rotationAngleX += Time.deltaTime * input.cameraInput.y * sensitivityY;
-            }
+                if (input.controllerType == MyInputManager.ControllerType.Keyboard)
+                {
+                    rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X") * sensitivityX;
+                    rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;
+                }
+                else
+                {
+                    rotationAngleY += Time.deltaTime * input.cameraInput.x * sensitivityX;
+                    rotationAngleX += Time.deltaTime * input.cameraInput.y * sensitivityY;
+                }
 
             ClampRotationX();
             Quaternion rotation = Quaternion.Euler(rotationAngleX, rotationAngleY, 0);
 
-                Vector3 targetPosition = player.position + rotation * Vector3.forward * defaultDistance + Vector3.up * height;
-                RaycastHit hit;
+            Vector3 targetPosition = player.position + rotation * Vector3.forward * defaultDistance + Vector3.up * height;
+            RaycastHit hit;
 
-                float lerp = 1;
-                if (Physics.Linecast(player.position + Vector3.up, targetPosition, out hit, cameraBlockingLayers, QueryTriggerInteraction.Ignore))
-                {
-                    lerp = hit.distance / defaultDistance;
-                }
+            float lerp = 1;
+            if (Physics.Linecast(player.position + Vector3.up, targetPosition, out hit, cameraBlockingLayers, QueryTriggerInteraction.Ignore))
+            {
+                lerp = hit.distance / defaultDistance;
+            }
 
-                if(hit.collider)
-                targetPosition = player.position + rotation * Vector3.forward * Mathf.Lerp(minimumDistance,hit.distance,lerp) + Vector3.up * Mathf.Lerp(minimumHeight, height,lerp);
-                else
+            if (hit.collider)
+                targetPosition = player.position + rotation * Vector3.forward * Mathf.Lerp(minimumDistance, hit.distance, lerp) + Vector3.up * Mathf.Lerp(minimumHeight, height, lerp);
+            else
                 targetPosition = player.position + rotation * Vector3.forward * Mathf.Lerp(minimumDistance, defaultDistance, lerp) + Vector3.up * Mathf.Lerp(minimumHeight, height, lerp);
 
             transform.position = targetPosition;
-                transform.rotation = Quaternion.LookRotation((player.position + Vector3.up * Mathf.Lerp(minimumLookAtHeight, defaultLookAtHeight,lerp)) - transform.position);
-            
+            transform.rotation = Quaternion.LookRotation((player.position + Vector3.up * Mathf.Lerp(minimumLookAtHeight, defaultLookAtHeight, lerp)) - transform.position);
+
+        }
+        else if (closeUp)
+        {
+            transform.position = Vector3.Slerp(closeUpTarget + closeUpDirection * closeUpStartDistance, closeUpTarget + closeUpDirection * closeUpDistance, (Time.time-closeUpStartTime) /  0.5f);
+            transform.rotation = Quaternion.LookRotation(closeUpTarget - transform.position);
         }
 		
 	}
@@ -130,5 +143,18 @@ public class CameraFollow : MonoBehaviour {
             rotationAngleX = minimumXRotation;
         else if (rotationAngleX > maximumXRotation)
             rotationAngleX = maximumXRotation;
+    }
+
+    public void ActivateCloseUp(Vector3 target, Vector3 targetDirection, bool activate)
+    {
+        closeUpStartTime = Time.time;
+        closeUp = activate;
+
+        if (closeUp == false)
+            return;
+
+        closeUpTarget = target;
+        closeUpDirection = targetDirection;
+
     }
 }

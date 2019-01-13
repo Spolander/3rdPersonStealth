@@ -10,6 +10,9 @@ ModelImporter:
     100008: table
     100010: Roof
     100012: Grid
+    100014: Roof2nd
+    100016: RoofThird
+    100018: SecondFloor
     400000: //RootNode
     400002: FirstFloor
     400004: Floor
@@ -17,6 +20,9 @@ ModelImporter:
     400008: table
     400010: Roof
     400012: Grid
+    400014: Roof2nd
+    400016: RoofThird
+    400018: SecondFloor
     2100000: Material.003
     2100002: Material.002
     2100004: walls
@@ -28,6 +34,9 @@ ModelImporter:
     2300008: table
     2300010: Roof
     2300012: Grid
+    2300014: Roof2nd
+    2300016: RoofThird
+    2300018: SecondFloor
     3300000: //RootNode
     3300002: FirstFloor
     3300004: Floor
@@ -35,12 +44,18 @@ ModelImporter:
     3300008: table
     3300010: Roof
     3300012: Grid
+    3300014: Roof2nd
+    3300016: RoofThird
+    3300018: SecondFloor
     4300000: FirstFloor
     4300002: Floor
     4300004: ElevatorShaft
     4300006: table
     4300008: Roof
     4300010: Grid
+    4300012: RoofThird
+    4300014: SecondFloor
+    4300016: Roof2nd
   externalObjects: {}
   materials:
     importMaterials: 1

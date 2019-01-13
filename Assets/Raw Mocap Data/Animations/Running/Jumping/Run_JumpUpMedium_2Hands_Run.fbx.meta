@@ -157,7 +157,7 @@ ModelImporter:
     400148: Spine
     400150: TongueBack
     400152: TongueTip
-    7400000: Run_JumpUpMedium_2Hands_Run
+    7400000: ClimbUpMedium
     9500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects: {}
@@ -191,10 +191,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Run_JumpUpMedium_2Hands_Run
+      name: ClimbUpMedium
       takeName: _211_Run_JumpUpMedium_2Hands_Run
-      firstFrame: 165
-      lastFrame: 282
+      firstFrame: 195
+      lastFrame: 233
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
