@@ -62,6 +62,10 @@ public class Player : MonoBehaviour {
     float obstacleDistance = 1.8f;
     float obstacleHeight = 1.6f;
 
+
+    //close up variables
+    private bool closeUpEnabled = false;
+
     [SerializeField]
     private LayerMask interactLayers;
 
@@ -228,7 +232,7 @@ public class Player : MonoBehaviour {
                     else
                     {
                         //check downwards to determine distance and collision
-                        Ray downRay = new Ray(hit.point+Vector3.up*2.5f - hit.normal * 0.5f, Vector3.down);
+                        Ray downRay = new Ray(hit.point + Vector3.up * 2.5f - hit.normal * 0.5f, Vector3.down);
                         Debug.DrawRay(downRay.origin, downRay.direction, Color.red);
                         if (Physics.Raycast(downRay, out hit, 2.5f, interactLayers, QueryTriggerInteraction.Ignore))
                         {
@@ -241,17 +245,17 @@ public class Player : MonoBehaviour {
 
                             wallNormal.y = 0;
                             //horizontal checks to determine if there's something blocking the player from getting up
-                            for(int i = -1; i < 2; i++)
+                            for (int i = -1; i < 2; i++)
                             {
                                 if (Physics.Linecast(originPos - directionX * (i * 0.3f), originPos - directionX * (i * 0.3f) - wallNormal * 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
                                     return;
-                                
-                               
+
+
                             }
 
                             //no obstacles horizontally
-                            matchingLocation = wallPoint+transform.right*0.2f;
-                            matchingLocation.y = hit.point.y+0.05f;
+                            matchingLocation = wallPoint + transform.right * 0.2f;
+                            matchingLocation.y = hit.point.y + 0.05f;
                             matchingRotation = Quaternion.LookRotation(-wallNormal);
                             originalRotation = transform.rotation;
 
@@ -269,8 +273,27 @@ public class Player : MonoBehaviour {
                             {
                                 anim.CrossFadeInFixedTime("ClimbUpHigh", 0.1f);
                             }
-                            
+
                         }
+                    }
+                }
+            }
+            else if (input.InteractButtonDown)
+            {
+                Ray ray = new Ray(transform.TransformPoint(0, 1, 0), transform.forward);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
+                {
+                    if (hit.collider.tag == "closeUpObject")
+                    {
+                        CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
+
+                        if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection,new Vector3(1,0,1))) > cu.ActivationAngle)
+                            return;
+
+                        CameraFollow.playerCam.ActivateCloseUp(cu.CloseUpPoint, cu.CloseUpDirection, true);
+                        VirtualCursor.instance.Activate(true);
+
                     }
                 }
             }

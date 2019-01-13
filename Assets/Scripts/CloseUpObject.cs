@@ -7,8 +7,12 @@ public class CloseUpObject : MonoBehaviour {
     [SerializeField]
     Vector3 closeUpDirection;
 
+    public Vector3 CloseUpDirection { get { return transform.TransformDirection(closeUpDirection); } }
+
     [SerializeField]
     Vector3 closeUpPoint;
+
+    public Vector3 CloseUpPoint { get { return transform.TransformPoint(closeUpPoint); } }
 
     [SerializeField]
     private float activationAngle = 90f;
@@ -16,14 +20,11 @@ public class CloseUpObject : MonoBehaviour {
     public float ActivationAngle { get { return activationAngle; } }
 
 
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawRay(transform.TransformPoint(closeUpPoint), transform.TransformDirection(closeUpDirection));
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-            CameraFollow.playerCam.ActivateCloseUp(transform.TransformPoint(closeUpPoint), transform.TransformDirection(closeUpDirection), true);
-    }
+  
 }
