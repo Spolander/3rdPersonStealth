@@ -12,7 +12,13 @@ public class CloseUpObject : MonoBehaviour {
     [SerializeField]
     Vector3 closeUpPoint;
 
-    public Vector3 CloseUpPoint { get { return transform.TransformPoint(closeUpPoint); } }
+
+    public Vector3 CloseUpPoint { get { return closeUpPoint; } }
+
+    [SerializeField]
+    Vector3 playerPoint;
+    public Vector3 PlayerPoint { get { return transform.TransformPoint(playerPoint); } }
+
 
     [SerializeField]
     private float activationAngle = 90f;
@@ -23,7 +29,11 @@ public class CloseUpObject : MonoBehaviour {
 
     private void OnDrawGizmosSelected()
     {
+        Color c = Color.green;
+        c.a = 0.4f;
+        Gizmos.color = c;
         Gizmos.DrawRay(transform.TransformPoint(closeUpPoint), transform.TransformDirection(closeUpDirection));
+        Gizmos.DrawSphere(transform.TransformPoint(playerPoint), 0.2f);
     }
 
   

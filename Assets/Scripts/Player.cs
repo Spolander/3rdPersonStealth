@@ -147,7 +147,7 @@ public class Player : MonoBehaviour {
         else
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 150, dampTime, Time.deltaTime);
 
-        if (anim.GetFloat("Forward") >= 80)
+        if (anim.GetFloat("Forward") >= 120)
         {
             canTransitionToStop = true;
             lastJogTime = Time.time;
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour {
         }
 
 
-        if (!info.IsTag("rootmotion") && anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && !info.IsName("jogStop") && !info.IsName("walkStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
+        if (!anim.GetBool("crouching") && !info.IsTag("rootmotion") && anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && !info.IsName("jogStop") && !info.IsName("walkStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
         {
             if (Time.time < lastJogTime + stoppingWindow)
             {
@@ -168,29 +168,66 @@ public class Player : MonoBehaviour {
             }
             else if (Time.time < lastWalkTime + stoppingWindow)
             {
-                anim.CrossFadeInFixedTime("walkStop", 0.1f);
+                anim.CrossFadeInFixedTime("walkStop", 0.25f);
                 canTransitionToStop = false;
             }
            
            
         }
 
+        if (input.CrouchButtonDown)
+            anim.SetBool("crouching", !anim.GetBool("crouching"));
+
 
         if (isGrounded)
             gravity = 1;
         else
             gravity = Mathf.MoveTowards(gravity, 20, Time.deltaTime * 30);
+
     }
 	void Update () {
 
 
-
-        Locomotion();
-        checkGrounded();
-        CheckInteractions();
-        MatchAnimator();
+        if (closeUpEnabled == false)
+        {
+            Locomotion();
+            checkGrounded();
+            CheckInteractions();
+            MatchAnimator();
+        }
+        else
+        {
+            FirstPersonInteraction();
+        }
+     
     
 	}
+    void FirstPersonInteraction()
+    {
+        if (input.JumpButtonDown || Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Ray ray = mainCam.ScreenPointToRay(VirtualCursor.instance.ScreenPosition);
+            RaycastHit hit;
+
+            //if (Physics.SphereCast(ray, 0.02f,out hit, 2, 1 << LayerMask.NameToLayer("FPSInteract"), QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(ray, out hit, 2, 1 << LayerMask.NameToLayer("FPSInteract"), QueryTriggerInteraction.Ignore))
+            {
+                if (hit.collider.GetComponent<Interactable>())
+                    hit.collider.GetComponent<Interactable>().Interact();
+            }
+        }
+        else if (input.InteractButtonDown)
+        {
+            CameraFollow.playerCam.ActivateCloseUp(null, Vector3.zero, Vector3.zero, false);
+            ShowMeshes(true);
+            controller.enabled = true;
+            closeUpEnabled = false;
+            lastGroundedTime = Time.time;
+            isGrounded = true;
+            anim.SetBool("Grounded", true);
+            VirtualCursor.instance.Activate(false);
+        }
+    }
     void CheckInteractions()
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
@@ -202,7 +239,7 @@ public class Player : MonoBehaviour {
         Vector3 wallPoint = Vector3.zero;
         if (isGrounded && !info.IsTag("rootmotion"))
         {
-            if (input.JumpButtonDown)
+            if (input.JumpButtonDown && !anim.IsInTransition(0))
             {
                 RaycastHit hit;
                 Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
@@ -280,26 +317,44 @@ public class Player : MonoBehaviour {
             }
             else if (input.InteractButtonDown)
             {
-                Ray ray = new Ray(transform.TransformPoint(0, 1, 0), transform.forward);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
+                float x = -0.5f;
+
+                for (int i = -1; i < 2; i++)
                 {
-                    if (hit.collider.tag == "closeUpObject")
+                    Ray ray = new Ray(transform.TransformPoint(x*i, 1, 0), transform.forward);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
                     {
-                        CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
+                        if (hit.collider.tag == "closeUpObject")
+                        {
+                            
+                            CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
 
-                        if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection,new Vector3(1,0,1))) > cu.ActivationAngle)
-                            return;
+                            if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
+                                return;
 
-                        CameraFollow.playerCam.ActivateCloseUp(cu.CloseUpPoint, cu.CloseUpDirection, true);
-                        VirtualCursor.instance.Activate(true);
+                            CameraFollow.playerCam.ActivateCloseUp(cu.transform,cu.CloseUpPoint, cu.CloseUpDirection, true);
+                            VirtualCursor.instance.Activate(true);
+                            closeUpEnabled = true;
+                            transform.position = cu.PlayerPoint;
+                            transform.rotation = Quaternion.LookRotation(Vector3.Scale(-cu.CloseUpDirection, new Vector3(1, 0, 1)));
+                            anim.Play("Move");
+                            ShowMeshes(false);
+                            controller.enabled = false;
+                            break;
 
+                        }
                     }
                 }
             }
         }
     }
-  
+    void ShowMeshes(bool show)
+    {
+        Renderer[] rends = GetComponentsInChildren<Renderer>();
+        for (int i = 0; i < rends.Length; i++)
+            rends[i].enabled = show;
+    }
    
     void checkGrounded()
     {
@@ -324,6 +379,8 @@ public class Player : MonoBehaviour {
                 isGrounded = true;
                 lastGroundedTime = Time.time;
                 anim.SetBool("Grounded", isGrounded);
+                if (hit.collider.tag == "platform")
+                    transform.SetParent(hit.collider.transform);
                 return;
             }
             else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
@@ -333,6 +390,7 @@ public class Player : MonoBehaviour {
                 isGrounded = false;
                 slopeNormal = hit.normal;
                 anim.SetBool("Grounded", isGrounded);
+                    transform.SetParent(null);
                 return;
             }
             else
@@ -342,12 +400,14 @@ public class Player : MonoBehaviour {
         {
             if (hit.normal.y > 0.7f)
             {
-                if (Time.time > lastGroundedTime + 0.7f && transform.position.y < groundLossHeight-4)
+                if (Time.time > lastGroundedTime + 0.7f && transform.position.y < groundLossHeight - 4)
                     anim.CrossFadeInFixedTime("LandingHard", 0.05f);
                 slopeNormal = Vector3.up;
                 isGrounded = true;
                 lastGroundedTime = Time.time;
                 anim.SetBool("Grounded", isGrounded);
+                if (hit.collider.tag == "platform")
+                    transform.SetParent(hit.collider.transform);
                 return;
             }
             else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
@@ -357,10 +417,14 @@ public class Player : MonoBehaviour {
                 slopeNormal = hit.normal;
                 isGrounded = false;
                 anim.SetBool("Grounded", isGrounded);
+                transform.SetParent(null);
                 return;
             }
             else
+            {
+                transform.SetParent(null);
                 slopeNormal = hit.normal;
+            }
         }
 
 
@@ -383,6 +447,7 @@ public class Player : MonoBehaviour {
                         groundLossHeight = transform.position.y;
                     isGrounded = false;
                     slopeNormal = Vector3.up;
+                    transform.SetParent(null);
                     anim.SetBool("Grounded", isGrounded);
                 }
                 else
@@ -393,7 +458,7 @@ public class Player : MonoBehaviour {
                             groundLossHeight = transform.position.y;
                         isGrounded = false;
                         slopeNormal = hit.normal;
-
+                        transform.SetParent(null);
                         anim.SetBool("Grounded", isGrounded);
                     }
                     else

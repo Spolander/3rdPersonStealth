@@ -9,8 +9,7 @@ public class MyInputManager : MonoBehaviour {
     public ControllerType controllerType;
 
     private bool rightTriggerPressed = false;
-    private bool jumpButtonPressed = false;
-    private bool interactButtonPressed = false;
+
 
     InputDevice device = null;
 
@@ -72,24 +71,8 @@ public class MyInputManager : MonoBehaviour {
             {
                 if (device == null)
                     return false;
+                return device.Action1.WasPressed;
 
-                if (jumpButtonPressed == false)
-                {
-                    if (device.Action1.IsPressed)
-                    {
-                        jumpButtonPressed = true;
-                        return true;
-                    }
-                }
-                else
-                {
-                    if (!device.Action1.IsPressed)
-                    {
-                        jumpButtonPressed = false;
-                        return false;
-                    }
-                }
-                return false;
             }
         }
     }
@@ -141,23 +124,25 @@ public class MyInputManager : MonoBehaviour {
                 if (device == null)
                     return false;
 
-                if (interactButtonPressed == false)
-                {
-                    if (device.Action3.IsPressed)
-                    {
-                        interactButtonPressed= true;
-                        return true;
-                    }
-                }
-                else
-                {
-                    if (!device.Action3.IsPressed)
-                    {
-                        interactButtonPressed = false;
-                        return false;
-                    }
-                }
-                return false;
+                return device.Action3.WasPressed;
+
+            }
+        }
+    }
+
+    public bool CrouchButtonDown
+    {
+
+        get
+        {
+            if (controllerType == ControllerType.Keyboard)
+                return Input.GetButtonDown(controllerType.ToString() + "Crouch");
+            else
+            {
+                if (device == null)
+                    return false;
+
+                return device.Action2.WasPressed;
 
             }
         }

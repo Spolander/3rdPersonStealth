@@ -10,6 +10,9 @@ public class VirtualCursor : MonoBehaviour {
     [SerializeField]
     private float sensitivity = 1;
 
+    [SerializeField]
+    private float controllerSensitivityMultiplier = 3f;
+
     private float sensitivityMultiplier = 0.2f;
 
     [SerializeField]
@@ -39,8 +42,12 @@ public class VirtualCursor : MonoBehaviour {
 
         if (inputManager)
         {
-            normalizedPosition.x += inputManager.cameraInput.x  * sensitivityMultiplier* Time.deltaTime;
-            normalizedPosition.y += inputManager.cameraInput.y *(Screen.width / Screen.height) * sensitivityMultiplier * Time.deltaTime;
+            float multiplier = 1;
+            if (inputManager.controllerType == MyInputManager.ControllerType.Gamepad1)
+                multiplier = controllerSensitivityMultiplier;
+
+            normalizedPosition.x += inputManager.cameraInput.x  * sensitivityMultiplier* Time.deltaTime*multiplier;
+            normalizedPosition.y += inputManager.cameraInput.y *(Screen.width / Screen.height) * sensitivityMultiplier * Time.deltaTime*multiplier;
         }
         else
         {
@@ -55,6 +62,7 @@ public class VirtualCursor : MonoBehaviour {
     }
 
     public Vector3 NormalizedPosition { get { return normalizedPosition; } }
+    public Vector3 ScreenPosition { get { return new Vector3(Screen.width * normalizedPosition.x, Screen.height * normalizedPosition.y, 0); } }
 
     public void Activate(bool enable)
     {

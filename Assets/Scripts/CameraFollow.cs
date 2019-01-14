@@ -67,7 +67,8 @@ public class CameraFollow : MonoBehaviour {
     //Distance at wich the camera is from the close up target object
     private float closeUpDistance = 0.5f;
     private float closeUpStartDistance = 0.6f;
-    private Vector3 closeUpTarget;
+    private Transform closeUpTarget;
+    private Vector3 closeUpTargetLocation;
     private Vector3 closeUpDirection;
     private bool closeUp;
     private float closeUpStartTime;
@@ -131,8 +132,8 @@ public class CameraFollow : MonoBehaviour {
         }
         else if (closeUp)
         {
-            transform.position = Vector3.Slerp(closeUpTarget + closeUpDirection * closeUpStartDistance, closeUpTarget + closeUpDirection * closeUpDistance, (Time.time-closeUpStartTime) /  0.5f);
-            transform.rotation = Quaternion.LookRotation(closeUpTarget - transform.position);
+            transform.position = Vector3.Slerp(closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpStartDistance, closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpDistance, (Time.time-closeUpStartTime) /  0.5f);
+            transform.rotation = Quaternion.LookRotation(closeUpTarget.TransformPoint(closeUpTargetLocation) - transform.position);
         }
 		
 	}
@@ -145,7 +146,7 @@ public class CameraFollow : MonoBehaviour {
             rotationAngleX = maximumXRotation;
     }
 
-    public void ActivateCloseUp(Vector3 target, Vector3 targetDirection, bool activate)
+    public void ActivateCloseUp(Transform target, Vector3 location, Vector3 targetDirection, bool activate)
     {
         closeUpStartTime = Time.time;
         closeUp = activate;
@@ -154,6 +155,7 @@ public class CameraFollow : MonoBehaviour {
             return;
 
         closeUpTarget = target;
+        closeUpTargetLocation = location;
         closeUpDirection = targetDirection;
 
     }
