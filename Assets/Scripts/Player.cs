@@ -50,6 +50,7 @@ public class Player : MonoBehaviour {
 
     //Animator matching targets
     Vector3 matchingLocation;
+    Transform matchingObject;
     Quaternion matchingRotation;
     Quaternion originalRotation;
 
@@ -84,31 +85,38 @@ public class Player : MonoBehaviour {
 
         if (anim.IsInTransition(0))
             return;
+        if (matchingObject == null)
+            return;
+
+
+        Vector3 location = matchingObject.TransformPoint(matchingLocation);
+
+     
 
         if (info.IsName("VaultMedium"))
         {
-            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0, 0.2f);
+            anim.MatchTarget(location, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0, 0.2f);
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
         else if (info.IsName("ClimbUpMedium"))
         {
             lastGroundedTime = Time.time;
-            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0.0f, 0.3f);
+            anim.MatchTarget(location, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0.0f, 0.3f);
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
         else if (info.IsName("ClimbUpLow"))
         {
             lastGroundedTime = Time.time;
-            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.15f);
+            anim.MatchTarget(location, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.15f);
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
         else if (info.IsName("ClimbUpHigh"))
         {
             lastGroundedTime = Time.time;
-            anim.MatchTarget(matchingLocation, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.185f);
+            anim.MatchTarget(location, matchingRotation, AvatarTarget.RightHand, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.185f);
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
@@ -263,7 +271,10 @@ public class Player : MonoBehaviour {
                             matchingLocation.y = hit.point.y;
                         }
 
+                        matchingObject = hit.collider.transform;
+                        matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
                         originalRotation = transform.rotation;
+                        transform.SetParent(null);
                         anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
                     }
                     else
@@ -295,6 +306,9 @@ public class Player : MonoBehaviour {
                             matchingLocation.y = hit.point.y + 0.05f;
                             matchingRotation = Quaternion.LookRotation(-wallNormal);
                             originalRotation = transform.rotation;
+
+                            matchingObject = hit.collider.transform;
+                            matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
 
                             float heightDistance = hit.point.y - transform.position.y;
 
@@ -366,7 +380,7 @@ public class Player : MonoBehaviour {
         Ray wallRay = new Ray(transform.TransformPoint(0, 1, 0), transform.forward);
 
 
-
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
         if (Physics.SphereCast(sphereRay, controller.radius, out hit, groundCheckDistance, groundLayers, QueryTriggerInteraction.Ignore))
         {
@@ -381,15 +395,22 @@ public class Player : MonoBehaviour {
                 anim.SetBool("Grounded", isGrounded);
                 if (hit.collider.tag == "platform")
                     transform.SetParent(hit.collider.transform);
+                else if(!info.IsTag("rootmotion"))
+                    transform.SetParent(null);
+
                 return;
+
+             
             }
-            else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
+            else if (Time.time > lastGroundedTime + groundedLossTime && (controller.velocity.y < -1 ||info.IsTag("rootmotion")))
             {
                 if (isGrounded)
                     groundLossHeight = transform.position.y;
                 isGrounded = false;
                 slopeNormal = hit.normal;
                 anim.SetBool("Grounded", isGrounded);
+                 if (!info.IsTag("rootmotion"))
+
                     transform.SetParent(null);
                 return;
             }
@@ -408,21 +429,27 @@ public class Player : MonoBehaviour {
                 anim.SetBool("Grounded", isGrounded);
                 if (hit.collider.tag == "platform")
                     transform.SetParent(hit.collider.transform);
+                else if (!info.IsTag("rootmotion"))
+                    transform.SetParent(null);
+
                 return;
             }
-            else if (Time.time > lastGroundedTime + groundedLossTime && controller.velocity.y < -1)
+            else if (Time.time > lastGroundedTime + groundedLossTime && (controller.velocity.y < -1 || info.IsTag("rootmotion")))
             {
                 if (isGrounded)
                     groundLossHeight = transform.position.y;
                 slopeNormal = hit.normal;
                 isGrounded = false;
                 anim.SetBool("Grounded", isGrounded);
-                transform.SetParent(null);
+
+                 if (!info.IsTag("rootmotion"))
+                    transform.SetParent(null);
                 return;
             }
             else
             {
-                transform.SetParent(null);
+                  if (!info.IsTag("rootmotion"))
+                    transform.SetParent(null);
                 slopeNormal = hit.normal;
             }
         }
@@ -452,7 +479,7 @@ public class Player : MonoBehaviour {
                 }
                 else
                 {
-                if(controller.velocity.y <= -1)
+                if(controller.velocity.y <= -1 || info.IsTag("rootmotion"))
                     {
                         if (isGrounded)
                             groundLossHeight = transform.position.y;
@@ -523,6 +550,7 @@ public class Player : MonoBehaviour {
         Debug.DrawRay(transform.position, deltaMovement, Color.green);
 
         //controller.SimpleMove(deltaMovement / Time.deltaTime);
+        if(controller.enabled)
         controller.Move(deltaMovement);
 
     }
