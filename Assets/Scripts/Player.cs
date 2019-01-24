@@ -141,7 +141,7 @@ public class Player : MonoBehaviour {
 
         isRunning = input.RunButtonHold;
 
-        if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion"))
+        if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard"))
         {
             if(anim.GetBool("Grounded"))
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
@@ -525,7 +525,7 @@ public class Player : MonoBehaviour {
 
         deltaMovement.y = gravity * Time.deltaTime*-1;
 
-        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion"))
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f)
         {
             transform.position = anim.rootPosition;
             return;
