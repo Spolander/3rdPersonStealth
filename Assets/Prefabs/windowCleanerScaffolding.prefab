@@ -255,7 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4275455317461804}
   m_Layer: 0
-  m_Name: WindowCleanerScaffolding
+  m_Name: windowCleanerScaffolding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
