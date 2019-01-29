@@ -331,23 +331,20 @@ public class Player : MonoBehaviour {
             }
             else if (input.InteractButtonDown)
             {
-                float x = -0.5f;
 
-                for (int i = -1; i < 2; i++)
-                {
-                    Ray ray = new Ray(transform.TransformPoint(x*i, 1, 0), transform.forward);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
+                Collider[] cols = Physics.OverlapSphere(transform.position, 1, interactLayers, QueryTriggerInteraction.Collide);
+
+                if (cols != null)
+                    for (int i = 0; i < cols.Length; i++)
                     {
-                        if (hit.collider.tag == "closeUpObject")
+                        if (cols[i].tag == "closeUpObject")
                         {
-                            
-                            CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
+                            CloseUpObject cu = cols[i].GetComponent<CloseUpObject>();
 
                             if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
                                 return;
 
-                            CameraFollow.playerCam.ActivateCloseUp(cu.transform,cu.CloseUpPoint, cu.CloseUpDirection, true);
+                            CameraFollow.playerCam.ActivateCloseUp(cu.transform, cu.CloseUpPoint, cu.CloseUpDirection, true);
                             VirtualCursor.instance.Activate(true);
                             closeUpEnabled = true;
                             transform.position = cu.PlayerPoint;
@@ -355,11 +352,39 @@ public class Player : MonoBehaviour {
                             anim.Play("Move");
                             ShowMeshes(false);
                             controller.enabled = false;
-                            break;
-
+                            return;
                         }
                     }
-                }
+
+                //float x = -0.5f;
+
+                //for (int i = -1; i < 2; i++)
+                //{
+                //    Ray ray = new Ray(transform.TransformPoint(x*i, 1, 0), transform.forward);
+                //    RaycastHit hit;
+                //    if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
+                //    {
+                //        if (hit.collider.tag == "closeUpObject")
+                //        {
+                            
+                //            CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
+
+                //            if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
+                //                return;
+
+                //            CameraFollow.playerCam.ActivateCloseUp(cu.transform,cu.CloseUpPoint, cu.CloseUpDirection, true);
+                //            VirtualCursor.instance.Activate(true);
+                //            closeUpEnabled = true;
+                //            transform.position = cu.PlayerPoint;
+                //            transform.rotation = Quaternion.LookRotation(Vector3.Scale(-cu.CloseUpDirection, new Vector3(1, 0, 1)));
+                //            anim.Play("Move");
+                //            ShowMeshes(false);
+                //            controller.enabled = false;
+                //            break;
+
+                //        }
+                //    }
+                //}
             }
         }
     }
