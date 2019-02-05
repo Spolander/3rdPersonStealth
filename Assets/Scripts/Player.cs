@@ -70,6 +70,10 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private LayerMask interactLayers;
 
+
+    //item that was last inspected in first person
+    private Item inspectedItem;
+
     void Start () {
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
@@ -234,6 +238,13 @@ public class Player : MonoBehaviour {
             isGrounded = true;
             anim.SetBool("Grounded", true);
             VirtualCursor.instance.Activate(false);
+
+            if (inspectedItem)
+            {
+                Inventory.instance.AddItem(inspectedItem);
+                inspectedItem = null;
+            }
+               
         }
     }
     void CheckInteractions()
@@ -343,6 +354,9 @@ public class Player : MonoBehaviour {
 
                             if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
                                 return;
+
+                            if (cu.GetComponent<Item>())
+                                inspectedItem = cu.GetComponent<Item>();
 
                             CameraFollow.playerCam.ActivateCloseUp(cu.transform, cu.CloseUpPoint, cu.CloseUpDirection, true);
                             VirtualCursor.instance.Activate(true);

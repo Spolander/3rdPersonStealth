@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33031967838020654}
   - component: {fileID: 23174836792746248}
   - component: {fileID: 65678021351857788}
+  - component: {fileID: 114674896909419598}
   m_Layer: 0
   m_Name: MovingDoor
   m_TagString: Untagged
@@ -35,13 +36,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1067991700352626}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -14.939, y: 1.0189419, z: -15.959}
+  m_LocalRotation: {x: 0.50000006, y: 0.50000006, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: -14.939, y: 1.699, z: -16.618}
   m_LocalScale: {x: 1, y: 0.5, z: 0.50000036}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 90}
 --- !u!23 &23174836792746248
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -97,3 +98,40 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.6644087, y: 6.629646, z: 0.18428336}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114674896909419598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1067991700352626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21e050c7fcce6045bbd52d23967569b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPosition: {x: -14.939, y: 1.699, z: -20.017}
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  animationLength: 2
