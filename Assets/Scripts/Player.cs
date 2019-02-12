@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-
+    public static Player instance;
     Animator anim;
     CharacterController controller;
 
     [SerializeField]
     private float rotateSpeed = 300;
+
+
+    [SerializeField]
+    private float crawlSpaceSpeed = 2;
+
+    private bool inCrawlSpace = false;
+    private bool inCrawlSpaceTransition = false;
+    [SerializeField]
+    private float crawlSpaceRotationSpeed = 150;
 
     Camera mainCam;
     // Use this for initialization
@@ -80,7 +89,15 @@ public class Player : MonoBehaviour {
         anim = GetComponent<Animator>();
         input = GetComponent<MyInputManager>();
         lastGroundedTime = 1;
+
 	}
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    
 
     // Update is called once per frame
     void MatchAnimator()
@@ -145,12 +162,16 @@ public class Player : MonoBehaviour {
 
         isRunning = input.RunButtonHold;
 
-        if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard"))
+        if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard") && !inCrawlSpace)
         {
-            if(anim.GetBool("Grounded"))
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
+            if (anim.GetBool("Grounded"))
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed);
             else
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed*0.5f);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveVector), Time.deltaTime * rotateSpeed * 0.5f);
+        }
+        else if (inCrawlSpace)
+        {
+            transform.Rotate(Vector3.up * crawlSpaceRotationSpeed * Time.deltaTime*Input.GetAxisRaw("Mouse X"));
         }
            
 
@@ -195,6 +216,12 @@ public class Player : MonoBehaviour {
             gravity = 1;
         else
             gravity = Mathf.MoveTowards(gravity, 20, Time.deltaTime * 30);
+
+        if (inCrawlSpace)
+        {
+            moveVector.y = -gravity;
+            controller.Move(moveVector * Time.deltaTime * crawlSpaceSpeed);
+        }
 
     }
 	void Update () {
@@ -261,81 +288,85 @@ public class Player : MonoBehaviour {
             if (input.JumpButtonDown && !anim.IsInTransition(0))
             {
                 RaycastHit hit;
-                Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
-                if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Ignore))
+                for (int ii = 2; ii > 0; ii--)
                 {
-                    wallNormal = hit.normal;
-                    wallPoint = hit.point;
-                    if (hit.collider.tag == "mediumVault")
+                    Ray ray = new Ray(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward);
+                    if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Ignore))
                     {
-                        ray = new Ray(transform.TransformPoint(0, obstacleHeight, 0), -hit.normal);
-
-                        if (Physics.Raycast(ray, obstacleDistance, groundLayers, QueryTriggerInteraction.Ignore))
-                            return;
-
-                        matchingLocation = hit.point + hit.normal * 0.1f + Vector3.up * 0.085f;
-                        matchingRotation = Quaternion.LookRotation(-hit.normal);
-
-                        ray = new Ray(hit.point - hit.normal * 0.01f + Vector3.up, Vector3.down);
-                        if (Physics.Raycast(ray, out hit, 1, interactLayers, QueryTriggerInteraction.Ignore))
+                        wallNormal = hit.normal;
+                        wallPoint = hit.point;
+                        if (hit.collider.tag == "mediumVault")
                         {
-                            matchingLocation.y = hit.point.y;
-                        }
+                            ray = new Ray(transform.TransformPoint(0, obstacleHeight, 0), -hit.normal);
 
-                        matchingObject = hit.collider.transform;
-                        matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
-                        originalRotation = transform.rotation;
-                        transform.SetParent(null);
-                        anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
-                    }
-                    else
-                    {
-                        //check downwards to determine distance and collision
-                        Ray downRay = new Ray(hit.point + Vector3.up * 2.5f - hit.normal * 0.5f, Vector3.down);
-                        Debug.DrawRay(downRay.origin, downRay.direction, Color.red);
-                        if (Physics.Raycast(downRay, out hit, 2.5f, interactLayers, QueryTriggerInteraction.Ignore))
-                        {
-                            if (hit.normal.y < 0.7f)
+                            if (Physics.Raycast(ray, obstacleDistance, groundLayers, QueryTriggerInteraction.Ignore))
                                 return;
 
-                            Vector3 directionX = Vector3.Cross(Vector3.up, wallNormal);
-                            Vector3 originPos = wallPoint + wallNormal * 0.2f;
-                            originPos.y = hit.point.y + 0.2f;
+                            matchingLocation = hit.point + hit.normal * 0.1f + Vector3.up * 0.085f;
+                            matchingRotation = Quaternion.LookRotation(-hit.normal);
 
-                            wallNormal.y = 0;
-                            //horizontal checks to determine if there's something blocking the player from getting up
-                            for (int i = -1; i < 2; i++)
+                            ray = new Ray(hit.point - hit.normal * 0.01f + Vector3.up, Vector3.down);
+                            if (Physics.Raycast(ray, out hit, 1, interactLayers, QueryTriggerInteraction.Ignore))
                             {
-                                if (Physics.Linecast(originPos - directionX * (i * 0.3f), originPos - directionX * (i * 0.3f) - wallNormal * 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
-                                    return;
-
-
+                                matchingLocation.y = hit.point.y;
                             }
-
-                            //no obstacles horizontally
-                            matchingLocation = wallPoint + transform.right * 0.2f;
-                            matchingLocation.y = hit.point.y + 0.05f;
-                            matchingRotation = Quaternion.LookRotation(-wallNormal);
-                            originalRotation = transform.rotation;
 
                             matchingObject = hit.collider.transform;
                             matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
-
-                            float heightDistance = hit.point.y - transform.position.y;
-
-                            if (heightDistance < 1.9f)
+                            originalRotation = transform.rotation;
+                            transform.SetParent(null);
+                            anim.CrossFadeInFixedTime("VaultMedium", 0.1f);
+                            break;
+                        }
+                        else
+                        {
+                            //check downwards to determine distance and collision
+                            Ray downRay = new Ray(hit.point + Vector3.up * 2.5f - hit.normal * 0.5f, Vector3.down);
+                            Debug.DrawRay(downRay.origin, downRay.direction, Color.red);
+                            if (Physics.Raycast(downRay, out hit, 2.5f / ii, interactLayers, QueryTriggerInteraction.Ignore))
                             {
-                                anim.CrossFadeInFixedTime("ClimbUpLow", 0.1f);
-                            }
-                            else if (heightDistance > 1.9f && heightDistance < 2.9f)
-                            {
-                                anim.CrossFadeInFixedTime("ClimbUpMedium", 0.1f);
-                            }
-                            else if (heightDistance > 2.9f)
-                            {
-                                anim.CrossFadeInFixedTime("ClimbUpHigh", 0.1f);
-                            }
+                                if (hit.normal.y < 0.7f)
+                                    return;
 
+                                Vector3 directionX = Vector3.Cross(Vector3.up, wallNormal);
+                                Vector3 originPos = wallPoint + wallNormal * 0.2f;
+                                originPos.y = hit.point.y + 0.2f;
+
+                                wallNormal.y = 0;
+                                //horizontal checks to determine if there's something blocking the player from getting up
+                                for (int i = -1; i < 2; i++)
+                                {
+                                    if (Physics.Linecast(originPos - directionX * (i * 0.3f), originPos - directionX * (i * 0.3f) - wallNormal * 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
+                                        return;
+
+
+                                }
+
+                                //no obstacles horizontally
+                                matchingLocation = wallPoint + transform.right * 0.2f;
+                                matchingLocation.y = hit.point.y + 0.05f;
+                                matchingRotation = Quaternion.LookRotation(-wallNormal);
+                                originalRotation = transform.rotation;
+
+                                matchingObject = hit.collider.transform;
+                                matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
+
+                                float heightDistance = hit.point.y - transform.position.y;
+
+                                if (heightDistance < 1.9f)
+                                {
+                                    anim.CrossFadeInFixedTime("ClimbUpLow", 0.1f);
+                                }
+                                else if (heightDistance > 1.9f && heightDistance < 2.9f)
+                                {
+                                    anim.CrossFadeInFixedTime("ClimbUpMedium", 0.1f);
+                                }
+                                else if (heightDistance > 2.9f)
+                                {
+                                    anim.CrossFadeInFixedTime("ClimbUpHigh", 0.1f);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
@@ -368,39 +399,75 @@ public class Player : MonoBehaviour {
                             controller.enabled = false;
                             return;
                         }
+                        else if (cols[i].tag == "crawlEntrance")
+                        {
+                            CrawlSpaceEntrance cse = cols[i].GetComponent<CrawlSpaceEntrance>();
+                            if(inCrawlSpace)
+                            StartCoroutine(crawlEnterAnimation(false, cse.EntrancePoint, cse.ExitPoint));
+                            else
+                                StartCoroutine(crawlEnterAnimation(true, cse.ExitPoint, cse.EntrancePoint));
+                        }
                     }
 
-                //float x = -0.5f;
-
-                //for (int i = -1; i < 2; i++)
-                //{
-                //    Ray ray = new Ray(transform.TransformPoint(x*i, 1, 0), transform.forward);
-                //    RaycastHit hit;
-                //    if (Physics.Raycast(ray, out hit, vaultDistance, interactLayers, QueryTriggerInteraction.Collide))
-                //    {
-                //        if (hit.collider.tag == "closeUpObject")
-                //        {
-                            
-                //            CloseUpObject cu = hit.collider.GetComponent<CloseUpObject>();
-
-                //            if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
-                //                return;
-
-                //            CameraFollow.playerCam.ActivateCloseUp(cu.transform,cu.CloseUpPoint, cu.CloseUpDirection, true);
-                //            VirtualCursor.instance.Activate(true);
-                //            closeUpEnabled = true;
-                //            transform.position = cu.PlayerPoint;
-                //            transform.rotation = Quaternion.LookRotation(Vector3.Scale(-cu.CloseUpDirection, new Vector3(1, 0, 1)));
-                //            anim.Play("Move");
-                //            ShowMeshes(false);
-                //            controller.enabled = false;
-                //            break;
-
-                //        }
-                //    }
-                //}
+   
             }
         }
+
+        //if (inCrawlSpace && !inCrawlSpaceTransition)
+        //{
+        //    if (input.InteractButtonDown)
+        //    {
+        //        Collider[] c = new Collider[1];
+        //        Physics.OverlapSphereNonAlloc(transform.position, 1f, c, interactLayers, QueryTriggerInteraction.Collide);
+
+        //        if (c[0] != null)
+        //        {
+        //            if (c[0].tag == "crawlEntrance")
+        //            {
+        //                CrawlSpaceEntrance cse = c[0].GetComponent<CrawlSpaceEntrance>();
+        //                StartCoroutine(crawlEnterAnimation(false, cse.EntrancePoint, cse.ExitPoint));
+        //            }
+        //        }
+        //    }
+        //}
+    }
+
+    IEnumerator crawlEnterAnimation(bool enter,Vector3 start, Vector3 end)
+    {
+        float lerp = 0;
+
+        inCrawlSpaceTransition = true;
+        controller.enabled = false;
+
+        if(enter)
+        {
+            controller.height = 1f;
+            controller.center = new Vector3(0, 0.6f, 0);
+            CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
+            ShowMeshes(false);
+        }
+            
+
+        while (lerp < 1)
+        {
+            lerp += Time.deltaTime;
+            transform.position = Vector3.Lerp(start, end, lerp);
+
+            yield return null;
+        }
+        inCrawlSpaceTransition = false;
+        controller.enabled = true;
+
+        inCrawlSpace = enter;
+
+        if(!enter)
+        {
+            CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
+            ShowMeshes(true);
+            controller.height = 2;
+            controller.center = new Vector3(0, 1.08f, 0);
+        }
+            
     }
     void ShowMeshes(bool show)
     {
@@ -555,6 +622,8 @@ public class Player : MonoBehaviour {
 
     private void OnAnimatorMove()
     {
+        if (inCrawlSpace)
+            return;
         Vector3 deltaMovement = anim.deltaPosition;
 
         if (!isGrounded)
@@ -593,4 +662,7 @@ public class Player : MonoBehaviour {
         controller.Move(deltaMovement);
 
     }
+
+
+ 
 }

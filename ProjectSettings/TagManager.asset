@@ -9,6 +9,7 @@ TagManager:
   - Fire
   - closeUpObject
   - platform
+  - crawlEntrance
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - FPSInteract
   - Ragdoll
   - Inventory
-  - 
+  - Trigger
   - 
   - 
   - 

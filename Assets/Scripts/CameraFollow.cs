@@ -74,6 +74,11 @@ public class CameraFollow : MonoBehaviour {
     private bool closeUp;
     private float closeUpStartTime;
 
+
+    //crawlspace variables
+    private bool inCrawlSpace = false;
+    private Vector3 crawlSpacePlayerPoint = new Vector3(0, 0.75f, 0);
+
     CinemachineBrain brain;
 
     private void Awake()
@@ -99,55 +104,26 @@ public class CameraFollow : MonoBehaviour {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 
-        //if (player && !closeUp)
-        //{
-        //    if (input != null)
-        //        if (input.controllerType == MyInputManager.ControllerType.Keyboard)
-        //        {
-        //            rotationAngleY += Time.deltaTime * Input.GetAxisRaw("Mouse X") * sensitivityX;
-        //            rotationAngleX += Time.deltaTime * Input.GetAxisRaw("Mouse Y") * sensitivityY;
-        //        }
-        //        else
-        //        {
-        //            rotationAngleY += Time.deltaTime * input.cameraInput.x * sensitivityX;
-        //            rotationAngleX += Time.deltaTime * input.cameraInput.y * sensitivityY;
-        //        }
-
-        //    ClampRotationX();
-        //    Quaternion rotation = Quaternion.Euler(rotationAngleX, rotationAngleY, 0);
-
-        //    Vector3 targetPosition = player.position + rotation * Vector3.forward * defaultDistance + Vector3.up * height;
-        //    RaycastHit hit;
-
-        //    float lerp = 1;
-        //    if (Physics.Linecast(player.position + Vector3.up, targetPosition, out hit, cameraBlockingLayers, QueryTriggerInteraction.Ignore))
-        //    {
-        //        lerp = hit.distance / defaultDistance;
-        //    }
-
-        //    if (hit.collider)
-        //        targetPosition = player.position + rotation * Vector3.forward * Mathf.Lerp(minimumDistance, hit.distance, lerp) + Vector3.up * Mathf.Lerp(minimumHeight, height, lerp);
-        //    else
-        //        targetPosition = player.position + rotation * Vector3.forward * Mathf.Lerp(minimumDistance, defaultDistance, lerp) + Vector3.up * Mathf.Lerp(minimumHeight, height, lerp);
-
-        //    transform.position = targetPosition;
-        //    transform.rotation = Quaternion.LookRotation((player.position + Vector3.up * Mathf.Lerp(minimumLookAtHeight, defaultLookAtHeight, lerp)) - transform.position);
-
-        //}
 
         if (closeUp)
         {
-            transform.position = Vector3.Slerp(closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpStartDistance, closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpDistance, (Time.time-closeUpStartTime) /  0.5f);
+            transform.position = Vector3.Slerp(closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpStartDistance, closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpDistance, (Time.time - closeUpStartTime) / 0.5f);
             transform.rotation = Quaternion.LookRotation(closeUpTarget.TransformPoint(closeUpTargetLocation) - transform.position);
+        }
+        else if (inCrawlSpace)
+        {
+            rotationAngleX -= Time.deltaTime * sensitivityX * Input.GetAxisRaw("Mouse Y");
+            ClampRotationX();
+            transform.localEulerAngles = new Vector3(rotationAngleX, 0, 0);
         }
 		
 	}
 
     void ClampRotationX()
     {
-        if (rotationAngleX < minimumXRotation)
+        if (rotationAngleX > minimumXRotation)
             rotationAngleX = minimumXRotation;
-        else if (rotationAngleX > maximumXRotation)
+        else if (rotationAngleX < maximumXRotation)
             rotationAngleX = maximumXRotation;
     }
 
@@ -171,5 +147,25 @@ public class CameraFollow : MonoBehaviour {
         if (brain)
             brain.enabled = false;
 
+    }
+
+    public void ActivateCrawlSpaceMode(bool activate)
+    {
+        if (activate)
+        {
+            brain.enabled = false;
+            inCrawlSpace = true;
+
+            transform.SetParent(Player.instance.transform);
+            transform.localEulerAngles = Vector3.zero;
+            transform.localPosition = crawlSpacePlayerPoint;
+
+        }
+        else
+        {
+            brain.enabled = true;
+            inCrawlSpace = false;
+            transform.SetParent(null);
+        }
     }
 }
