@@ -15,7 +15,8 @@ public class CrawlSpaceEntrance : MonoBehaviour {
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.TransformPoint(entrancePoint), Vector3.one * 0.5f);
-        Gizmos.DrawWireCube(transform.TransformPoint(exitPoint), Vector3.one * 0.5f);
+        Gizmos.color = Color.green;
+        Gizmos.DrawCube(transform.TransformPoint(entrancePoint), Vector3.one * 0.2f);
+        Gizmos.DrawCube(transform.TransformPoint(exitPoint), Vector3.one * 0.2f);
     }
 }

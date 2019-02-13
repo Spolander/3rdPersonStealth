@@ -467,6 +467,8 @@ public class Player : MonoBehaviour {
             controller.height = 2;
             controller.center = new Vector3(0, 1.08f, 0);
         }
+
+        gravity = 0;
             
     }
     void ShowMeshes(bool show)
