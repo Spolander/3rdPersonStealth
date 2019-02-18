@@ -147,7 +147,7 @@ ModelImporter:
     2100002: Alpha_Joints_MAT
     4300000: Alpha_Surface
     4300002: Alpha_Joints
-    7400000: mixamo.com
+    7400000: running
     9500000: //RootNode
     13700000: Alpha_Joints
     13700002: Alpha_Surface
@@ -180,19 +180,19 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: running
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 19
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: 4.67
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 0

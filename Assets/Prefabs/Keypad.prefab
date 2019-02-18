@@ -621,8 +621,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1809628743983888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09, y: 0.0947, z: 0.411}
-  m_LocalScale: {x: 0.42417, y: 0.5764372, z: 0.14591146}
+  m_LocalPosition: {x: 0.013, y: 0.0947, z: 0.411}
+  m_LocalScale: {x: 0.5781013, y: 0.5764372, z: 0.14591146}
   m_Children: []
   m_Father: {fileID: 4196775552496908}
   m_RootOrder: 12
@@ -634,8 +634,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1499878271183976}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0422, y: -0.10199928, z: 0.4505005}
-  m_LocalScale: {x: 0.099999994, y: 0.099999994, z: 0.099999994}
+  m_LocalPosition: {x: -0.0811, y: -0.10199928, z: 0.4505005}
+  m_LocalScale: {x: 0.1968, y: 0.099999994, z: 0.099999994}
   m_Children:
   - {fileID: 224864631305827926}
   m_Father: {fileID: 4196775552496908}
@@ -647,9 +647,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1232988334407010}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.59, y: 19.781733, z: -13.861}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -14.902, y: 0.6457329, z: -18.9}
+  m_LocalScale: {x: 0.51975, y: 0.51975, z: 0.51975}
   m_Children:
   - {fileID: 224570248042263472}
   - {fileID: 4128853324481112}
@@ -2939,6 +2939,8 @@ MonoBehaviour:
   combination: 04000000040000000700000001000000
   inputNumbers: 
   inputText: {fileID: 114517420391376862}
+  target: {fileID: 0}
+  methodName: OpenDoor
 --- !u!114 &114484329666310448
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3748,7 +3750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   closeUpDirection: {x: 0, y: 0.01, z: 1}
-  closeUpPoint: {x: 0.05, y: 0.13, z: 0.69}
+  closeUpPoint: {x: 0.05, y: 0.18, z: 1}
   playerPoint: {x: 0, y: -1.06, z: 1.06}
   activationAngle: 90
 --- !u!114 &114963319572369386
@@ -3770,7 +3772,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: OK
+  m_text: Enter
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3838,7 +3840,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 2.2703362, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 114963319572369386}
-    characterCount: 2
+    characterCount: 5
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -4161,14 +4163,14 @@ RectTransform:
   m_GameObject: {fileID: 1325268195874220}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0.5089951}
-  m_LocalScale: {x: 0.18108587, y: 0.18108587, z: 0.18108587}
+  m_LocalScale: {x: 0.11184588, y: 0.21354733, z: 0.11184588}
   m_Children: []
   m_Father: {fileID: 4155534884407992}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.007821, y: 0.2457}
+  m_AnchoredPosition: {x: -0.015933, y: 0.28343}
   m_SizeDelta: {x: 2.7, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224932001961177546
