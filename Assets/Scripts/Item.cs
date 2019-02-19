@@ -10,8 +10,8 @@ public class Item : MonoBehaviour {
     public Vector3 InventoryPosition { get { return inventoryPosition; } }
 
     [SerializeField]
-    private Vector3 inventoryRotation;
+    private Vector3 inventoryRotation = new Vector3(100,100,100);
 
-    public Vector3 InventoryRotation { get { return inventoryRotation; } }
+    public Vector3 InventoryRotation { get { return this.inventoryRotation; } }
 
 }

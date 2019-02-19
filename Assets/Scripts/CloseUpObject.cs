@@ -10,10 +10,10 @@ public class CloseUpObject : MonoBehaviour {
     public Vector3 CloseUpDirection { get { return transform.TransformDirection(closeUpDirection); } }
 
     [SerializeField]
-    Vector3 closeUpPoint;
+    protected Vector3 closeUpPoint;
 
 
-    public Vector3 CloseUpPoint { get { return closeUpPoint; } }
+    public virtual Vector3 CloseUpPoint { get { return closeUpPoint; } }
 
     [SerializeField]
     Vector3 playerPoint;
@@ -21,11 +21,24 @@ public class CloseUpObject : MonoBehaviour {
 
 
     [SerializeField]
-    private float activationAngle = 90f;
+    protected float activationAngle = 90f;
 
     public float ActivationAngle { get { return activationAngle; } }
 
 
+    [SerializeField]
+    Renderer interactRenderer;
+
+    [SerializeField]
+    protected bool parentCamera = true;
+
+    public bool ParentCamera { get { return parentCamera; } }
+
+    public virtual void OnInteract()
+    {
+        if (interactRenderer)
+            interactRenderer.material.SetFloat("_MaxIntensity", 0);
+    }
 
     private void OnDrawGizmosSelected()
     {

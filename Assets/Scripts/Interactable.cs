@@ -8,6 +8,8 @@ public class Interactable : MonoBehaviour {
 
     [SerializeField]
     private string functionName;
+
+
     public virtual void Interact()
     {
 

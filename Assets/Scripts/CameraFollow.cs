@@ -107,8 +107,16 @@ public class CameraFollow : MonoBehaviour {
 
         if (closeUp)
         {
-            transform.position = Vector3.Slerp(closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpStartDistance, closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpDistance, (Time.time - closeUpStartTime) / 0.5f);
-            transform.rotation = Quaternion.LookRotation(closeUpTarget.TransformPoint(closeUpTargetLocation) - transform.position);
+            if (closeUpTarget)
+            {
+                transform.position = Vector3.Slerp(closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpStartDistance, closeUpTarget.TransformPoint(closeUpTargetLocation) + closeUpDirection * closeUpDistance, (Time.time - closeUpStartTime) / 0.5f);
+                transform.rotation = Quaternion.LookRotation(closeUpTarget.TransformPoint(closeUpTargetLocation) - transform.position);
+            }
+            else
+            {
+                transform.position = Vector3.Slerp(closeUpTargetLocation + closeUpDirection * closeUpStartDistance, closeUpTargetLocation + closeUpDirection * closeUpDistance, (Time.time - closeUpStartTime) / 0.5f);
+                transform.rotation = Quaternion.LookRotation(closeUpTargetLocation- transform.position);
+            }
         }
         else if (inCrawlSpace)
         {

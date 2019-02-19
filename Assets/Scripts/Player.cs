@@ -26,6 +26,7 @@ public class Player : MonoBehaviour {
 
     MyInputManager input;
 
+    [SerializeField]
     private float dampTime = 0.2f;
     private float turnDampTime = 0.2f;
 
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour {
     private float airMoveSpeed = 6;
     private float groundLossHeight;
     Vector3 slopeNormal;
+    Vector3 groundNormal;
 
 
     //Animator matching targets
@@ -75,9 +77,19 @@ public class Player : MonoBehaviour {
 
     //close up variables
     private bool closeUpEnabled = false;
+    public bool CloseUpEnabled { get { return closeUpEnabled; } }
 
     [SerializeField]
     private LayerMask interactLayers;
+
+    [SerializeField]
+    private LayerMask fpsInteractLayers;
+
+    //cached interactable material
+    Material interactMaterial;
+    float minIntensity = 0;
+    float maxIntensity = 3.5f;
+    float blinkSpeed = 2;
 
 
     //item that was last inspected in first person
@@ -192,11 +204,11 @@ public class Player : MonoBehaviour {
         }
 
 
-        if (!anim.GetBool("crouching") && !info.IsTag("rootmotion") && anim.GetFloat("Forward") < 70f && inputVector.magnitude <= 0.1f && !info.IsName("jogStop") && !info.IsName("walkStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
+        if (!anim.GetBool("crouching") && !info.IsTag("rootmotion") && anim.GetFloat("Forward") < 80f && inputVector.magnitude <= 0.1f && !info.IsName("jogStop") && !info.IsName("walkStop") && anim.IsInTransition(0) == false && canTransitionToStop && isGrounded)
         {
             if (Time.time < lastJogTime + stoppingWindow)
             {
-                anim.CrossFadeInFixedTime("jogStop", 0.05f);
+                anim.CrossFadeInFixedTime("jogStop", 0.3f);
                 canTransitionToStop = false;
             }
             else if (Time.time < lastWalkTime + stoppingWindow)
@@ -209,7 +221,13 @@ public class Player : MonoBehaviour {
         }
 
         if (input.CrouchButtonDown)
+        {
             anim.SetBool("crouching", !anim.GetBool("crouching"));
+
+            if (anim.GetFloat("Forward") > 100 && anim.IsInTransition(0) == false && info.IsTag("move"))
+                anim.CrossFadeInFixedTime("runningSlide", 0.2f);
+        }
+           
 
 
         if (isGrounded)
@@ -217,11 +235,14 @@ public class Player : MonoBehaviour {
         else
             gravity = Mathf.MoveTowards(gravity, 20, Time.deltaTime * 30);
 
-        if (inCrawlSpace)
+        if (inCrawlSpace && controller.enabled)
         {
             moveVector.y = -gravity;
             controller.Move(moveVector * Time.deltaTime * crawlSpaceSpeed);
         }
+
+
+    
 
     }
 	void Update () {
@@ -249,7 +270,7 @@ public class Player : MonoBehaviour {
             RaycastHit hit;
 
             //if (Physics.SphereCast(ray, 0.02f,out hit, 2, 1 << LayerMask.NameToLayer("FPSInteract"), QueryTriggerInteraction.Ignore))
-            if (Physics.Raycast(ray, out hit, 2, 1 << LayerMask.NameToLayer("FPSInteract"), QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(ray, out hit, 2, fpsInteractLayers, QueryTriggerInteraction.Ignore))
             {
                 if (hit.collider.GetComponent<Interactable>())
                     hit.collider.GetComponent<Interactable>().Interact();
@@ -389,7 +410,16 @@ public class Player : MonoBehaviour {
                             if (cu.GetComponent<Item>())
                                 inspectedItem = cu.GetComponent<Item>();
 
-                            CameraFollow.playerCam.ActivateCloseUp(cu.transform, cu.CloseUpPoint, cu.CloseUpDirection, true);
+                            cu.OnInteract();
+                            Transform t = cu.transform;
+                            if (cu.ParentCamera == false)
+                                t = null;
+
+                            if(t)
+                            CameraFollow.playerCam.ActivateCloseUp(t, cu.CloseUpPoint, cu.CloseUpDirection, true);
+                            else
+                                CameraFollow.playerCam.ActivateCloseUp(t, cu.transform.TransformPoint(cu.CloseUpPoint), cu.CloseUpDirection, true);
+                           
                             VirtualCursor.instance.Activate(true);
                             closeUpEnabled = true;
                             transform.position = cu.PlayerPoint;
@@ -657,7 +687,6 @@ public class Player : MonoBehaviour {
         if (!isGrounded)
             deltaMovement = Vector3.ProjectOnPlane(deltaMovement, slopeNormal);
 
-        Debug.DrawRay(transform.position, deltaMovement, Color.green);
 
         //controller.SimpleMove(deltaMovement / Time.deltaTime);
         if(controller.enabled)

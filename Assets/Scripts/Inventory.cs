@@ -5,6 +5,7 @@ using UnityEngine.Rendering.PostProcessing;
 [RequireComponent(typeof(Camera))]
 public class Inventory : MonoBehaviour {
 
+    [SerializeField]
     private List<Item> items;
 
     public static Inventory instance;
@@ -26,7 +27,8 @@ public class Inventory : MonoBehaviour {
 
     private DepthOfField dof;
 
-    int inventoryIndex = 0;
+
+    public int inventoryIndex = 0;
     private void Awake()
     {
         instance = this;
@@ -56,12 +58,12 @@ public class Inventory : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     inventoryIndex++;
-                    PositionItem(inventoryIndex);
+                    PositionItem(ref inventoryIndex);
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
                     inventoryIndex--;
-                    PositionItem(inventoryIndex);
+                    PositionItem(ref inventoryIndex);
                 }
             }
             lastFrame = System.DateTime.Now.Millisecond;
@@ -70,7 +72,7 @@ public class Inventory : MonoBehaviour {
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false)
         {
             Activate();
         }
@@ -80,6 +82,7 @@ public class Inventory : MonoBehaviour {
         items.Insert(0, item);
         item.gameObject.layer = LayerMask.NameToLayer("Inventory");
         item.transform.SetParent(transform);
+        item.gameObject.SetActive(false);
     }
 
     public void Activate()
@@ -107,14 +110,14 @@ public class Inventory : MonoBehaviour {
             inventoryCamera.enabled = true;
 
             if (items.Count > 0)
-                PositionItem(inventoryIndex);
+                PositionItem(ref inventoryIndex);
 
             StartCoroutine(inspectItem());
         }
 
     }
 
-    private void PositionItem(int index)
+    private void PositionItem(ref int index)
     {
         if (currentItem)
             currentItem.gameObject.SetActive(false);
@@ -128,5 +131,7 @@ public class Inventory : MonoBehaviour {
         currentItem.gameObject.SetActive(true);
         currentItem.transform.localPosition = currentItem.InventoryPosition;
         currentItem.transform.localEulerAngles = currentItem.InventoryRotation;
+
+        print("Should be " + currentItem.InventoryRotation + " is " + currentItem.transform.localEulerAngles);
     }
 }
