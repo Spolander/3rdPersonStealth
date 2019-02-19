@@ -132,6 +132,5 @@ public class Inventory : MonoBehaviour {
         currentItem.transform.localPosition = currentItem.InventoryPosition;
         currentItem.transform.localEulerAngles = currentItem.InventoryRotation;
 
-        print("Should be " + currentItem.InventoryRotation + " is " + currentItem.transform.localEulerAngles);
     }
 }

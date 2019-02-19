@@ -237,6 +237,7 @@ public class Player : MonoBehaviour {
 
         if (inCrawlSpace && controller.enabled)
         {
+            anim.SetFloat("Forward", 0);
             moveVector.y = -gravity;
             controller.Move(moveVector * Time.deltaTime * crawlSpaceSpeed);
         }
@@ -419,7 +420,8 @@ public class Player : MonoBehaviour {
                             CameraFollow.playerCam.ActivateCloseUp(t, cu.CloseUpPoint, cu.CloseUpDirection, true);
                             else
                                 CameraFollow.playerCam.ActivateCloseUp(t, cu.transform.TransformPoint(cu.CloseUpPoint), cu.CloseUpDirection, true);
-                           
+
+                            anim.SetFloat("Forward", 0);
                             VirtualCursor.instance.Activate(true);
                             closeUpEnabled = true;
                             transform.position = cu.PlayerPoint;
@@ -464,6 +466,7 @@ public class Player : MonoBehaviour {
 
     IEnumerator crawlEnterAnimation(bool enter,Vector3 start, Vector3 end)
     {
+        anim.SetFloat("Forward", 0);
         float lerp = 0;
 
         inCrawlSpaceTransition = true;
