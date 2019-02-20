@@ -37,6 +37,7 @@ public class Player : MonoBehaviour {
 
     bool canTransitionToStop = false;
     bool isRunning = false;
+    bool isWalking = false;
     bool isGrounded = true;
 
     float gravity;
@@ -173,6 +174,7 @@ public class Player : MonoBehaviour {
             moveVector.Normalize();
 
         isRunning = input.RunButtonHold;
+        isWalking = input.WalkButtonHold;
 
         if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard") && !inCrawlSpace)
         {
@@ -188,7 +190,13 @@ public class Player : MonoBehaviour {
            
 
         if (isRunning == false)
+        {
+            if(isWalking == false)
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
+            else
+                anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 25, dampTime, Time.deltaTime);
+        }
+           
         else
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 150, dampTime, Time.deltaTime);
 
