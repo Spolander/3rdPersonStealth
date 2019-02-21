@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 65720061566707584}
   - component: {fileID: 114967442820832024}
   - component: {fileID: 65755606272674712}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: elevator
   m_TagString: closeUpObject
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1709965174184830}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.79900074, y: 26.22, z: -4.7110014}
+  m_LocalPosition: {x: 0.79900074, y: 38.89, z: -4.7110014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4275455317461804}
@@ -336,7 +336,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1908616476426650}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.4, y: 4.39, z: -15.04}
+  m_LocalPosition: {x: 9.28, y: 4.39, z: -18.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4910620425017110}
@@ -461,7 +461,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553182532284270}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4312249791343032}
@@ -494,7 +494,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1787508926596968}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.7989998, y: 25.7, z: 2.625001}
+  m_LocalPosition: {x: 0.7989998, y: 38.370003, z: 2.625001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4275455317461804}
@@ -939,8 +939,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   brakeSpeed: 1
-  maxYPosition: 27.56
-  minYPosition: 4.21
+  maxYPosition: 41.29
+  minYPosition: 6.72
   lines:
   - {fileID: 120382618719183326}
   - {fileID: 120314124500460486}
@@ -977,6 +977,8 @@ MonoBehaviour:
   closeUpPoint: {x: 0, y: 0.26, z: 0}
   playerPoint: {x: 0, y: -0.44, z: -2.03}
   activationAngle: 90
+  interactRenderer: {fileID: 0}
+  parentCamera: 1
 --- !u!120 &120314124500460486
 LineRenderer:
   m_ObjectHideFlags: 1

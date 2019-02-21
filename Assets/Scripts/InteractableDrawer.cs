@@ -16,6 +16,9 @@ public class InteractableDrawer : CloseUpObject {
     public override Vector3 CloseUpPoint { get { return transform.InverseTransformPoint(startingPosition); } }
 
     Vector3 startingPosition;
+
+
+
     private void Start()
     {
         startingPosition = transform.TransformPoint(closeUpPoint);

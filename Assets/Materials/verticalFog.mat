@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: verticalFog
   m_Shader: {fileID: 4800000, guid: 056b3e00f61be3a45bc8e5cc4ac0fdd3, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _ALPHABLEND_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -67,15 +67,15 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _Edges: 0.1
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _IntersectionThresholdMax: 0.06
     - _Level: 0.1
     - _Metallic: 0
-    - _Mode: 0
+    - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RandomHeight: 0.8
@@ -83,18 +83,18 @@ Material:
     - _Shininess: 34.36
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _UVSec: 0
     - _WaveHeight: 1
     - _WaveLength: 7.36
     - _WaveSpeed: 2
-    - _ZWrite: 1
+    - _ZWrite: 0
     - _isInnerAlphaBlendOrColor: 0
     m_Colors:
     - _BaseColor: {r: 0.9669811, g: 0.99710363, b: 1, a: 0.5}
     - _BumpDirection: {r: 1, g: 1, b: -1, a: 1}
     - _BumpTiling: {r: 1, g: 1, b: -2, a: 3}
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.17924526, g: 0.13105196, b: 0.13947168, a: 1}
     - _EdgeColour1: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeColour2: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}

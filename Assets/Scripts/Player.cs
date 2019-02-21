@@ -19,6 +19,10 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private float crawlSpaceRotationSpeed = 150;
 
+    private float crawlSpaceStepDistance = 0.7f;
+
+    private Vector3 lastCrawlPosition;
+
     Camera mainCam;
     // Use this for initialization
 
@@ -248,6 +252,12 @@ public class Player : MonoBehaviour {
             anim.SetFloat("Forward", 0);
             moveVector.y = -gravity;
             controller.Move(moveVector * Time.deltaTime * crawlSpaceSpeed);
+
+            if (Vector3.Distance(transform.position, lastCrawlPosition) > crawlSpaceStepDistance)
+            {
+                lastCrawlPosition = transform.position;
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+            }
         }
 
 
