@@ -8,6 +8,8 @@ public class SoundEngine : MonoBehaviour {
 
     public AudioClip[] footstepSounds;
 
+    public AudioClip[] playerSounds;
+
     [Space(15)]
 
     public AudioMixer mixer;
@@ -40,6 +42,13 @@ public class SoundEngine : MonoBehaviour {
                     a = footstepSounds[i];
 
             AS.volume = 0.5f;
+        }
+        else if (soundType == SoundType.Player)
+        {
+            for (int i = 0; i < playerSounds.Length; i++)
+                if (playerSounds[i].name == clipName)
+                    a = playerSounds[i];
+
         }
 
         if (a == null)

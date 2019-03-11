@@ -106,6 +106,22 @@ public class MyInputManager : MonoBehaviour {
             }
         }
     }
+
+    public bool WalkButtonDown
+    {
+        get
+        {
+            if (controllerType == ControllerType.Keyboard)
+                return Input.GetButtonDown(controllerType.ToString() + "Walk");
+            else
+            {
+                if (device == null)
+                    return false;
+
+                return device.LeftTrigger;
+            }
+        }
+    }
     public Vector2 cameraInput
     {
         get

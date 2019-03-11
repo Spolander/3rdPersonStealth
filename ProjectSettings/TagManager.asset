@@ -12,6 +12,8 @@ TagManager:
   - crawlEntrance
   - outside
   - inside
+  - slidesurface
+  - crawlEntranceIcon
   layers:
   - Default
   - TransparentFX

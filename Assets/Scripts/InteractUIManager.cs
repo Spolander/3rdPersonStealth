@@ -37,9 +37,12 @@ public class InteractUIManager : MonoBehaviour {
     [SerializeField]
     private GameObject interactIconPrefab;
 
+
+    private float interactCheckInterval = 0.7f;
+    private float lastInteractCheck;
+
     List<InteractLinker> toRemove;
 
-    [System.Serializable]
     class InteractLinker
     {
         public GameObject target;
@@ -82,8 +85,44 @@ public class InteractUIManager : MonoBehaviour {
             Vector3 screenPos = main.WorldToScreenPoint(linkers[i].target.transform.position);
             screenPos.z = 0;
             linkers[i].icon.transform.position = screenPos;
-            if (main.transform.InverseTransformPoint(linkers[i].target.transform.position).z <= 0)
+            if (main.transform.InverseTransformPoint(linkers[i].target.transform.position).z <= 0 || interactLayers != (interactLayers | 1 << linkers[i].target.layer))
+            {
                 toRemove.Add(linkers[i]);
+                continue;
+            }
+
+            if (Time.time > lastInteractCheck + interactCheckInterval)
+            {
+                lastInteractCheck = Time.time;
+                if (linkers[i].target.tag == "closeUpObject")
+                {
+                    CloseUpObject cu = linkers[i].target.GetComponent<CloseUpObject>();
+
+                    if (Vector3.Angle(-transform.forward, Vector3.Scale(cu.CloseUpDirection, new Vector3(1, 0, 1))) > cu.ActivationAngle)
+                    {
+                        ShowIconInteract(linkers[i].icon, false);
+                        continue;
+                    }
+                    else if (Vector3.Distance(transform.position, linkers[i].target.transform.position) > Player.instance.InteractRadius * 2)
+                    {
+                        ShowIconInteract(linkers[i].icon, false);
+                        continue;
+                    }
+
+                    ShowIconInteract(linkers[i].icon, true);
+                }
+                else if (linkers[i].target.tag == "crawlEntranceIcon")
+                {
+                    if (Vector3.Distance(transform.position, linkers[i].target.transform.position) > 1 +(Player.instance.InteractRadius * 2))
+                    {
+                        print("distance to ogreat");
+                        ShowIconInteract(linkers[i].icon, false);
+                        continue;
+                    }
+                    else
+                        ShowIconInteract(linkers[i].icon, true);
+                }
+            }
         }
 
         if (toRemove.Count > 0)
@@ -138,10 +177,17 @@ public class InteractUIManager : MonoBehaviour {
     {
         for (int i = 0; i < l.Count; i++)
         {
+            ShowIconInteract(l[i].icon, false);
             l[i].icon.SetActive(false);
             linkers.Remove(l[i]);
         }
 
+    }
+
+    void ShowIconInteract(GameObject g, bool show)
+    {
+        g.GetComponent<Image>().enabled = !show;
+        g.transform.GetChild(0).gameObject.SetActive(show);
     }
     GameObject getIcon()
     {

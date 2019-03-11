@@ -95,4 +95,26 @@ public class OutdoorManager : MonoBehaviour {
             EnteredOutside(false);
     }
 
+    void PlayerDeath()
+    {
+        stealthMusic1.Stop();
+    }
+    void PlayerReset()
+    {
+        stealthMusic1.Stop();
+        enteredInside = false;
+        EnteredOutside(startOutside);
+    }
+    private void OnEnable()
+    {
+        Player.OnDeath += PlayerDeath;
+        Player.OnRestart += PlayerReset;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnDeath -= PlayerDeath;
+        Player.OnRestart -= PlayerReset;
+    }
+
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
     public static Player instance;
     Animator anim;
@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
 
 
     [SerializeField]
-    private float crawlSpaceSpeed = 2;
+    private float crawlSpaceSpeed = 1.3f;
 
     private bool inCrawlSpace = false;
     private bool inCrawlSpaceTransition = false;
@@ -27,6 +27,9 @@ public class Player : MonoBehaviour {
     // Use this for initialization
 
     Vector3 moveVector;
+
+    Vector3 startingPoint;
+    Quaternion startingRotation;
 
     MyInputManager input;
 
@@ -43,6 +46,9 @@ public class Player : MonoBehaviour {
     bool isRunning = false;
     bool isWalking = false;
     bool isGrounded = true;
+
+    float maxFallingHeight = 7.5f;
+    float lastGroundedHeight;
 
     float gravity;
 
@@ -90,15 +96,18 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private LayerMask fpsInteractLayers;
 
-    //cached interactable material
-    Material interactMaterial;
-    float minIntensity = 0;
-    float maxIntensity = 3.5f;
-    float blinkSpeed = 2;
+    private float interactRadius = 1;
+    public float InteractRadius { get { return interactRadius; } }
 
 
     //item that was last inspected in first person
     private Item inspectedItem;
+
+    public delegate void Death();
+    public static event Death OnDeath;
+
+    public delegate void Restart();
+    public static event Restart OnRestart;
 
     void Start () {
         controller = GetComponent<CharacterController>();
@@ -106,6 +115,9 @@ public class Player : MonoBehaviour {
         anim = GetComponent<Animator>();
         input = GetComponent<MyInputManager>();
         lastGroundedTime = 1;
+        lastGroundedHeight = transform.position.y;
+        startingPoint = transform.position;
+        startingRotation = transform.rotation;
 
 	}
 
@@ -178,7 +190,9 @@ public class Player : MonoBehaviour {
             moveVector.Normalize();
 
         isRunning = input.RunButtonHold;
-        isWalking = input.WalkButtonHold;
+
+        if (input.WalkButtonDown)
+            isWalking = !isWalking;
 
         if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard") && !inCrawlSpace)
         {
@@ -236,8 +250,13 @@ public class Player : MonoBehaviour {
         {
             anim.SetBool("crouching", !anim.GetBool("crouching"));
 
-            if (anim.GetFloat("Forward") > 100 && anim.IsInTransition(0) == false && info.IsTag("move"))
+            if (anim.GetFloat("Forward") > 100 && anim.IsInTransition(0) == false && info.IsTag("move") && isRunning)
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_"+Random.Range(1,4).ToString(), transform.position, transform, 0, 0);
                 anim.CrossFadeInFixedTime("runningSlide", 0.2f);
+                
+            }
+               
         }
            
 
@@ -266,6 +285,8 @@ public class Player : MonoBehaviour {
     }
 	void Update () {
 
+        if (Input.GetKeyDown(KeyCode.R))
+            OnRestart();
 
         if (closeUpEnabled == false)
         {
@@ -305,13 +326,13 @@ public class Player : MonoBehaviour {
             isGrounded = true;
             anim.SetBool("Grounded", true);
             VirtualCursor.instance.Activate(false);
+            GameplayCanvas.instance.HideUI(false);
+            //if (inspectedItem)
+            //{
+            //    Inventory.instance.AddItem(inspectedItem);
+            //    inspectedItem = null;
+            //}
 
-            if (inspectedItem)
-            {
-                Inventory.instance.AddItem(inspectedItem);
-                inspectedItem = null;
-            }
-               
         }
     }
     void CheckInteractions()
@@ -414,7 +435,7 @@ public class Player : MonoBehaviour {
             else if (input.InteractButtonDown)
             {
 
-                Collider[] cols = Physics.OverlapSphere(transform.position, 1, interactLayers, QueryTriggerInteraction.Collide);
+                Collider[] cols = Physics.OverlapSphere(transform.position, interactRadius, interactLayers, QueryTriggerInteraction.Collide);
 
                 if (cols != null)
                     for (int i = 0; i < cols.Length; i++)
@@ -439,6 +460,7 @@ public class Player : MonoBehaviour {
                             else
                                 CameraFollow.playerCam.ActivateCloseUp(t, cu.transform.TransformPoint(cu.CloseUpPoint), cu.CloseUpDirection, true);
 
+                            GameplayCanvas.instance.HideUI(true);
                             anim.SetFloat("Forward", 0);
                             VirtualCursor.instance.Activate(true);
                             closeUpEnabled = true;
@@ -527,6 +549,14 @@ public class Player : MonoBehaviour {
         Renderer[] rends = GetComponentsInChildren<Renderer>();
         for (int i = 0; i < rends.Length; i++)
             rends[i].enabled = show;
+
+        if(show)
+        {
+            Cloth c = GetComponentInChildren<Cloth>();
+            if (c != null)
+                c.ClearTransformMotion();
+        }
+            
     }
    
     void checkGrounded()
@@ -546,7 +576,20 @@ public class Player : MonoBehaviour {
             if (hit.normal.y > 0.7f)
             {
                 if (Time.time > lastGroundedTime + 0.7f)
-                    anim.CrossFadeInFixedTime("LandingHard", 0.05f);
+                {
+                    if (transform.position.y < groundLossHeight - 4)
+                    {
+                        if (anim.GetBool("landRoll") == false)
+                            anim.CrossFadeInFixedTime("LandingHard", 0.05f);
+                        else
+                        {
+                            anim.SetBool("landRoll", false);
+                            anim.CrossFadeInFixedTime("landRoll", 0.1f);
+                        }
+                    }
+
+                }
+
 
                 slopeNormal = Vector3.up;
                 isGrounded = true;
@@ -580,8 +623,20 @@ public class Player : MonoBehaviour {
         {
             if (hit.normal.y > 0.7f)
             {
-                if (Time.time > lastGroundedTime + 0.7f && transform.position.y < groundLossHeight - 4)
-                    anim.CrossFadeInFixedTime("LandingHard", 0.05f);
+                if (Time.time > lastGroundedTime + 0.7f)
+                {
+                    if (transform.position.y < groundLossHeight - 4)
+                    {
+                        if (anim.GetBool("landRoll") == false)
+                            anim.CrossFadeInFixedTime("LandingHard", 0.05f);
+                        else
+                        {
+                            anim.SetBool("landRoll", false);
+                            anim.CrossFadeInFixedTime("landRoll", 0.1f);
+                        }
+                    }
+                   
+                }
                 slopeNormal = Vector3.up;
                 isGrounded = true;
                 lastGroundedTime = Time.time;
@@ -666,10 +721,19 @@ public class Player : MonoBehaviour {
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        groundNormal = hit.normal;
         if (hit.normal.y > 0.7f)
         {
             isGrounded = true;
             anim.SetBool("Grounded", isGrounded);
+
+            if (lastGroundedHeight - transform.position.y > maxFallingHeight && Time.time > 1)
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "deathLand", transform.position, transform, 0, 0);
+                OnDeath();
+            }
+
+            lastGroundedHeight = transform.position.y;
         }
     }
 
@@ -715,6 +779,36 @@ public class Player : MonoBehaviour {
 
     }
 
+    private void OnEnable()
+    {
+        Player.OnDeath += PlayerDeath;
+        Player.OnRestart += PlayerRestart;
+    }
 
- 
+    private void OnDisable()
+    {
+        Player.OnDeath -= PlayerDeath;
+        Player.OnRestart -= PlayerRestart;
+    }
+
+    private void PlayerDeath()
+    {
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
+
+      
+    }
+
+
+    public void PlayerRestart()
+    {
+        transform.position = startingPoint;
+        transform.rotation = startingRotation;
+        lastGroundedHeight = transform.position.y;
+
+        anim.Play("Move");
+
+        Cloth c = GetComponentInChildren<Cloth>();
+        if (c != null)
+            c.ClearTransformMotion();
+    }
 }

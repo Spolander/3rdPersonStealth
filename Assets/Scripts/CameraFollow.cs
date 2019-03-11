@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using Cinemachine;
 public class CameraFollow : MonoBehaviour {
 
+
+    Camera cam;
     private Transform lockOntarget;
     public Transform LockOnTarget { get { return lockOntarget; } set { lockOntarget = value; } }
 
@@ -83,6 +85,7 @@ public class CameraFollow : MonoBehaviour {
 
     private void Awake()
     {
+        cam = GetComponent<Camera>();
         brain = GetComponent<CinemachineBrain>();
         input = FindObjectOfType(typeof(MyInputManager)) as MyInputManager;
         playerCam = this;
@@ -100,8 +103,6 @@ public class CameraFollow : MonoBehaviour {
     // Update is called once per frame
     void LateUpdate () {
 
-        if (Input.GetKeyDown(KeyCode.R))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 
 
@@ -142,11 +143,14 @@ public class CameraFollow : MonoBehaviour {
 
         if (closeUp == false)
         {
+
             if (brain)
                 brain.enabled = true;
             return;
         }
-          
+
+       
+
 
         closeUpTarget = target;
         closeUpTargetLocation = location;
