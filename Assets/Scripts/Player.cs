@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour {
     public static Player instance;
@@ -102,6 +103,8 @@ public class Player : MonoBehaviour {
 
     //item that was last inspected in first person
     private Item inspectedItem;
+
+
 
     public delegate void Death();
     public static event Death OnDeath;
@@ -213,10 +216,14 @@ public class Player : MonoBehaviour {
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
             else
                 anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 25, dampTime, Time.deltaTime);
+
         }
            
         else
+        {
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 150, dampTime, Time.deltaTime);
+        }
+            
 
         if (anim.GetFloat("Forward") >= 120)
         {

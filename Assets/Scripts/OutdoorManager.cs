@@ -35,6 +35,9 @@ public class OutdoorManager : MonoBehaviour {
     [SerializeField]
     private AudioSource stealthMusic1;
 
+    [SerializeField]
+    private AudioReverbZone insideReverbZone;
+
     private void Start()
     {
         windZone = FindObjectOfType(typeof(WindZone)) as WindZone;
@@ -74,6 +77,7 @@ public class OutdoorManager : MonoBehaviour {
 
         if (outside)
         {
+            insideReverbZone.enabled = false;
             windTarget = externalWind;
             randomTarget = randomWind;
         }
@@ -81,7 +85,9 @@ public class OutdoorManager : MonoBehaviour {
         {
             if (!enteredInside)
                 stealthMusic1.Play();
+
             enteredInside = true;
+            insideReverbZone.enabled = true;
             windTarget = Vector3.zero;
             randomTarget = Vector3.zero;
         }

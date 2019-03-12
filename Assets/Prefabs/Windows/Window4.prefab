@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4668875042169216}
   - component: {fileID: 33023764404886358}
   - component: {fileID: 23131481508736826}
+  - component: {fileID: 65952630261583918}
   m_Layer: 0
   m_Name: Window4
   m_TagString: Untagged
@@ -85,3 +86,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1588605270633332}
   m_Mesh: {fileID: 4300000, guid: cd3f395dce8976646a302e079054e92a, type: 3}
+--- !u!65 &65952630261583918
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1588605270633332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.5277286, y: 6.628614, z: 0.5945001}
+  m_Center: {x: 0, y: 0, z: 0}

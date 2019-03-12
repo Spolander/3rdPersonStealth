@@ -133,4 +133,13 @@ public class Inventory : MonoBehaviour {
         currentItem.transform.localEulerAngles = currentItem.InventoryRotation;
 
     }
+
+    public bool HasItem(string tag)
+    {
+        for (int i = 0; i < items.Count; i++)
+            if (items[i].tag == tag)
+                return true;
+
+        return false;
+    }
 }

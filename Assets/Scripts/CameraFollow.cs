@@ -83,8 +83,11 @@ public class CameraFollow : MonoBehaviour {
 
     CinemachineBrain brain;
 
+    private Light flashLight;
+
     private void Awake()
     {
+        flashLight = GetComponent<Light>();
         cam = GetComponent<Camera>();
         brain = GetComponent<CinemachineBrain>();
         input = FindObjectOfType(typeof(MyInputManager)) as MyInputManager;
@@ -171,6 +174,8 @@ public class CameraFollow : MonoBehaviour {
             transform.SetParent(Player.instance.transform);
             transform.localEulerAngles = Vector3.zero;
             transform.localPosition = crawlSpacePlayerPoint;
+            if (flashLight)
+                flashLight.enabled = true;
 
         }
         else
@@ -178,6 +183,9 @@ public class CameraFollow : MonoBehaviour {
             brain.enabled = true;
             inCrawlSpace = false;
             transform.SetParent(null);
+
+            if (flashLight)
+                flashLight.enabled = false;
         }
     }
 }
