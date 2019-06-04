@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerAnimationEvents : MonoBehaviour {
     Animator anim;
 
-    private float runningValueLimit = 110;
-    private float joggingValueLimit = 50;
+    private float runningValueLimit = 101;
+    private float joggingValueLimit = 90;
+    private float walkingValueLimit = 35;
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -26,7 +27,7 @@ public class PlayerAnimationEvents : MonoBehaviour {
     {
         float forward = anim.GetFloat("Forward");
 
-        if (forward < joggingValueLimit && forward > 10)
+        if (forward < joggingValueLimit-walkingValueLimit && forward > 10)
         {
             SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_walk_" + Random.Range(1, 6).ToString(), transform.position, transform, 1, 0);
         }
@@ -36,7 +37,7 @@ public class PlayerAnimationEvents : MonoBehaviour {
     {
         float forward = anim.GetFloat("Forward");
 
-        if (forward <= runningValueLimit && forward > 10)
+        if (forward <= runningValueLimit && forward >= joggingValueLimit &&  forward > 10)
         {
             SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_walk_" + Random.Range(1, 6).ToString(), transform.position, transform, 1, 0);
         }
