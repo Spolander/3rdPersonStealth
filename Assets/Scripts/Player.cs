@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
     public static Player instance;
     Animator anim;
     CharacterController controller;
 
     [SerializeField]
     private float rotateSpeed = 300;
+
+    Vector2 inputVector;
 
 
     [SerializeField]
@@ -112,7 +115,18 @@ public class Player : MonoBehaviour {
     public delegate void Restart();
     public static event Restart OnRestart;
 
-    void Start () {
+
+    private float defaultControllerOffset = 1.08f;
+    private float defaultControllerHeight = 2;
+
+    private float crouchingControllerOffset = 0.9f;
+    private float crouchingControllerHeight = 1.66f;
+
+
+    private float airDamping = 0.5f;
+
+    void Start()
+    {
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
@@ -122,14 +136,14 @@ public class Player : MonoBehaviour {
         startingPoint = transform.position;
         startingRotation = transform.rotation;
 
-	}
+    }
 
     private void Awake()
     {
         instance = this;
     }
 
-    
+
 
     // Update is called once per frame
     void MatchAnimator()
@@ -144,7 +158,7 @@ public class Player : MonoBehaviour {
 
         Vector3 location = matchingObject.TransformPoint(matchingLocation);
 
-     
+
 
         if (info.IsName("VaultMedium"))
         {
@@ -181,7 +195,15 @@ public class Player : MonoBehaviour {
         camForward.y = 0;
         camForward.Normalize();
 
-        Vector2 inputVector = input.inputVector;
+        if (isGrounded)
+        {
+            inputVector = input.inputVector;
+        }
+        else
+        {
+            inputVector = Vector2.MoveTowards(inputVector, input.inputVector, airDamping*Time.deltaTime);
+        }
+
 
         moveVector = camForward * inputVector.y + mainCam.transform.right * inputVector.x;
 
@@ -206,24 +228,24 @@ public class Player : MonoBehaviour {
         }
         else if (inCrawlSpace)
         {
-            transform.Rotate(Vector3.up * crawlSpaceRotationSpeed * Time.deltaTime*Input.GetAxisRaw("Mouse X"));
+            transform.Rotate(Vector3.up * crawlSpaceRotationSpeed * Time.deltaTime * Input.GetAxisRaw("Mouse X"));
         }
-           
+
 
         if (isRunning == false)
         {
-            if(isWalking == false)
-            anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
+            if (isWalking == false)
+                anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 100, dampTime, Time.deltaTime);
             else
                 anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 25, dampTime, Time.deltaTime);
 
         }
-           
+
         else
         {
             anim.SetFloat("Forward", transform.InverseTransformDirection(moveVector).z * 150, dampTime, Time.deltaTime);
         }
-            
+
 
         if (anim.GetFloat("Forward") >= 120)
         {
@@ -249,8 +271,8 @@ public class Player : MonoBehaviour {
                 anim.CrossFadeInFixedTime("walkStop", 0.25f);
                 canTransitionToStop = false;
             }
-           
-           
+
+
         }
 
         if (input.CrouchButtonDown)
@@ -259,13 +281,13 @@ public class Player : MonoBehaviour {
 
             if (anim.GetFloat("Forward") > 100 && anim.IsInTransition(0) == false && info.IsTag("move") && isRunning)
             {
-                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_"+Random.Range(1,4).ToString(), transform.position, transform, 0, 0);
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_" + Random.Range(1, 4).ToString(), transform.position, transform, 0, 0);
                 anim.CrossFadeInFixedTime("runningSlide", 0.2f);
-                
+
             }
-               
+
         }
-           
+
 
 
         if (isGrounded)
@@ -287,10 +309,11 @@ public class Player : MonoBehaviour {
         }
 
 
-    
+
 
     }
-	void Update () {
+    void Update()
+    {
 
         if (Input.GetKeyDown(KeyCode.R))
             OnRestart();
@@ -306,9 +329,9 @@ public class Player : MonoBehaviour {
         {
             FirstPersonInteraction();
         }
-     
-    
-	}
+
+
+    }
     void FirstPersonInteraction()
     {
         if (input.JumpButtonDown || Input.GetKeyDown(KeyCode.Mouse0))
@@ -346,7 +369,7 @@ public class Player : MonoBehaviour {
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-        Debug.DrawRay(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward*vaultDistance,Color.cyan);
+        Debug.DrawRay(transform.TransformPoint(0, vaultRayHeight, 0), transform.forward * vaultDistance, Color.cyan);
         Debug.DrawRay(transform.TransformPoint(0, obstacleHeight, 0), transform.forward * obstacleDistance, Color.red);
 
         Vector3 wallNormal = Vector3.zero;
@@ -462,8 +485,8 @@ public class Player : MonoBehaviour {
                             if (cu.ParentCamera == false)
                                 t = null;
 
-                            if(t)
-                            CameraFollow.playerCam.ActivateCloseUp(t, cu.CloseUpPoint, cu.CloseUpDirection, true);
+                            if (t)
+                                CameraFollow.playerCam.ActivateCloseUp(t, cu.CloseUpPoint, cu.CloseUpDirection, true);
                             else
                                 CameraFollow.playerCam.ActivateCloseUp(t, cu.transform.TransformPoint(cu.CloseUpPoint), cu.CloseUpDirection, true);
 
@@ -481,14 +504,14 @@ public class Player : MonoBehaviour {
                         else if (cols[i].tag == "crawlEntrance")
                         {
                             CrawlSpaceEntrance cse = cols[i].GetComponent<CrawlSpaceEntrance>();
-                            if(inCrawlSpace)
-                            StartCoroutine(crawlEnterAnimation(false, cse.EntrancePoint, cse.ExitPoint));
+                            if (inCrawlSpace)
+                                StartCoroutine(crawlEnterAnimation(false, cse.EntrancePoint, cse.ExitPoint));
                             else
                                 StartCoroutine(crawlEnterAnimation(true, cse.ExitPoint, cse.EntrancePoint));
                         }
                     }
 
-   
+
             }
         }
 
@@ -511,7 +534,7 @@ public class Player : MonoBehaviour {
         //}
     }
 
-    IEnumerator crawlEnterAnimation(bool enter,Vector3 start, Vector3 end)
+    IEnumerator crawlEnterAnimation(bool enter, Vector3 start, Vector3 end)
     {
         anim.SetFloat("Forward", 0);
         float lerp = 0;
@@ -519,14 +542,14 @@ public class Player : MonoBehaviour {
         inCrawlSpaceTransition = true;
         controller.enabled = false;
 
-        if(enter)
+        if (enter)
         {
             controller.height = 1f;
             controller.center = new Vector3(0, 0.6f, 0);
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }
-            
+
 
         while (lerp < 1)
         {
@@ -540,7 +563,7 @@ public class Player : MonoBehaviour {
 
         inCrawlSpace = enter;
 
-        if(!enter)
+        if (!enter)
         {
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(true);
@@ -549,7 +572,7 @@ public class Player : MonoBehaviour {
         }
 
         gravity = 0;
-            
+
     }
     void ShowMeshes(bool show)
     {
@@ -557,18 +580,18 @@ public class Player : MonoBehaviour {
         for (int i = 0; i < rends.Length; i++)
             rends[i].enabled = show;
 
-        if(show)
+        if (show)
         {
             Cloth c = GetComponentInChildren<Cloth>();
             if (c != null)
                 c.ClearTransformMotion();
         }
-            
+
     }
-   
+
     void checkGrounded()
     {
-        
+
         RaycastHit hit;
 
         Ray ray = new Ray(transform.TransformPoint(0f, 0.1f, 0f), Vector3.down);
@@ -604,21 +627,21 @@ public class Player : MonoBehaviour {
                 anim.SetBool("Grounded", isGrounded);
                 if (hit.collider.tag == "platform")
                     transform.SetParent(hit.collider.transform);
-                else if(!info.IsTag("rootmotion"))
+                else if (!info.IsTag("rootmotion"))
                     transform.SetParent(null);
 
                 return;
 
-             
+
             }
-            else if (Time.time > lastGroundedTime + groundedLossTime && (controller.velocity.y < -1 ||info.IsTag("rootmotion")))
+            else if (Time.time > lastGroundedTime + groundedLossTime && (controller.velocity.y < -1 || info.IsTag("rootmotion")))
             {
                 if (isGrounded)
                     groundLossHeight = transform.position.y;
                 isGrounded = false;
                 slopeNormal = hit.normal;
                 anim.SetBool("Grounded", isGrounded);
-                 if (!info.IsTag("rootmotion"))
+                if (!info.IsTag("rootmotion"))
 
                     transform.SetParent(null);
                 return;
@@ -626,7 +649,7 @@ public class Player : MonoBehaviour {
             else
                 slopeNormal = hit.normal;
         }
-        else if (Physics.Raycast(ray, out hit, groundCheckDistance*2, groundLayers, QueryTriggerInteraction.Ignore))
+        else if (Physics.Raycast(ray, out hit, groundCheckDistance * 2, groundLayers, QueryTriggerInteraction.Ignore))
         {
             if (hit.normal.y > 0.7f)
             {
@@ -642,7 +665,7 @@ public class Player : MonoBehaviour {
                             anim.CrossFadeInFixedTime("landRoll", 0.1f);
                         }
                     }
-                   
+
                 }
                 slopeNormal = Vector3.up;
                 isGrounded = true;
@@ -663,13 +686,13 @@ public class Player : MonoBehaviour {
                 isGrounded = false;
                 anim.SetBool("Grounded", isGrounded);
 
-                 if (!info.IsTag("rootmotion"))
+                if (!info.IsTag("rootmotion"))
                     transform.SetParent(null);
                 return;
             }
             else
             {
-                  if (!info.IsTag("rootmotion"))
+                if (!info.IsTag("rootmotion"))
                     transform.SetParent(null);
                 slopeNormal = hit.normal;
             }
@@ -690,7 +713,7 @@ public class Player : MonoBehaviour {
                     gravity = 3;
                     if (Physics.Raycast(transform.TransformPoint(0, 0.1f, 0), Vector3.down, 1.5f, groundLayers, QueryTriggerInteraction.Ignore))
                         return;
-                    
+
                     if (isGrounded)
                         groundLossHeight = transform.position.y;
                     isGrounded = false;
@@ -700,7 +723,7 @@ public class Player : MonoBehaviour {
                 }
                 else
                 {
-                if(controller.velocity.y <= -1 || info.IsTag("rootmotion"))
+                    if (controller.velocity.y <= -1 || info.IsTag("rootmotion"))
                     {
                         if (isGrounded)
                             groundLossHeight = transform.position.y;
@@ -712,15 +735,15 @@ public class Player : MonoBehaviour {
                     else
                         slopeNormal = hit.normal;
                 }
-               
-                
 
-               
+
+
+
             }
-             
+
         }
 
-     
+
     }
     private void OnDrawGizmos()
     {
@@ -752,10 +775,10 @@ public class Player : MonoBehaviour {
 
         if (!isGrounded)
         {
-            deltaMovement = Vector3.MoveTowards(deltaMovement, moveVector * Time.deltaTime*airMoveSpeed*anim.GetFloat("Forward")/100,Time.deltaTime*5);
+            deltaMovement = Vector3.MoveTowards(deltaMovement, moveVector * Time.deltaTime * airMoveSpeed * anim.GetFloat("Forward") / 100, Time.deltaTime * 5);
         }
 
-        deltaMovement.y = gravity * Time.deltaTime*-1;
+        deltaMovement.y = gravity * Time.deltaTime * -1;
 
         if (anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion") && anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f)
         {
@@ -766,7 +789,7 @@ public class Player : MonoBehaviour {
 
         //check for stairs when going downwards
         RaycastHit hit;
-        Ray ray = new Ray(transform.TransformPoint(0,0.1f,0.5f), Vector3.down);
+        Ray ray = new Ray(transform.TransformPoint(0, 0.1f, 0.5f), Vector3.down);
         float checkDistance = 1f;
         Debug.DrawRay(ray.origin, ray.direction.normalized * checkDistance, Color.black);
 
@@ -781,8 +804,8 @@ public class Player : MonoBehaviour {
 
 
         //controller.SimpleMove(deltaMovement / Time.deltaTime);
-        if(controller.enabled)
-        controller.Move(deltaMovement);
+        if (controller.enabled)
+            controller.Move(deltaMovement);
 
     }
 
@@ -802,7 +825,7 @@ public class Player : MonoBehaviour {
     {
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
 
-      
+
     }
 
 
@@ -817,5 +840,19 @@ public class Player : MonoBehaviour {
         Cloth c = GetComponentInChildren<Cloth>();
         if (c != null)
             c.ClearTransformMotion();
+    }
+
+    public void CrouchModeChange(bool crouching)
+    {
+        if (crouching)
+        {
+            controller.center = new Vector3(0, crouchingControllerOffset, 0);
+            controller.height = crouchingControllerHeight;
+        }
+        else
+        {
+            controller.center = new Vector3(0, defaultControllerOffset, 0);
+            controller.height = defaultControllerHeight;
+        }
     }
 }
