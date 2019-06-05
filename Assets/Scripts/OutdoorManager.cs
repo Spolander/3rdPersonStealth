@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OutdoorManager : MonoBehaviour {
+public class OutdoorManager : MonoBehaviour
+{
 
     [SerializeField]
     private WindZone windZone;
@@ -45,7 +46,7 @@ public class OutdoorManager : MonoBehaviour {
         cloth = GetComponentInChildren<Cloth>();
 
         externalWind = Vector3.Scale(windZone.transform.forward, externalWind);
-        randomWind = Vector3.Scale(windZone.transform.forward+windZone.transform.right, randomWind);
+        randomWind = Vector3.Scale(windZone.transform.forward + windZone.transform.right, randomWind);
 
 
         EnteredOutside(startOutside);
@@ -67,7 +68,7 @@ public class OutdoorManager : MonoBehaviour {
             else
                 windAudio.volume = Mathf.MoveTowards(windAudio.volume, 0.06f, Time.deltaTime);
         }
-       
+
 
     }
 
@@ -96,13 +97,34 @@ public class OutdoorManager : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "outside")
+        {
             EnteredOutside(true);
+
+            DarkAmbientActivator da = other.GetComponent<DarkAmbientActivator>();
+
+            if(da != null)
+            {
+                DarkAmbient.darkAmbientActivated = da.activate;
+            }
+        }
+
         else if (other.tag == "inside")
+        {
             EnteredOutside(false);
+
+            DarkAmbientActivator da = other.GetComponent<DarkAmbientActivator>();
+
+            if(da != null)
+            {
+                DarkAmbient.darkAmbientActivated = da.activate;
+            }
+        }
+
     }
 
     void PlayerDeath()
     {
+        DarkAmbient.darkAmbientActivated = false;
         stealthMusic1.Stop();
     }
     void PlayerReset()
