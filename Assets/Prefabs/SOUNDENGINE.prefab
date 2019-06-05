@@ -69,4 +69,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bc218e178f2f973428fbdb785fef8ff0, type: 3}
   - {fileID: 8300000, guid: 4bd765189a7428043b65351abb4fdf29, type: 3}
   - {fileID: 8300000, guid: 77c21623547644944b5a9db97e007504, type: 3}
+  - {fileID: 8300000, guid: a603604a333a1c14a821667e664e8b66, type: 3}
+  - {fileID: 8300000, guid: dab1b2fdae763fa4b8d324ececd95cc6, type: 3}
+  - {fileID: 8300000, guid: c438d44194fcae745983588bfa418f0c, type: 3}
+  - {fileID: 8300000, guid: c9a4e756aa7969a4e9eca503ca3d0891, type: 3}
+  playerSounds:
+  - {fileID: 8300000, guid: d959d0bc7200b634b97de351bf1fe36a, type: 3}
+  - {fileID: 8300000, guid: 2ae1ab2777625324fb7ea090f87f68fb, type: 3}
+  - {fileID: 8300000, guid: 4c41c279e9090f346b19e805b09e9e61, type: 3}
+  - {fileID: 8300000, guid: d39e62adf665d6c4195725f2ba874ad2, type: 3}
+  - {fileID: 8300000, guid: f8222e47564e45e41b0c146c4d08f2f3, type: 3}
   mixer: {fileID: 24100000, guid: 038708c480814df49a2a09266471d95d, type: 2}

@@ -15,6 +15,8 @@ TagManager:
   - slidesurface
   - crawlEntranceIcon
   - bridge
+  - metal
+  - pipe
   layers:
   - Default
   - TransparentFX

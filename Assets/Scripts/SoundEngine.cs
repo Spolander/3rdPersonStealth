@@ -25,8 +25,8 @@ public class SoundEngine : MonoBehaviour {
 
     public void PlaySoundAt(SoundType soundType,string clipName, Vector3 position, Transform parent, float spatial, float delay)
     {
-        if (soundType == SoundType.Footstep && Time.time < footStepPlayTime + 0.2f)
-            return;
+        // if (soundType == SoundType.Footstep && Time.time < footStepPlayTime + 0.2f)
+        //     return;
 
         footStepPlayTime = Time.time;
 

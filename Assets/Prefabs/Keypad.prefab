@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 65974733839706062}
   - component: {fileID: 114961939035547600}
   - component: {fileID: 114454997366119232}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Keypad
   m_TagString: closeUpObject
   m_Icon: {fileID: 0}
@@ -3753,6 +3753,8 @@ MonoBehaviour:
   closeUpPoint: {x: 0.05, y: 0.18, z: 1}
   playerPoint: {x: 0, y: -1.06, z: 1.06}
   activationAngle: 90
+  interactRenderer: {fileID: 0}
+  parentCamera: 1
 --- !u!114 &114963319572369386
 MonoBehaviour:
   m_ObjectHideFlags: 1

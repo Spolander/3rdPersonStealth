@@ -544,8 +544,8 @@ public class Player : MonoBehaviour
 
         if (enter)
         {
-            controller.height = 1f;
-            controller.center = new Vector3(0, 0.6f, 0);
+            controller.height = 0.8f;
+            controller.center = new Vector3(0, 0.4f, 0);
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }

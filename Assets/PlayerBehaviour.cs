@@ -18,10 +18,15 @@ public class PlayerBehaviour : StateMachineBehaviour
         }
 
         if (stateInfo.IsTag("crouch"))
-        {   
+        {
             Player.instance.CrouchModeChange(true);
-        }
 
+
+        }
+        if (stateInfo.IsName("LandingHard"))
+        {
+            animator.GetComponent<PlayerAnimationEvents>().LandingSound();
+        }
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
@@ -30,9 +35,10 @@ public class PlayerBehaviour : StateMachineBehaviour
     //}
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    if (stateInfo.IsTag("crouch"))
-        {   
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (stateInfo.IsTag("crouch"))
+        {
             Player.instance.CrouchModeChange(false);
         }
     }
