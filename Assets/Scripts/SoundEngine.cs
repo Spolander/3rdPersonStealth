@@ -61,6 +61,7 @@ public class SoundEngine : MonoBehaviour {
         AS.spatialBlend = spatial;
         AS.maxDistance = 25;
         AS.minDistance = 3;
+        AS.rolloffMode = AudioRolloffMode.Linear;
         AS.outputAudioMixerGroup = mixer.FindMatchingGroups("FX")[0];
         AS.PlayDelayed(delay);
         g.transform.SetParent(parent);

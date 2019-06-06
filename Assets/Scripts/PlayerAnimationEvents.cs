@@ -60,6 +60,7 @@ public class PlayerAnimationEvents : MonoBehaviour
             {
                 SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_walk_" + Random.Range(1, 6).ToString(), transform.position, transform, 1, 0);
             }
+
         }
     }
 
@@ -90,14 +91,12 @@ public class PlayerAnimationEvents : MonoBehaviour
     public void LandingSound()
     {
         string s = GetGroundTag();
-        print("tagi on " + s);
         if (s == "metal")
         {
             SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "footstepMetal" + Random.Range(1, 5).ToString(), transform.position, transform, 1, 0);
         }
         else if (s == "pipe")
         {
-            print("pipe");
             SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
         }
 

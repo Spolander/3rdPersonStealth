@@ -23,7 +23,7 @@ public class PlayerBehaviour : StateMachineBehaviour
 
 
         }
-        if (stateInfo.IsName("LandingHard"))
+        if (stateInfo.IsName("LandingHard") ||stateInfo.IsName("landRoll"))
         {
             animator.GetComponent<PlayerAnimationEvents>().LandingSound();
         }
