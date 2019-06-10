@@ -49,6 +49,7 @@ public class OutdoorManager : MonoBehaviour
         randomWind = Vector3.Scale(windZone.transform.forward + windZone.transform.right, randomWind);
 
 
+        startOutside = !Physics.Raycast(transform.TransformPoint(0,1,0), Vector3.up,100, 1 << LayerMask.NameToLayer("Default"),QueryTriggerInteraction.Ignore);
         EnteredOutside(startOutside);
     }
 

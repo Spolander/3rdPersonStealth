@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 
 
     [SerializeField]
-    private float crawlSpaceSpeed = 1.3f;
+    private float crawlSpaceSpeed = 2.5f;
 
     private bool inCrawlSpace = false;
     private bool inCrawlSpaceTransition = false;
@@ -216,7 +216,7 @@ public class Player : MonoBehaviour
 
         isRunning = input.RunButtonHold;
 
-        if (input.WalkButtonDown)
+        if (input.WalkButtonDown && !anim.GetBool("crouching"))
             isWalking = !isWalking;
 
         if (moveVector.magnitude > 0.1f && !info.IsTag("rootmotion") && !info.IsName("LandingHard") && !inCrawlSpace)
@@ -275,8 +275,9 @@ public class Player : MonoBehaviour
 
         }
 
-        if (input.CrouchButtonDown)
+        if (input.CrouchButtonDown && !inCrawlSpace && !inCrawlSpaceTransition)
         {
+            isWalking = false;
             anim.SetBool("crouching", !anim.GetBool("crouching"));
 
             if (anim.GetFloat("Forward") > 100 && anim.IsInTransition(0) == false && info.IsTag("move") && isRunning)
@@ -544,8 +545,7 @@ public class Player : MonoBehaviour
 
         if (enter)
         {
-            controller.height = 0.8f;
-            controller.center = new Vector3(0, 0.4f, 0);
+            
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }
@@ -558,6 +558,10 @@ public class Player : MonoBehaviour
 
             yield return null;
         }
+        controller.height = 0.8f;
+            controller.center = new Vector3(0, 0.4f, 0);
+        lastGroundedTime = Time.time;
+        isGrounded = true;
         inCrawlSpaceTransition = false;
         controller.enabled = true;
 
@@ -567,8 +571,8 @@ public class Player : MonoBehaviour
         {
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(true);
-            controller.height = 2;
-            controller.center = new Vector3(0, 1.08f, 0);
+
+            CrouchModeChange(anim.GetBool("crouching"));
         }
 
         gravity = 0;
@@ -824,7 +828,9 @@ public class Player : MonoBehaviour
     private void PlayerDeath()
     {
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
-
+        DarkAmbient.darkAmbientActivated = false;
+        SecretAreaTrigger.instance.ResetSecretArea();
+        SecretMusic.secretMusicActivated = false;
 
     }
 

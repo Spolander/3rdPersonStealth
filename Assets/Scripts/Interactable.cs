@@ -7,7 +7,7 @@ public class Interactable : MonoBehaviour {
     public MonoBehaviour behaviour;
 
     [SerializeField]
-    private string functionName;
+    protected string functionName;
 
 
     public virtual void Interact()

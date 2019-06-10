@@ -94,7 +94,7 @@ Material:
     - _BaseColor: {r: 0.9669811, g: 0.99710363, b: 1, a: 0.5}
     - _BumpDirection: {r: 1, g: 1, b: -1, a: 1}
     - _BumpTiling: {r: 1, g: 1, b: -2, a: 3}
-    - _Color: {r: 0.17924526, g: 0.13105196, b: 0.13947168, a: 1}
+    - _Color: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 1}
     - _EdgeColour1: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeColour2: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
