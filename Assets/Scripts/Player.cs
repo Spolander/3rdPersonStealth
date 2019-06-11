@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.SceneManagement;
+using Assets.Scripts.Cam.Effects;
 public class Player : MonoBehaviour
 {
     public static Player instance;
@@ -34,6 +35,11 @@ public class Player : MonoBehaviour
 
     Vector3 startingPoint;
     Quaternion startingRotation;
+
+
+    //Checkpoint position and rotation
+    Vector3 checkPointPosition;
+    Quaternion checkPointRotation;
 
     MyInputManager input;
 
@@ -133,8 +139,12 @@ public class Player : MonoBehaviour
         input = GetComponent<MyInputManager>();
         lastGroundedTime = 1;
         lastGroundedHeight = transform.position.y;
-        startingPoint = transform.position;
-        startingRotation = transform.rotation;
+
+        startingPoint = new Vector3(-50.693f, -16.69835f,-32);
+        startingRotation = Quaternion.Euler(0,-262,0);
+
+        checkPointPosition = transform.position;
+        checkPointRotation = transform.rotation;
 
     }
 
@@ -201,7 +211,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            inputVector = Vector2.MoveTowards(inputVector, input.inputVector, airDamping*Time.deltaTime);
+            inputVector = Vector2.MoveTowards(inputVector, input.inputVector, airDamping * Time.deltaTime);
         }
 
 
@@ -545,7 +555,7 @@ public class Player : MonoBehaviour
 
         if (enter)
         {
-            
+
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }
@@ -559,7 +569,7 @@ public class Player : MonoBehaviour
             yield return null;
         }
         controller.height = 0.8f;
-            controller.center = new Vector3(0, 0.4f, 0);
+        controller.center = new Vector3(0, 0.4f, 0);
         lastGroundedTime = Time.time;
         isGrounded = true;
         inCrawlSpaceTransition = false;
@@ -831,14 +841,47 @@ public class Player : MonoBehaviour
         DarkAmbient.darkAmbientActivated = false;
         SecretAreaTrigger.instance.ResetSecretArea();
         SecretMusic.secretMusicActivated = false;
+        LastNotesMusic.noteMusicActivated = false;
+        BreathActivator.breathActivated = false;
 
     }
 
-
-    public void PlayerRestart()
+    public void CompleteLoop()
     {
+        DarkAmbient.darkAmbientActivated = false;
+        SecretMusic.secretMusicActivated = false;
+        LastNotesMusic.noteMusicActivated = false;
+        BreathActivator.breathActivated = false;
         transform.position = startingPoint;
         transform.rotation = startingRotation;
+
+        checkPointPosition = startingPoint;
+        checkPointRotation = startingRotation;
+        lastGroundedHeight = transform.position.y;
+
+        anim.Play("Move");
+
+        Cloth c = GetComponentInChildren<Cloth>();
+        if (c != null)
+            c.ClearTransformMotion();
+
+        RetroSize.instance.Pixelate(false);
+        RetroSize.instance.enabled = false;
+
+        CameraFollow.playerCam.ActivateCloseUp(null, Vector3.zero, Vector3.zero, false);
+        ShowMeshes(true);
+        controller.enabled = true;
+        closeUpEnabled = false;
+        lastGroundedTime = Time.time;
+        isGrounded = true;
+        anim.SetBool("Grounded", true);
+        VirtualCursor.instance.Activate(false);
+        GameplayCanvas.instance.HideUI(false);
+    }
+    public void PlayerRestart()
+    {
+        transform.position = checkPointPosition;
+        transform.rotation = checkPointRotation;
         lastGroundedHeight = transform.position.y;
 
         anim.Play("Move");

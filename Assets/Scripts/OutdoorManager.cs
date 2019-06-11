@@ -39,6 +39,12 @@ public class OutdoorManager : MonoBehaviour
     [SerializeField]
     private AudioReverbZone insideReverbZone;
 
+    public static OutdoorManager instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         windZone = FindObjectOfType(typeof(WindZone)) as WindZone;
@@ -49,7 +55,7 @@ public class OutdoorManager : MonoBehaviour
         randomWind = Vector3.Scale(windZone.transform.forward + windZone.transform.right, randomWind);
 
 
-        startOutside = !Physics.Raycast(transform.TransformPoint(0,1,0), Vector3.up,100, 1 << LayerMask.NameToLayer("Default"),QueryTriggerInteraction.Ignore);
+        startOutside = !Physics.Raycast(transform.TransformPoint(0, 1, 0), Vector3.up, 100, 1 << LayerMask.NameToLayer("Default"), QueryTriggerInteraction.Ignore);
         EnteredOutside(startOutside);
     }
 
@@ -73,7 +79,7 @@ public class OutdoorManager : MonoBehaviour
 
     }
 
-    void EnteredOutside(bool outside)
+    public void EnteredOutside(bool outside)
     {
         this.outside = outside;
 
@@ -103,7 +109,7 @@ public class OutdoorManager : MonoBehaviour
 
             DarkAmbientActivator da = other.GetComponent<DarkAmbientActivator>();
 
-            if(da != null)
+            if (da != null)
             {
                 DarkAmbient.darkAmbientActivated = da.activate;
             }
@@ -115,7 +121,7 @@ public class OutdoorManager : MonoBehaviour
 
             DarkAmbientActivator da = other.GetComponent<DarkAmbientActivator>();
 
-            if(da != null)
+            if (da != null)
             {
                 DarkAmbient.darkAmbientActivated = da.activate;
             }
