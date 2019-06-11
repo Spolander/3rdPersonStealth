@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 64193882711447860}
   m_Layer: 0
   m_Name: air vent very short 1
-  m_TagString: Untagged
+  m_TagString: pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
