@@ -18,7 +18,7 @@ public class ElevatorButton : KeypadButton
 
 IEnumerator buttonAnimation()
     {
-
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"buttonPress",transform.position,transform,1,0);
         animationInProgress = true;
 
         float lerp = 0;

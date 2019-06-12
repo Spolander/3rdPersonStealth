@@ -27,6 +27,7 @@ public class Keypad : MonoBehaviour {
     {
         if (erase)
         {
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"inputNumber",transform.position,null,1,0);
             if(inputNumbers.Count > 0)
             {
                 inputNumbers.RemoveAt(inputNumbers.Count - 1);
@@ -49,6 +50,7 @@ public class Keypad : MonoBehaviour {
         {
             inputNumbers.Add(number);
             inputText.text = inputText.text + number.ToString();
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"inputNumber",transform.position,null,1,0);
         }
     }
 
@@ -59,6 +61,7 @@ public class Keypad : MonoBehaviour {
             //ouput error message
             inputText.text = "";
             inputNumbers.Clear();
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"keypadFail",transform.position,null,1,0);
         }
         else
         {
@@ -68,11 +71,12 @@ public class Keypad : MonoBehaviour {
 
                     inputText.text = "";
                     inputNumbers.Clear();
+                    SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"keypadFail",transform.position,null,1,0);
                     return;
                 }
             inputText.text = "";
             inputNumbers.Clear();
-
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"keypadSuccess",transform.position,null,1,0);
 
             target.Invoke(methodName, 0);
                    

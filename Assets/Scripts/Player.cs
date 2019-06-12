@@ -132,6 +132,8 @@ public class Player : MonoBehaviour
 
     private float airDamping = 0.5f;
 
+
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -146,6 +148,7 @@ public class Player : MonoBehaviour
 
         checkPointPosition = transform.position;
         checkPointRotation = transform.rotation;
+
 
     }
 
@@ -841,6 +844,8 @@ public class Player : MonoBehaviour
         dead = true;
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
         DarkAmbient.darkAmbientActivated = false;
+
+        if(SecretAreaTrigger.instance)
         SecretAreaTrigger.instance.ResetSecretArea();
         SecretMusic.secretMusicActivated = false;
         LastNotesMusic.noteMusicActivated = false;
@@ -888,6 +893,9 @@ public class Player : MonoBehaviour
         {
             cps[i].ResetCheckpoint();
         }
+
+        
+        Elevator.instance.ResetElevators();
     }
     public void PlayerRestart()
     {

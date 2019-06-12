@@ -115,7 +115,6 @@ public class InteractUIManager : MonoBehaviour {
                 {
                     if (Vector3.Distance(transform.position, linkers[i].target.transform.position) > 1 +(Player.instance.InteractRadius * 2))
                     {
-                        print("distance to ogreat");
                         ShowIconInteract(linkers[i].icon, false);
                         continue;
                     }

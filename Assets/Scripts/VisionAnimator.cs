@@ -23,7 +23,9 @@ public class VisionAnimator : MonoBehaviour
 
     AudioSource visionSound;
 
+	[SerializeField]
     private float minDurationBetweenVisions = 90f;
+	[SerializeField]
     private float maxDurationBetweenVisions = 180f;
 
 	[SerializeField]
@@ -47,6 +49,7 @@ public class VisionAnimator : MonoBehaviour
 
     public void ActivateVision(int vision)
     {
+		back.texture = backImages[0];
         visionSound.Play();
         sinTimer = 0;
         activated = true;

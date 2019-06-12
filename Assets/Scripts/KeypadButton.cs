@@ -33,7 +33,7 @@ public class KeypadButton : Interactable {
 
     IEnumerator buttonAnimation()
     {
-
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"buttonPress",transform.position,transform,1,0);
         animationInProgress = true;
 
         float lerp = 0;

@@ -31,6 +31,8 @@ public class Elevator : MonoBehaviour
 
     new AudioSource audio;
 
+    public static Elevator instance;
+
     void Start()
     {
         for (int i = 0; i < elevatorPoints.Length; i++)
@@ -46,6 +48,21 @@ public class Elevator : MonoBehaviour
 
         elevatorPowered = eEnabled;
 
+    }
+
+    void Awake()
+    {
+        instance = this;
+    }
+
+    public void ResetElevators()
+    {
+        for (int i = 0; i < elevatorPoints.Length; i++)
+        {
+            doors.CloseDoor(i);
+        }
+
+        CallElevator(6);
     }
 
     public void CallElevator(int floor)
@@ -68,7 +85,7 @@ public class Elevator : MonoBehaviour
         //close current floor doors
         doors.CloseDoor(currentFloor);
 
-        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorDoorClose", doors.getDoor(currentFloor).transform.TransformPoint(-1.76f,1,0), null, 1, 0);
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorDoorClose", doors.getDoor(currentFloor).transform.TransformPoint(-1.76f, 1, 0), null, 1, 0);
         moving = true;
         yield return new WaitForSeconds(2);
 
@@ -96,7 +113,7 @@ public class Elevator : MonoBehaviour
         //stop sound
         audio.Stop();
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorStop", transform.position, transform, 1, 0);
-        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorDoorOpen", doors.getDoor(currentFloor).transform.TransformPoint(-1.76f,1,0), null, 1, 0);
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorDoorOpen", doors.getDoor(currentFloor).transform.TransformPoint(-1.76f, 1, 0), null, 1, 0);
 
         yield return new WaitForSeconds(2);
         moving = false;

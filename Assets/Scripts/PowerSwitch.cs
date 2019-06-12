@@ -7,6 +7,8 @@ public class PowerSwitch : Interactable
 
     bool activated = false;
 
+    public MovingDoor door;
+
     
     public override void Interact()
     {
@@ -14,8 +16,11 @@ public class PowerSwitch : Interactable
             return;
 
         activated = true;
-        WindowCleanerElevator.windowCleanerPowerEnabled = true;
+        Elevator.elevatorPowered = true;
         GetComponentInParent<Animator>().Play("Activate");
+
+        if(door)
+        door.OpenDoor();
 
         //activate window cleaner stuff
 

@@ -142,4 +142,14 @@ public class WindowCleanerElevator : MonoBehaviour
             elevators[i].GoDown();
         }
     }
+
+    public static void ResetWindowCleanerElevators()
+    {
+        WindowCleanerElevator[] elevators = FindObjectsOfType(typeof(WindowCleanerElevator)) as WindowCleanerElevator[];
+
+        for (int i = 0; i < elevators.Length; i++)
+        {
+            elevators[i].GoUp();
+        }
+    }
 }

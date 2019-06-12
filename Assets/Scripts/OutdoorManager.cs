@@ -31,10 +31,6 @@ public class OutdoorManager : MonoBehaviour
     [SerializeField]
     private AudioSource windAudio;
 
-    public static bool enteredInside = false;
-
-    [SerializeField]
-    private AudioSource stealthMusic1;
 
     [SerializeField]
     private AudioReverbZone insideReverbZone;
@@ -93,10 +89,7 @@ public class OutdoorManager : MonoBehaviour
         }
         else
         {
-            if (!enteredInside)
-                stealthMusic1.Play();
 
-            enteredInside = true;
             insideReverbZone.enabled = true;
             windTarget = Vector3.zero;
             randomTarget = Vector3.zero;
@@ -134,13 +127,12 @@ public class OutdoorManager : MonoBehaviour
     void PlayerDeath()
     {
         DarkAmbient.darkAmbientActivated = false;
-        stealthMusic1.Stop();
+
     }
     void PlayerReset()
     {
         cloth.ClearTransformMotion();
-        stealthMusic1.Stop();
-        enteredInside = false;
+
         EnteredOutside(startOutside);
     }
     private void OnEnable()

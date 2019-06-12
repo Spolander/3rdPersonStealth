@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Loop2.unity
+    guid: b2baa7a37a6e6644da3bcb5774ca72d3
+  - enabled: 1
+    path: Assets/Scenes/Intermission.unity
+    guid: ccbc2d09c3c11144d9ec0f1b20a53610
   m_configObjects: {}
