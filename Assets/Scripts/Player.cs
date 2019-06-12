@@ -113,7 +113,8 @@ public class Player : MonoBehaviour
     //item that was last inspected in first person
     private Item inspectedItem;
 
-
+    private bool dead = false;
+    public bool Dead{get{return dead;}}
 
     public delegate void Death();
     public static event Death OnDeath;
@@ -326,7 +327,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftShift))
             OnRestart();
 
         if (closeUpEnabled == false)
@@ -837,6 +838,7 @@ public class Player : MonoBehaviour
 
     private void PlayerDeath()
     {
+        dead = true;
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
         DarkAmbient.darkAmbientActivated = false;
         SecretAreaTrigger.instance.ResetSecretArea();
@@ -877,9 +879,19 @@ public class Player : MonoBehaviour
         anim.SetBool("Grounded", true);
         VirtualCursor.instance.Activate(false);
         GameplayCanvas.instance.HideUI(false);
+
+
+        //reset checkpoints
+        Checkpoint[] cps = FindObjectsOfType(typeof(Checkpoint)) as Checkpoint[];
+
+        for(int i = 0; i < cps.Length; i++)
+        {
+            cps[i].ResetCheckpoint();
+        }
     }
     public void PlayerRestart()
     {
+        dead = false;
         transform.position = checkPointPosition;
         transform.rotation = checkPointRotation;
         lastGroundedHeight = transform.position.y;
@@ -889,8 +901,25 @@ public class Player : MonoBehaviour
         Cloth c = GetComponentInChildren<Cloth>();
         if (c != null)
             c.ClearTransformMotion();
-    }
 
+            if(WindowCleanerElevator.windowCleanerPowerEnabled)
+            WindowCleanerElevator.LowerAllWindowCleanerElevators();
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "checkpoint")
+        {
+            other.enabled = false;
+            checkPointPosition = transform.position;
+            checkPointRotation = transform.rotation;
+            Checkpoint cp = other.GetComponent<Checkpoint>();
+
+            if(cp.Tag == "vision")
+            {
+                VisionAnimator.visionReached = true;
+            }
+        }
+    }
     public void CrouchModeChange(bool crouching)
     {
         if (crouching)

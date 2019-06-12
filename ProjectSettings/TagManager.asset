@@ -17,6 +17,7 @@ TagManager:
   - bridge
   - metal
   - pipe
+  - checkpoint
   layers:
   - Default
   - TransparentFX

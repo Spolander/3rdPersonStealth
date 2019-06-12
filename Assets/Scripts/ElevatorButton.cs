@@ -23,8 +23,8 @@ IEnumerator buttonAnimation()
 
         float lerp = 0;
 
-        Vector3 originalPos = transform.position;
-        Vector3 targetPos = transform.position - transform.up * 0.015f;
+        Vector3 originalPos = transform.localPosition;
+        Vector3 targetPos = transform.localPosition - new Vector3(0,0,0.015f);
         while (lerp < 1)
         {
             lerp += Time.deltaTime / 0.25f;
@@ -32,11 +32,11 @@ IEnumerator buttonAnimation()
 
             if (lerp <= 0.5f)
             {
-                transform.position = Vector3.Lerp(originalPos, targetPos, lerp / 0.5f);
+                transform.localPosition = Vector3.Lerp(originalPos, targetPos, lerp / 0.5f);
             }
             else
             {
-                transform.position = Vector3.Lerp(targetPos,originalPos, (lerp-0.5f) / 0.5f);
+                transform.localPosition = Vector3.Lerp(targetPos,originalPos, (lerp-0.5f) / 0.5f);
             }
 
             yield return null;

@@ -41,6 +41,8 @@ public class OutdoorManager : MonoBehaviour
 
     public static OutdoorManager instance;
 
+    private float areaChangeSpeed = 0.6f;
+
     void Awake()
     {
         instance = this;
@@ -71,9 +73,9 @@ public class OutdoorManager : MonoBehaviour
         if (windAudio)
         {
             if (outside)
-                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 1, Time.deltaTime);
+                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 1, Time.deltaTime*areaChangeSpeed);
             else
-                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 0.06f, Time.deltaTime);
+                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 0.06f, Time.deltaTime*areaChangeSpeed);
         }
 
 
@@ -136,6 +138,7 @@ public class OutdoorManager : MonoBehaviour
     }
     void PlayerReset()
     {
+        cloth.ClearTransformMotion();
         stealthMusic1.Stop();
         enteredInside = false;
         EnteredOutside(startOutside);

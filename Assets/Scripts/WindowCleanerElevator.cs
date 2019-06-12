@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WindowCleanerElevator : MonoBehaviour {
+public class WindowCleanerElevator : MonoBehaviour
+{
 
 
     int direction = 0;
@@ -34,7 +35,7 @@ public class WindowCleanerElevator : MonoBehaviour {
 
     [SerializeField]
     private Transform[] linePoints;
-
+    public static bool windowCleanerPowerEnabled = false;
 
     private void Start()
     {
@@ -93,21 +94,21 @@ public class WindowCleanerElevator : MonoBehaviour {
                 Stop();
         }
 
-      
+
     }
 
     void MatchLines()
     {
-        
-            lines[0].SetPosition(0, linePoints[0].transform.position);
-            lines[0].SetPosition(1, linePoints[1].transform.position);
-            lines[1].SetPosition(0, linePoints[2].transform.position);
-            lines[1].SetPosition(1, linePoints[3].transform.position);
+
+        lines[0].SetPosition(0, linePoints[0].transform.position);
+        lines[0].SetPosition(1, linePoints[1].transform.position);
+        lines[1].SetPosition(0, linePoints[2].transform.position);
+        lines[1].SetPosition(1, linePoints[3].transform.position);
     }
 
     IEnumerator StopAnimation(int direction)
     {
-        
+
         stopping = true;
         float lerp = 0;
         Vector3 clampPos;
@@ -115,7 +116,7 @@ public class WindowCleanerElevator : MonoBehaviour {
         {
             MatchLines();
             lerp += Time.deltaTime;
-            transform.Translate(Vector3.up * direction * Time.deltaTime * brakeSpeed*curve.Evaluate(lerp));
+            transform.Translate(Vector3.up * direction * Time.deltaTime * brakeSpeed * curve.Evaluate(lerp));
             clampPos = transform.position;
             clampPos.y = Mathf.Clamp(clampPos.y, minYPosition, maxYPosition);
             transform.position = clampPos;
@@ -130,5 +131,15 @@ public class WindowCleanerElevator : MonoBehaviour {
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawLine(new Vector3(transform.position.x, minYPosition, transform.position.z), new Vector3(transform.position.x, maxYPosition, transform.position.z));
+    }
+
+    public static void LowerAllWindowCleanerElevators()
+    {
+        WindowCleanerElevator[] elevators = FindObjectsOfType(typeof(WindowCleanerElevator)) as WindowCleanerElevator[];
+
+        for (int i = 0; i < elevators.Length; i++)
+        {
+            elevators[i].GoDown();
+        }
     }
 }

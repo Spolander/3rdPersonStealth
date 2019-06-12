@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-public class SoundEngine : MonoBehaviour {
+public class SoundEngine : MonoBehaviour
+{
     public static SoundEngine instance;
 
 
@@ -10,20 +11,23 @@ public class SoundEngine : MonoBehaviour {
 
     public AudioClip[] playerSounds;
 
+    public AudioClip[] misc;
+
     [Space(15)]
 
     public AudioMixer mixer;
 
-    public enum SoundType {Player, Footstep};
+    public enum SoundType { Player, Footstep, Misc };
 
 
     private float footStepPlayTime;
-	// Use this for initialization
-	void Awake () {
+    // Use this for initialization
+    void Awake()
+    {
         instance = this;
-	}
+    }
 
-    public void PlaySoundAt(SoundType soundType,string clipName, Vector3 position, Transform parent, float spatial, float delay)
+    public void PlaySoundAt(SoundType soundType, string clipName, Vector3 position, Transform parent, float spatial, float delay)
     {
         // if (soundType == SoundType.Footstep && Time.time < footStepPlayTime + 0.2f)
         //     return;
@@ -50,6 +54,12 @@ public class SoundEngine : MonoBehaviour {
                     a = playerSounds[i];
 
         }
+        else if (soundType == SoundType.Misc)
+        {
+            for (int i = 0; i < misc.Length; i++)
+                if (misc[i].name == clipName)
+                    a = misc[i];
+        }
 
         if (a == null)
         {
@@ -65,7 +75,7 @@ public class SoundEngine : MonoBehaviour {
         AS.outputAudioMixerGroup = mixer.FindMatchingGroups("FX")[0];
         AS.PlayDelayed(delay);
         g.transform.SetParent(parent);
-        Destroy(g, a.length+delay);
+        Destroy(g, a.length + delay);
     }
-	
+
 }

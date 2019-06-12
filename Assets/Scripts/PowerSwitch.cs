@@ -7,12 +7,14 @@ public class PowerSwitch : Interactable
 
     bool activated = false;
 
+    
     public override void Interact()
     {
         if (activated)
             return;
 
         activated = true;
+        WindowCleanerElevator.windowCleanerPowerEnabled = true;
         GetComponentInParent<Animator>().Play("Activate");
 
         //activate window cleaner stuff

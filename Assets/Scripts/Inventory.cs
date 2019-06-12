@@ -72,7 +72,7 @@ public class Inventory : MonoBehaviour {
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false)
+        if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false && VisionAnimator.instance.Activated == false && Player.instance.Dead == false)
         {
             Activate();
         }
