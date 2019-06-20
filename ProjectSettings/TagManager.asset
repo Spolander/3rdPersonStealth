@@ -18,6 +18,8 @@ TagManager:
   - metal
   - pipe
   - checkpoint
+  - sea
+  - music
   layers:
   - Default
   - TransparentFX

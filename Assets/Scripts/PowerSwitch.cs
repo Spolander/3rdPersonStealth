@@ -16,11 +16,16 @@ public class PowerSwitch : Interactable
             return;
 
         activated = true;
-        Elevator.elevatorPowered = true;
+
+       
         GetComponentInParent<Animator>().Play("Activate");
 
         if(door)
-        door.OpenDoor();
+        {
+             Elevator.elevatorPowered = true;
+               door.OpenDoor();
+        }
+      
 
         //activate window cleaner stuff
 

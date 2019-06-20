@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
     private Item inspectedItem;
 
     private bool dead = false;
-    public bool Dead{get{return dead;}}
+    public bool Dead { get { return dead; } }
 
     public delegate void Death();
     public static event Death OnDeath;
@@ -143,8 +143,8 @@ public class Player : MonoBehaviour
         lastGroundedTime = 1;
         lastGroundedHeight = transform.position.y;
 
-        startingPoint = new Vector3(-50.693f, -16.69835f,-32);
-        startingRotation = Quaternion.Euler(0,-262,0);
+        startingPoint = new Vector3(-50.693f, -16.69835f, -32);
+        startingRotation = Quaternion.Euler(0, -262, 0);
 
         checkPointPosition = transform.position;
         checkPointRotation = transform.rotation;
@@ -417,6 +417,8 @@ public class Player : MonoBehaviour
                                 matchingLocation.y = hit.point.y;
                             }
 
+
+
                             matchingObject = hit.collider.transform;
                             matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
                             originalRotation = transform.rotation;
@@ -456,6 +458,13 @@ public class Player : MonoBehaviour
 
                                 matchingObject = hit.collider.transform;
                                 matchingLocation = matchingObject.transform.InverseTransformPoint(matchingLocation);
+
+                                if (Physics.Raycast(matchingObject.TransformPoint(matchingLocation), Vector3.up, 2, groundLayers, QueryTriggerInteraction.Ignore))
+                                    return;
+                                
+                                if(Physics.Raycast(transform.TransformPoint(0,0.5f,0), Vector3.up,3,groundLayers, QueryTriggerInteraction.Ignore))
+                                return;
+                         
 
                                 float heightDistance = hit.point.y - transform.position.y;
 
@@ -845,14 +854,20 @@ public class Player : MonoBehaviour
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
         DarkAmbient.darkAmbientActivated = false;
 
-        if(SecretAreaTrigger.instance)
-        SecretAreaTrigger.instance.ResetSecretArea();
+        if (SecretAreaTrigger.instance)
+            SecretAreaTrigger.instance.ResetSecretArea();
         SecretMusic.secretMusicActivated = false;
         LastNotesMusic.noteMusicActivated = false;
         BreathActivator.breathActivated = false;
 
-    }
+        StartCoroutine(RestartDelay());
 
+    }
+    IEnumerator RestartDelay()
+    {
+        yield return new WaitForSeconds(5);
+        OnRestart();
+    }
     public void CompleteLoop()
     {
         DarkAmbient.darkAmbientActivated = false;
@@ -889,12 +904,12 @@ public class Player : MonoBehaviour
         //reset checkpoints
         Checkpoint[] cps = FindObjectsOfType(typeof(Checkpoint)) as Checkpoint[];
 
-        for(int i = 0; i < cps.Length; i++)
+        for (int i = 0; i < cps.Length; i++)
         {
             cps[i].ResetCheckpoint();
         }
 
-        
+
         Elevator.instance.ResetElevators();
     }
     public void PlayerRestart()
@@ -910,22 +925,26 @@ public class Player : MonoBehaviour
         if (c != null)
             c.ClearTransformMotion();
 
-            if(WindowCleanerElevator.windowCleanerPowerEnabled)
+        if (WindowCleanerElevator.windowCleanerPowerEnabled)
             WindowCleanerElevator.LowerAllWindowCleanerElevators();
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "checkpoint")
+        if (other.tag == "checkpoint")
         {
             other.enabled = false;
             checkPointPosition = transform.position;
             checkPointRotation = transform.rotation;
             Checkpoint cp = other.GetComponent<Checkpoint>();
 
-            if(cp.Tag == "vision")
+            if (cp.Tag == "vision")
             {
                 VisionAnimator.visionReached = true;
             }
+        }
+        else if (other.tag == "sea" && !dead)
+        {
+            OnDeath();
         }
     }
     public void CrouchModeChange(bool crouching)

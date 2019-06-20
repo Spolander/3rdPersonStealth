@@ -15,22 +15,20 @@ public class OperatingTable : CloseUpObject {
 		RetroSize.instance.Pixelate(true);
 		RetroSize.instance.enabled = true;
 
-		//Invoke("ResetPlayer",6);
 		StartCoroutine(LoopRoutine());
-	}
-
-	private void ResetPlayer()
-	{
-		Player.instance.enabled = true;
-		Player.instance.CompleteLoop();
-		OutdoorManager.instance.EnteredOutside(true);
 	}
 
 	IEnumerator LoopRoutine()
 	{
-		yield return new WaitForSeconds(6);
+		
+		yield return new WaitForSeconds(10);
 
-		AsyncOperation a = SceneManager.LoadSceneAsync("Intermission");
+		string levelToLoad = "Intermission";
+
+		if(Time.time < 60f*15f)
+		levelToLoad = "Victory";
+		
+		AsyncOperation a = SceneManager.LoadSceneAsync(levelToLoad);
 
 		while(a.isDone == false)
 		yield return null;

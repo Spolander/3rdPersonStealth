@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class Intermission : MonoBehaviour {
+public class VictoryVision : MonoBehaviour {
 
 	public RawImage red;
-
-    public RawImage back;
-
 
     private float sinTimer;
 
@@ -18,27 +15,16 @@ public class Intermission : MonoBehaviour {
 
 	public AudioSource visionLoop;
 
-
-	bool fade = false;
 	
 	// Update is called once per frame
 	void Update () {
 
 		FlashImages();
 		
-		if(fade)
-		FadeImages();
 	}
 	void Start()
 	{
 		StartCoroutine(visionRoutine());
-	}
-	void FadeImages()
-	{
-		sinTimer += Time.deltaTime;
-
-		Color black = Color.Lerp(Color.white, Color.black, sinTimer/2);
-		back.color = black;
 	}
 	void FlashImages()
     {
@@ -46,7 +32,7 @@ public class Intermission : MonoBehaviour {
         red.uvRect = new Rect(Random.insideUnitCircle, Vector2.one);
 
         Color c = red.color;
-        c.a = Mathf.Lerp(5f / 255f, 78f / 255f, (Mathf.Sin(sinTimer) + 1) / 2);
+        c.a = Mathf.Lerp(0.5f,1, (Mathf.Sin(sinTimer) + 1) / 2);
         red.color = c;
 
 
@@ -56,18 +42,23 @@ public class Intermission : MonoBehaviour {
 	IEnumerator visionRoutine()
 	{
 		VisionAnimator.visionReached = false;
-		yield return new WaitForSeconds(30);
-		visionLoop.Stop();
 		vision.Play();
-		sinTimer = 0;
-		fade = true;
-
 		yield return new WaitForSeconds(vision.clip.length);
+		
+		sinTimer = 0;
 
-		AsyncOperation a = SceneManager.LoadSceneAsync("Loop2");
+		float timer = 0;
+		float max = visionLoop.volume;
+		while(timer < 1)
+		{
+			visionLoop.volume = (1-timer)*max;
+			timer += Time.deltaTime/3;
+			yield return null;
+		}
 
-		while(a.isDone == false)
-		yield return null;
+		yield return new WaitForSeconds(1);
+
+		Application.Quit();
 
 	}
 }
