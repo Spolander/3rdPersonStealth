@@ -20,6 +20,11 @@ public class KeycardReader : Interactable {
         {
             used = true;
             base.Interact();
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"keypadSuccess",transform.position,null,1,0);
+        }
+        else
+        {
+            SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc,"keypadFail",transform.position,null,1,0);
         }
        
     }
