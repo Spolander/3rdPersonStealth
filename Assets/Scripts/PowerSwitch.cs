@@ -17,6 +17,7 @@ public class PowerSwitch : Interactable
 
         activated = true;
 
+        GetComponent<AudioSource>().Play();
        
         GetComponentInParent<Animator>().Play("Activate");
 

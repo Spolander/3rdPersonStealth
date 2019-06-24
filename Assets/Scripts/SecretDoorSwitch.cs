@@ -15,7 +15,7 @@ public class SecretDoorSwitch : Interactable
         activated = true;
         GetComponentInParent<Animator>().Play("Activate");
 
-
+        GetComponent<AudioSource>().Play();
 		transform.parent.GetComponent<BoxCollider>().enabled = false;
 		transform.parent.gameObject.layer = LayerMask.NameToLayer("Default");
 
