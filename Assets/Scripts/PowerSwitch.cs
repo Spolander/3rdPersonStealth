@@ -9,7 +9,7 @@ public class PowerSwitch : Interactable
 
     public MovingDoor door;
 
-    
+
     public override void Interact()
     {
         if (activated)
@@ -18,15 +18,20 @@ public class PowerSwitch : Interactable
         activated = true;
 
         GetComponent<AudioSource>().Play();
-       
+
         GetComponentInParent<Animator>().Play("Activate");
 
-        if(door)
+        transform.parent.GetComponent<BoxCollider>().enabled = false;
+        transform.parent.gameObject.layer = LayerMask.NameToLayer("Default");
+
+        if (door)
         {
-             Elevator.elevatorPowered = true;
-               door.OpenDoor();
+            Elevator.elevatorPowered = true;
+            door.OpenDoor();
+
+            return;
         }
-      
+
 
         //activate window cleaner stuff
 
@@ -34,10 +39,9 @@ public class PowerSwitch : Interactable
 
         for (int i = 0; i < elevators.Length; i++)
         {
-			elevators[i].GoDown();
+            elevators[i].GoDown();
         }
 
-		transform.parent.GetComponent<BoxCollider>().enabled = false;
-		transform.parent.gameObject.layer = LayerMask.NameToLayer("Default");
+
     }
 }
