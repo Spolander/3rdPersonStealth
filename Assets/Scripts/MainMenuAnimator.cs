@@ -19,13 +19,39 @@ public class MainMenuAnimator : MonoBehaviour
 
     Bloom bloomLayer = null;
 
+    ColorGrading colorGrading = null;
+
+    public float exposureMax = -0.1f;
+    public float exposureMin = -10;
+    public float effectTime = 4;
+
 
     void Start()
     {
         // somewhere during initializing
         PostProcessVolume volume = gameObject.GetComponent<PostProcessVolume>();
         volume.profile.TryGetSettings(out bloomLayer);
+        volume.profile.TryGetSettings(out colorGrading);
 
+    }
+
+    public void FadeToBlack()
+    {
+        StartCoroutine(fadeAnimation());
+    }
+
+    IEnumerator fadeAnimation()
+    {
+        float timer = 0;
+
+        while(timer < 1)
+        {
+            colorGrading.postExposure.value = Mathf.Lerp(exposureMax, exposureMin, timer);
+            timer += Time.deltaTime/effectTime;
+            yield return null;
+        }
+
+       
     }
 
     void Update()
