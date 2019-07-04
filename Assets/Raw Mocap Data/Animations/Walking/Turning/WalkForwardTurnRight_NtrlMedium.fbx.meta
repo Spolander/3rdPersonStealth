@@ -195,11 +195,11 @@ ModelImporter:
       name: walkTurnRight
       takeName: _7_a_U1_M_P_WalkForwardTurnRight_NtrlMedium__Fb_Dia2m_No_0_PJ_1
       firstFrame: 46
-      lastFrame: 203
+      lastFrame: 136
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 0.3
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
@@ -223,11 +223,11 @@ ModelImporter:
       name: walkTurnLeft
       takeName: _7_a_U1_M_P_WalkForwardTurnRight_NtrlMedium__Fb_Dia2m_No_0_PJ_1
       firstFrame: 46
-      lastFrame: 203
+      lastFrame: 136
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
-      cycleOffset: 0
+      cycleOffset: 0.3
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
