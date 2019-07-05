@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23174836792746248}
   - component: {fileID: 65678021351857788}
   - component: {fileID: 114674896909419598}
+  - component: {fileID: 65599370026979584}
   m_Layer: 0
   m_Name: MovingDoor
   m_TagString: Untagged
@@ -86,6 +87,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1067991700352626}
   m_Mesh: {fileID: 4300000, guid: 96e35b531ca81de4da5581978846a725, type: 3}
+--- !u!65 &65599370026979584
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1067991700352626}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.66441, y: 11.64, z: 9.66}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65678021351857788
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -134,4 +147,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  animationLength: 2
+  animationLength: 1

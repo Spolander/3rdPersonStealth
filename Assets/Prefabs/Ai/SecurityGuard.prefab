@@ -357,6 +357,8 @@ GameObject:
   - component: {fileID: 81566085762750896}
   - component: {fileID: 114344042619341864}
   - component: {fileID: 114631377089672424}
+  - component: {fileID: 114429009807273206}
+  - component: {fileID: 114737332108034340}
   m_Layer: 10
   m_Name: AgentCamera
   m_TagString: MainCamera
@@ -405,7 +407,9 @@ GameObject:
   - component: {fileID: 195838568320624428}
   - component: {fileID: 114072073359760114}
   - component: {fileID: 95149575405456090}
-  m_Layer: 0
+  - component: {fileID: 114212180329931370}
+  - component: {fileID: 143976901585017042}
+  m_Layer: 23
   m_Name: SecurityGuard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +424,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4150549671526190}
-  - component: {fileID: 114381774155879836}
   m_Layer: 0
   m_Name: specops
   m_TagString: Untagged
@@ -795,14 +798,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1742697748236310}
-  m_LocalRotation: {x: -0, y: 0.9779804, z: -0, w: 0.20869702}
-  m_LocalPosition: {x: -6.88, y: 4.23, z: 8.11}
+  m_LocalRotation: {x: 0, y: 0.013272794, z: 0, w: 0.99991196}
+  m_LocalPosition: {x: 16.727962, y: 5.219, z: -10.822983}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4150549671526190}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 1.521, z: 0}
 --- !u!4 &4520471222865402
 Transform:
   m_ObjectHideFlags: 1
@@ -1002,14 +1005,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 5000
-  field of view: 60
+  far clip plane: 40
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3243831
+    m_Bits: 15826743
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1153,16 +1156,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec29c4ff837dcd84899b066573d7b317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSightDistance: 20
+  defaultSightDistance: 40
   defaultFieldOfView: 70
-  alertedSightDistance: 40
+  alertedSightDistance: 60
   alertedFieldOfView: 90
   visionBlockingLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65537
   state: 0
   patrolAreas:
-  - Frontyard
+  - Building1Floor1
+  - Building1Floor2
+  - Building1Floor3
+  - Building1Floor4
+  - Building1Floor5
+--- !u!114 &114212180329931370
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1742697748236310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9aaeeb6a04d4cd4389cc4b1d3172df5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114344042619341864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1222,15 +1240,15 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
---- !u!114 &114381774155879836
+--- !u!114 &114429009807273206
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1752747476635070}
+  m_GameObject: {fileID: 1650974323116712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aaeeb6a04d4cd4389cc4b1d3172df5, type: 3}
+  m_Script: {fileID: 11500000, guid: 4de86c737e6e6ad42af73a8d81053ce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114631377089672424
@@ -1244,11 +1262,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 30c76ed8c1bfdec468bc22dee567578c, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 49ade2fe9f8db754eb31c6ff7b523352, type: 2}
   isGlobal: 1
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &114737332108034340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1650974323116712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c250f528b2afef41bfd3a8d0cdc0447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: 646cdf2c8e6209c4da17ff665baf6a4d, type: 3}
+  verts_force: 0.354
+  verts_force_2: 0.489
+  scanLineColor: 0
 --- !u!137 &137319155110131100
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -1475,6 +1508,23 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.4723235, z: 0.022050485}
     m_Extent: {x: 0.15481621, y: 0.17953166, z: 0.17712457}
   m_DirtyAABB: 0
+--- !u!143 &143976901585017042
+CharacterController:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1742697748236310}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2.5
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1.23, z: 0}
 --- !u!195 &195838568320624428
 NavMeshAgent:
   m_ObjectHideFlags: 1
@@ -1488,11 +1538,11 @@ NavMeshAgent:
   m_Acceleration: 0
   avoidancePriority: 50
   m_AngularSpeed: 0
-  m_StoppingDistance: 0.2
+  m_StoppingDistance: 0.4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2.53
-  m_BaseOffset: 0
+  m_BaseOffset: -0.05
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4

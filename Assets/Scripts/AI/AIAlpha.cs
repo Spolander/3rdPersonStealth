@@ -11,7 +11,7 @@ public class AIAlpha : MonoBehaviour {
 
 	public enum SituationState{Normal, Alert};
 
-	
+	[SerializeField]
 	private SituationState situation;
 	public SituationState Situation{get{return situation;}}
 

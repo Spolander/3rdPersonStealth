@@ -11,6 +11,10 @@ public class PlayerAnimationEvents : MonoBehaviour
     private float walkingValueLimit = 35;
 
 
+    [SerializeField]
+    private float audioTriggerDistance = 25;
+
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -23,6 +27,7 @@ public class PlayerAnimationEvents : MonoBehaviour
         if (forward > runningValueLimit && forward > 10)
         {
             string tag = GetGroundTag();
+            AudioTrigger();
 
             if (tag == "metal")
             {
@@ -46,6 +51,7 @@ public class PlayerAnimationEvents : MonoBehaviour
 
         if (forward < joggingValueLimit - walkingValueLimit && forward > 10)
         {
+            AudioTrigger();
             string tag = GetGroundTag();
 
             if (tag == "metal")
@@ -61,6 +67,8 @@ public class PlayerAnimationEvents : MonoBehaviour
                 SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_walk_" + Random.Range(1, 6).ToString(), transform.position, transform, 1, 0);
             }
 
+            
+
         }
     }
 
@@ -70,6 +78,7 @@ public class PlayerAnimationEvents : MonoBehaviour
 
         if (forward <= runningValueLimit && forward >= joggingValueLimit && forward > 10)
         {
+            AudioTrigger();
             string tag = GetGroundTag();
 
             if (tag == "metal")
@@ -100,6 +109,7 @@ public class PlayerAnimationEvents : MonoBehaviour
             SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
         }
 
+        AudioTrigger();
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "land",transform.position, transform,1,0);
     }
 
@@ -119,4 +129,15 @@ public class PlayerAnimationEvents : MonoBehaviour
 
         return s;
     }
+
+    void AudioTrigger()
+	{
+		Collider[] cols = Physics.OverlapSphere(transform.position, audioTriggerDistance, 1 << LayerMask.NameToLayer("Guard"));
+
+		for(int i = 0; i < cols.Length; i++)
+		{
+			cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.Footstep,transform.position);
+		}
+
+	}
 }

@@ -133,6 +133,10 @@ public class Player : MonoBehaviour
     private float airDamping = 0.5f;
 
 
+    //VARIABLES FOR AI
+    private bool insideRestrictedArea = true;
+    public bool InsideRestrictedArea{get{return insideRestrictedArea;}}
+
 
     void Start()
     {

@@ -7,7 +7,7 @@ public class EnemyAnimationEvents : MonoBehaviour
     Animator anim;
 
     private float runningValueLimit = 101;
-    private float joggingValueLimit = 50;
+    private float joggingValueLimit = 40;
     private float walkingValueLimit = 10;
 
 
@@ -16,7 +16,7 @@ public class EnemyAnimationEvents : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-  
+
 
     public void WalkingFootStep()
     {
@@ -43,6 +43,29 @@ public class EnemyAnimationEvents : MonoBehaviour
     }
 
 
+    public void JoggingFootStep()
+    {
+        float forward = anim.GetFloat("Forward");
+
+        if (forward < runningValueLimit && forward > joggingValueLimit)
+        {
+            string tag = GetGroundTag();
+
+            if (tag == "metal")
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "footstepMetal" + Random.Range(1, 5).ToString(), transform.position, transform, 1, 0);
+            }
+            else if (tag == "pipe")
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+            }
+            else
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_run_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+            }
+
+        }
+    }
 
 
     string GetGroundTag()
