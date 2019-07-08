@@ -27,7 +27,7 @@ public class PowerSwitch : Interactable
         if (door)
         {
             Elevator.elevatorPowered = true;
-            door.OpenDoor();
+            door.OpenDoor(true);
 
             return;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using UnityEngine.Rendering.PostProcessing;
 public class AIAgent : MonoBehaviour
 {
 
@@ -59,7 +60,7 @@ public class AIAgent : MonoBehaviour
 
 
     //values used for animator.SetFloat damp value
-    protected float animatorDampValue = 0.1f;
+    protected float animatorDampValue = 0.15f;
 
     //Current target for the forward value
     protected float animatorForwardTarget = 0;
@@ -85,10 +86,13 @@ public class AIAgent : MonoBehaviour
     protected float lastLookAtTime = 0;
 
     //how far ahead we check to look
-    protected float lookAtDistance = 10;
+    protected float lookAtDistance = 15;
 
     //how much space there needs to be horizontally for the lookat to activate
     protected float lookAtWidth = 5;
+
+
+    protected float lookAtDamp = 1.6f;
 
     //maximum angle that the look at position can be from relative to the agent's direction
     protected float maxLookAtAngle = 80;
@@ -135,6 +139,31 @@ public class AIAgent : MonoBehaviour
     //ESCORT VARIABLES
     protected Vector3 playerLastSeenPosition;
 
+    protected float pathFindingInterval = 0.3f;
+
+    protected float lastPathfindingTime;
+
+    protected float escortStoppingDistance = 3;
+    protected float defaultStoppingDistance = 0.4f;
+
+    //how long from last player sighting
+    protected float timeSinceLastSighting = 0;
+
+    //how long till player is "lost"
+    protected float playerLoseDuration = 5;
+
+    //how long till to escalate to chase
+    protected float chaseThreshold = 30;
+
+
+    //if we have lost player and currently searching for him
+    private bool searchingForPlayer = false;
+
+
+    [Header("Debug variables")]
+    public bool cameraEnabled = false;
+
+
     // Use this for initialization
     void Awake()
     {
@@ -152,6 +181,10 @@ public class AIAgent : MonoBehaviour
         currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
 
         ChangeState(AIState.Patrol);
+
+        GetComponentInChildren<Camera>().enabled = cameraEnabled;
+        GetComponentInChildren<PostProcessVolume>().enabled = cameraEnabled;
+        GetComponentInChildren<AudioListener>().enabled = cameraEnabled;
     }
 
     // Update is called once per frame
@@ -183,6 +216,20 @@ public class AIAgent : MonoBehaviour
         lookingAt = false;
         lookAtWeightTarget = 0;
         bool playerSpotted = Awareness();
+
+        if (playerSpotted)
+        {
+            //if the situation has not been escalated yet, change state to escort
+            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            {
+                ChangeState(AIState.Escort);
+            }
+            else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+            {
+                ChangeState(AIState.Chase);
+            }
+
+        }
     }
 
     protected virtual void Patrol()
@@ -213,6 +260,30 @@ public class AIAgent : MonoBehaviour
         //execute awareness = look for player
         bool playerSpotted = Awareness();
 
+        if (playerSpotted)
+        {
+            //if the situation has not been escalated yet, change state to escort
+            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            {
+                ChangeState(AIState.Escort);
+            }
+            else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+            {
+                ChangeState(AIState.Chase);
+            }
+
+        }
+
+        if (searchingForPlayer)
+        {
+            animatorForwardTarget = 50;
+            timeSinceLastSighting += Time.deltaTime;
+
+            if (timeSinceLastSighting > chaseThreshold && AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            {
+                AIAlpha.instance.ReportPlayerLost();
+            }
+        }
 
         //keep track of heard footsteps
         if (Time.time > lastFootStepTime + footStepMemory)
@@ -290,6 +361,7 @@ public class AIAgent : MonoBehaviour
             if (angle <= fov && distance <= sightDistance)
             {
                 lastPlayerSpotted = true;
+                playerLastSeenPosition = Player.instance.transform.position;
                 return true;
             }
         }
@@ -312,7 +384,7 @@ public class AIAgent : MonoBehaviour
             if (investigateTimer > investigateDuration)
             {
                 investigationCount++;
-                anim.SetBool("LookingAround",false);
+                anim.SetBool("LookingAround", false);
                 lookingAt = false;
                 lookAtWeightTarget = 0;
                 investigateTimer = 0;
@@ -323,11 +395,11 @@ public class AIAgent : MonoBehaviour
 
             investigateLocationReached = true;
             animatorForwardTarget = 0;
-
+            agent.velocity = Vector3.zero;
             //look left and right and not towards a wall
             LookLeftAndRight();
 
-            anim.SetBool("LookingAround",true);
+            anim.SetBool("LookingAround", true);
         }
         else if (!investigateLocationReached)
         {
@@ -338,7 +410,21 @@ public class AIAgent : MonoBehaviour
         }
 
 
+        bool playerSpotted = Awareness();
 
+        if (playerSpotted)
+        {
+            //if the situation has not been escalated yet, change state to escort
+            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            {
+                ChangeState(AIState.Escort);
+            }
+            else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+            {
+                ChangeState(AIState.Chase);
+            }
+
+        }
 
         SetAnimatorValues();
 
@@ -347,13 +433,82 @@ public class AIAgent : MonoBehaviour
     protected virtual void Escort()
     {
         //follow player
-        //match own speed with player's speed
+
         bool playerSpotted = Awareness();
 
-        if(playerSpotted)
+
+        if (Time.time > lastPathfindingTime + pathFindingInterval)
         {
-            playerLastSeenPosition = Player.instance.transform.position;
+            NavMeshHit hit;
+            NavMesh.SamplePosition(playerLastSeenPosition, out hit, 5, NavMesh.AllAreas);
+            if (hit.hit)
+            {
+                lastPathfindingTime = Time.time;
+                agent.SetDestination(hit.position);
+            }
+
         }
+
+        if (agent.remainingDistance >= agent.stoppingDistance)
+        {
+            //match own speed with player's speed
+            //normalize player's speed 0-150 to 0-100
+            float playerSpeed = Player.instance.CurrentSpeed;
+            playerSpeed = Mathf.Lerp(0, 100, playerSpeed / 150);
+            animatorForwardTarget = Mathf.MoveTowards(animatorForwardTarget, Mathf.Clamp(playerSpeed, 25, 100), Time.deltaTime * 35);
+
+            if (animatorForwardTarget < 25)
+                animatorForwardTarget = 25;
+            RotateTowardsSteeringTarget();
+        }
+        else
+        {
+            animatorForwardTarget = 0;
+            agent.velocity = Vector3.zero;
+
+            //Rotate towards player
+
+        }
+
+
+        if (playerSpotted)
+        {
+            //if we see that the player has exited the area
+            if (Player.instance.InsideRestrictedArea == false)
+            {
+                AIAlpha.instance.ReportPlayerOutsideArea(this);
+            }
+            lookingAt = true;
+            lookAtWeightTarget = 1;
+            lookAtPoint = Player.instance.transform.TransformPoint(0, 1.5f, 0);
+            playerLastSeenPosition = Player.instance.transform.position;
+            timeSinceLastSighting = 0;
+        }
+        else
+        {
+            //increase time since last 
+            timeSinceLastSighting += Time.deltaTime;
+
+            //change to patrol current or closest floor if player hasn't been seen
+            if (timeSinceLastSighting > playerLoseDuration)
+            {
+                ChangeState(AIState.Patrol);
+
+                //get closest floor 
+                currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
+                currentPathIndex++;
+
+                currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
+
+                searchingForPlayer = true;
+                agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
+                print(currentPath.transform.name);
+            }
+            LookAround();
+        }
+
+        SetAnimatorValues();
+
     }
     void ChangeState(AIState state)
     {
@@ -365,15 +520,23 @@ public class AIAgent : MonoBehaviour
             currentState = Patrol;
             //start the path from the beginning based on index
             currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
-
+            agent.stoppingDistance = defaultStoppingDistance;
             agent.SetDestination(NextWayPoint());
         }
         else if (state == AIState.Investigate)
         {
             //Set the action
+            agent.stoppingDistance = defaultStoppingDistance;
             currentState = Investigate;
             investigateLocationReached = false;
             agent.SetDestination(investigateLocation);
+        }
+        else if (state == AIState.Escort)
+        {
+            agent.stoppingDistance = escortStoppingDistance;
+            currentState = Escort;
+            investigateLocationReached = false;
+            agent.SetDestination(playerLastSeenPosition);
         }
     }
 
@@ -408,6 +571,7 @@ public class AIAgent : MonoBehaviour
                 {
                     if (state == AIState.Chase || state == AIState.Escort)
                     {
+                        playerLastSeenPosition = position;
                         agent.SetDestination(position);
                     }
                     else
@@ -455,7 +619,7 @@ public class AIAgent : MonoBehaviour
     {
         anim.SetFloat("Forward", animatorForwardTarget, animatorDampValue, Time.deltaTime);
         anim.SetFloat("TurnAngle", animatorTurningTarget, animatorDampValue, Time.deltaTime);
-        lookAtWeight = Mathf.MoveTowards(lookAtWeight, lookAtWeightTarget, Time.deltaTime * animatorDampValue);
+        lookAtWeight = Mathf.MoveTowards(lookAtWeight, lookAtWeightTarget, Time.deltaTime * lookAtDamp);
 
     }
     Vector3 NextWayPoint()
@@ -546,6 +710,9 @@ public class AIAgent : MonoBehaviour
     {
         Vector3 velocity = anim.deltaPosition / Time.deltaTime;
         agent.velocity = velocity;
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+            agent.velocity = Vector3.zero;
     }
 
     void OnAnimatorIK()
@@ -557,6 +724,14 @@ public class AIAgent : MonoBehaviour
         anim.SetLookAtWeight(lookAtWeight, 0.2f, 1f, 0, 0.5f);
     }
 
+    //basically return everyone to their patrols, except for the one guy guarding the border
+    public virtual void ReturnToPositions()
+    {
+        if (state != AIState.Guard)
+        {
+            ChangeState(AIState.Patrol);
+        }
+    }
     void OnTriggerEnter(Collider col)
     {
         MovingDoor m = col.GetComponent<MovingDoor>();

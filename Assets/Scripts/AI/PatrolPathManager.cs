@@ -25,4 +25,25 @@ public class PatrolPathManager : MonoBehaviour {
 		return path;
 	}
 
+	public PatrolPath GetClosestFloorPath(float height)
+	{
+		float y = Mathf.Infinity;
+		int pathIndex = 0;
+
+		for(int i = 0;i < patrolPaths.Count; i++)
+		{
+
+			float distance = Mathf.Abs(patrolPaths[i].transform.position.y-height);
+
+
+			if(distance < y)
+			{
+				pathIndex = i;
+				y = distance;
+			}
+		}
+
+		return patrolPaths[pathIndex];
+	}
+
 }

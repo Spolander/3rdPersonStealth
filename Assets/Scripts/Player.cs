@@ -137,6 +137,8 @@ public class Player : MonoBehaviour
     private bool insideRestrictedArea = true;
     public bool InsideRestrictedArea{get{return insideRestrictedArea;}}
 
+    public float CurrentSpeed{get{return anim.GetFloat("Forward");}}
+
 
     void Start()
     {

@@ -24,4 +24,21 @@ public class PatrolPath : MonoBehaviour {
 			}
 		}
 	}
+
+	public int GetClosestWaypointIndex(Vector3 source)
+	{
+		int index = 0;
+		float distance = Mathf.Infinity;
+
+		for(int i = 0; i < waypoints.Length; i++)
+		{
+			float tempDistance = Vector3.Distance(transform.TransformPoint(waypoints[i]), source);
+			if(tempDistance < distance)
+			{
+				index = i;
+			}
+		}
+
+		return index;
+	}
 }

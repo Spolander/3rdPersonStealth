@@ -42,4 +42,23 @@ public class AIAlpha : MonoBehaviour {
 	{
 
 	}
+
+	//agent calls this when the player exited the area
+	public void ReportPlayerOutsideArea(AIAgent agent)
+	{
+		ReturnToPositions();
+	}
+
+	public void ReportPlayerLost()
+	{
+		situation = SituationState.Alert;
+	}
+
+	private void ReturnToPositions()
+	{
+		for(int i = 0; i < agents.Count; i++)
+		{
+			agents[i].ReturnToPositions();
+		}
+	}
 }

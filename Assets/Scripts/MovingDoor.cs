@@ -35,12 +35,42 @@ public class MovingDoor : MonoBehaviour
         state = DoorState.Closed;
         startPos = transform.localPosition;
     }
+    public void OpenDoor(bool permanent = false)
+    {
+        if (state == DoorState.Opened || animationInProgress)
+            return;
+
+        //targetPosition = transform.TransformPoint(targetPosition);
+
+        if (permanent)
+        {
+            BoxCollider[] colliders = GetComponents<BoxCollider>();
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].isTrigger)
+                    colliders[i].enabled = false;
+            }
+        }
+
+        StartCoroutine(doorAnimation());
+
+    }
     public void OpenDoor()
     {
         if (state == DoorState.Opened || animationInProgress)
             return;
 
         //targetPosition = transform.TransformPoint(targetPosition);
+
+
+            BoxCollider[] colliders = GetComponents<BoxCollider>();
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].isTrigger)
+                    colliders[i].enabled = false;
+            }
 
         StartCoroutine(doorAnimation());
 
@@ -54,12 +84,12 @@ public class MovingDoor : MonoBehaviour
 
         if (openQueue)
         {
-            OpenDoor();
+            OpenDoor(false);
         }
     }
     public void CloseDoor()
     {
-        if (state == DoorState.Closed|| animationInProgress)
+        if (state == DoorState.Closed || animationInProgress)
             return;
 
         //targetPosition = transform.TransformPoint(targetPosition);
