@@ -70,7 +70,7 @@ public class AIAgent : MonoBehaviour
     protected float animatorTurningTarget = 0;
 
     //character rotation speed
-    protected float rotationSpeed = 120;
+    protected float rotationSpeed = 150;
 
 
     //Random looking variables
@@ -109,6 +109,9 @@ public class AIAgent : MonoBehaviour
 
     //INVESTIGATE STATE VARIABLES
     //the center point of interest
+
+    protected bool playerSpotted = false;
+    public bool PlayerSpotted { get { return playerSpotted; } }
     protected Vector3 investigateLocation;
 
     //how long to investigate the area
@@ -134,6 +137,8 @@ public class AIAgent : MonoBehaviour
     //last time when a footstep was heard
     protected float lastFootStepTime;
 
+    bool calculatingPath = false;
+
 
 
     //ESCORT VARIABLES
@@ -157,8 +162,13 @@ public class AIAgent : MonoBehaviour
 
 
     //if we have lost player and currently searching for him
-    private bool searchingForPlayer = false;
+    protected bool searchingForPlayer = false;
 
+
+    //GUARD VARIABLES
+    //how long will the agent stay guarding the position
+    protected float guardDuration = 20;
+    protected float guardTimer = 0;
 
     [Header("Debug variables")]
     public bool cameraEnabled = false;
@@ -215,7 +225,7 @@ public class AIAgent : MonoBehaviour
         animatorForwardTarget = 0;
         lookingAt = false;
         lookAtWeightTarget = 0;
-        bool playerSpotted = Awareness();
+        playerSpotted = Awareness();
 
         if (playerSpotted)
         {
@@ -258,21 +268,28 @@ public class AIAgent : MonoBehaviour
         }
 
         //execute awareness = look for player
-        bool playerSpotted = Awareness();
+        playerSpotted = Awareness();
 
         if (playerSpotted)
         {
-            //if the situation has not been escalated yet, change state to escort
-            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            if (Player.instance.InsideRestrictedArea)
             {
-                ChangeState(AIState.Escort);
-            }
-            else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
-            {
-                ChangeState(AIState.Chase);
+                searchingForPlayer = false;
+                //if the situation has not been escalated yet, change state to escort
+                if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+                {
+                    ChangeState(AIState.Escort);
+                }
+                else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+                {
+                    ChangeState(AIState.Chase);
+                }
+
             }
 
         }
+
+
 
         if (searchingForPlayer)
         {
@@ -362,6 +379,7 @@ public class AIAgent : MonoBehaviour
             {
                 lastPlayerSpotted = true;
                 playerLastSeenPosition = Player.instance.transform.position;
+                timeSinceLastSighting = 0;
                 return true;
             }
         }
@@ -410,10 +428,14 @@ public class AIAgent : MonoBehaviour
         }
 
 
-        bool playerSpotted = Awareness();
+        playerSpotted = Awareness();
 
         if (playerSpotted)
         {
+            //stop animator from looking around
+            anim.SetBool("LookingAround", false);
+
+
             //if the situation has not been escalated yet, change state to escort
             if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
             {
@@ -434,7 +456,7 @@ public class AIAgent : MonoBehaviour
     {
         //follow player
 
-        bool playerSpotted = Awareness();
+        playerSpotted = Awareness();
 
 
         if (Time.time > lastPathfindingTime + pathFindingInterval)
@@ -459,6 +481,7 @@ public class AIAgent : MonoBehaviour
 
             if (animatorForwardTarget < 25)
                 animatorForwardTarget = 25;
+
             RotateTowardsSteeringTarget();
         }
         else
@@ -468,6 +491,13 @@ public class AIAgent : MonoBehaviour
 
             //Rotate towards player
 
+        }
+
+        //if the player is in a unreachable location, stand still if we still see him
+        if (agent.pathPending == false && agent.pathStatus != NavMeshPathStatus.PathComplete)
+        {
+            animatorForwardTarget = 0;
+            agent.ResetPath();
         }
 
 
@@ -482,7 +512,7 @@ public class AIAgent : MonoBehaviour
             lookAtWeightTarget = 1;
             lookAtPoint = Player.instance.transform.TransformPoint(0, 1.5f, 0);
             playerLastSeenPosition = Player.instance.transform.position;
-            timeSinceLastSighting = 0;
+
         }
         else
         {
@@ -497,12 +527,13 @@ public class AIAgent : MonoBehaviour
                 //get closest floor 
                 currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
                 currentPathIndex++;
+                if (currentPathIndex > patrolAreas.Count - 1)
+                    currentPathIndex = 0;
 
                 currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
 
                 searchingForPlayer = true;
                 agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
-                print(currentPath.transform.name);
             }
             LookAround();
         }
@@ -510,7 +541,51 @@ public class AIAgent : MonoBehaviour
         SetAnimatorValues();
 
     }
-    void ChangeState(AIState state)
+
+    protected virtual void Guard()
+    {
+        animatorForwardTarget = 0;
+        LookLeftAndRight();
+
+        Awareness();
+
+        //increase guard progress
+        guardTimer += Time.deltaTime;
+
+
+        //if we have guarded long enough return to patrol and reset guard progress
+        if (guardTimer >= guardDuration)
+        {
+            guardTimer = 0;
+            ChangeState(AIState.Patrol);
+            return;
+        }
+        timeSinceLastSighting = 0;
+
+        if (playerSpotted)
+        {
+            if (Player.instance.InsideRestrictedArea)
+            {
+                //Reset guarding progress
+                guardTimer = 0;
+                searchingForPlayer = false;
+                //if the situation has not been escalated yet, change state to escort
+                if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+                {
+                    ChangeState(AIState.Escort);
+                }
+                else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+                {
+                    ChangeState(AIState.Chase);
+                }
+
+            }
+        }
+
+        SetAnimatorValues();
+    }
+
+    public void ChangeState(AIState state)
     {
         this.state = state;
 
@@ -538,8 +613,29 @@ public class AIAgent : MonoBehaviour
             investigateLocationReached = false;
             agent.SetDestination(playerLastSeenPosition);
         }
+        else if (state == AIState.Guard)
+        {
+            agent.stoppingDistance = defaultStoppingDistance;
+            currentState = Guard;
+            investigateLocationReached = false;
+            agent.destination = transform.position;
+        }
     }
 
+    protected IEnumerator CheckReachableLocation(Vector3 location)
+    {
+        calculatingPath = true;
+        NavMeshPath path = new NavMeshPath();
+
+        yield return NavMesh.CalculatePath(transform.position, location, NavMesh.AllAreas, path);
+
+        if (path.status == NavMeshPathStatus.PathComplete)
+        {
+            agent.destination = location;
+        }
+        calculatingPath = false;
+
+    }
     //audio trigger that will be called by the player's footstep script
     public enum AudioTriggerType { Footstep, Elevator, AirDuct };
     public void AudioTrigger(AudioTriggerType type, Vector3 position)
@@ -562,24 +658,33 @@ public class AIAgent : MonoBehaviour
                 investigateLocation = position;
                 //We have a clue where the player is
                 NavMeshHit hit;
-                NavMesh.SamplePosition(position, out hit, 4, NavMesh.AllAreas);
+                NavMesh.SamplePosition(position, out hit, 10, NavMesh.AllAreas);
 
                 if (hit.hit)
                     investigateLocation = hit.position;
 
+
+                //if we don't see player
                 if (playerSpotted == false)
                 {
                     if (state == AIState.Chase || state == AIState.Escort)
                     {
                         playerLastSeenPosition = position;
-                        agent.SetDestination(position);
+                        if (calculatingPath == false)
+                        {
+                            StartCoroutine(CheckReachableLocation(position));
+                        }
+
                     }
                     else
                     {
                         //check if the sound is coming from the restricted area or NOT!!!!
                         if (Player.instance.InsideRestrictedArea)
                         {
-
+                            if (calculatingPath == false)
+                            {
+                                StartCoroutine(CheckReachableLocation(position));
+                            }
                             ChangeState(AIState.Investigate);
                         }
 
@@ -615,6 +720,13 @@ public class AIAgent : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(rotationDirection), rotationSpeed * multiplier * Time.deltaTime);
     }
 
+    protected void RotateTowardsPlayer()
+    {
+        Vector3 dir = Player.instance.transform.position - transform.position;
+        dir.y = 0;
+
+
+    }
     void SetAnimatorValues()
     {
         anim.SetFloat("Forward", animatorForwardTarget, animatorDampValue, Time.deltaTime);

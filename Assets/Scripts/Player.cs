@@ -134,10 +134,15 @@ public class Player : MonoBehaviour
 
 
     //VARIABLES FOR AI
-    private bool insideRestrictedArea = true;
+    private bool insideRestrictedArea = false;
     public bool InsideRestrictedArea{get{return insideRestrictedArea;}}
 
     public float CurrentSpeed{get{return anim.GetFloat("Forward");}}
+
+
+    //restricted area stuff
+    private float restrictedAreaCheckInterval = 1;
+    private float lastRestrictedAreaCheck;
 
 
     void Start()
@@ -351,7 +356,18 @@ public class Player : MonoBehaviour
             FirstPersonInteraction();
         }
 
+        CheckRestrictedArea();
 
+
+    }
+
+    void CheckRestrictedArea()
+    {
+        if(Time.time > lastRestrictedAreaCheck+restrictedAreaCheckInterval)
+        {
+            lastRestrictedAreaCheck = Time.time;
+            insideRestrictedArea = !RestrictedAreaManager.instance.OutsideRestrictedArea(transform.position);
+        }
     }
     void FirstPersonInteraction()
     {
