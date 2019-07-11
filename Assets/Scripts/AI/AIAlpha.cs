@@ -16,9 +16,21 @@ public class AIAlpha : MonoBehaviour
     private SituationState situation;
     public SituationState Situation { get { return situation; } }
 
+    private bool escortInProgress =  false;
+    public bool EscortInProgress{get{return escortInProgress;}}
+
+    public static float groundLevel = 4;
+
+    public static float groundLevelThreshold = 2;
+
+    private Transform exitPoint;
+    public Vector3 ExitPoint{get{return exitPoint.position;}}
+
     void Awake()
     {
         instance = this;
+
+        exitPoint = transform.Find("ExitPoint");
     }
 
     void Start()
@@ -35,19 +47,24 @@ public class AIAlpha : MonoBehaviour
     //agent calls this when the agent's behavior changes to chase
     public void ReportChase(AIAgent agent)
     {
-
+        situation = SituationState.Alert;
     }
 
     //agent calls this when it starts to escort the player out of the premises
     public void ReportEscort(AIAgent agent)
     {
-
+        escortInProgress = true;
+    }
+    public void ReportEscortOver(AIAgent agent)
+    {
+        escortInProgress = false;
     }
 
     //agent calls this when the player exited the area
     public void ReportPlayerOutsideArea(AIAgent agent)
     {
-
+        escortInProgress = false;
+        
         for (int i = 0; i < agents.Count; i++)
         {
             if (agents[i] != agent)

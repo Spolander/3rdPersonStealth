@@ -5,6 +5,7 @@ using System.Linq;
 public class PatrolPathManager : MonoBehaviour {
 
 	List<PatrolPath> patrolPaths;
+	
 
 	public static PatrolPathManager instance;
 
@@ -36,7 +37,7 @@ public class PatrolPathManager : MonoBehaviour {
 			float distance = Mathf.Abs(patrolPaths[i].transform.position.y-height);
 
 
-			if(distance < y)
+			if(distance < y && patrolPaths[i].tag != "Building2")
 			{
 				pathIndex = i;
 				y = distance;

@@ -147,6 +147,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        dead = true;
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
@@ -340,6 +341,9 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+
+        if(dead)
+        return;
 
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftShift))
             OnRestart();
