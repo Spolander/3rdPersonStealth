@@ -135,19 +135,21 @@ public class Player : MonoBehaviour
 
     //VARIABLES FOR AI
     private bool insideRestrictedArea = false;
-    public bool InsideRestrictedArea{get{return insideRestrictedArea;}}
+    public bool InsideRestrictedArea { get { return insideRestrictedArea; } }
 
-    public float CurrentSpeed{get{return anim.GetFloat("Forward");}}
+    public float CurrentSpeed { get { return anim.GetFloat("Forward"); } }
 
 
     //restricted area stuff
     private float restrictedAreaCheckInterval = 1;
     private float lastRestrictedAreaCheck;
 
+    public Vector3 Velocity{get{return controller.velocity;}}
+
 
     void Start()
     {
-        dead = true;
+
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
@@ -213,6 +215,14 @@ public class Player : MonoBehaviour
 
             transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.3f);
         }
+        else if (info.IsName("Takedown_Victim"))
+        {
+
+            lastGroundedTime = Time.time;
+            anim.MatchTarget(location, matchingRotation, AvatarTarget.Root, new MatchTargetWeightMask(Vector3.one, 1), 0f, 0.05f);
+            transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.05f);
+        }
+
     }
     void Locomotion()
     {
@@ -341,9 +351,13 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        if (closeUpEnabled == false)
+        {
+            MatchAnimator();
+        }
 
-        if(dead)
-        return;
+        if (dead)
+            return;
 
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftShift))
             OnRestart();
@@ -353,7 +367,6 @@ public class Player : MonoBehaviour
             Locomotion();
             checkGrounded();
             CheckInteractions();
-            MatchAnimator();
         }
         else
         {
@@ -364,10 +377,35 @@ public class Player : MonoBehaviour
 
 
     }
+    public void InitiateTakedown(Vector3 dir)
+    {
+        if (dead)
+            return;
 
+
+        //Disable first person just in case
+        DisableFirstPerson();
+        dir.y = 0;
+        dir.Normalize();
+        originalRotation = transform.rotation;
+        matchingRotation = Quaternion.LookRotation(dir);
+        matchingLocation = transform.position;
+        anim.CrossFadeInFixedTime("Takedown_Victim", 0.1f);
+        dead = true;
+        matchingLocation = transform.InverseTransformPoint(matchingLocation);
+        matchingObject = transform;
+        StartCoroutine(deathDelay());
+
+    }
+
+    IEnumerator deathDelay()
+    {
+        yield return new WaitForSecondsRealtime(2);
+        OnDeath();
+    }
     void CheckRestrictedArea()
     {
-        if(Time.time > lastRestrictedAreaCheck+restrictedAreaCheckInterval)
+        if (Time.time > lastRestrictedAreaCheck + restrictedAreaCheckInterval)
         {
             lastRestrictedAreaCheck = Time.time;
             insideRestrictedArea = !RestrictedAreaManager.instance.OutsideRestrictedArea(transform.position);
@@ -389,22 +427,27 @@ public class Player : MonoBehaviour
         }
         else if (input.InteractButtonDown)
         {
-            CameraFollow.playerCam.ActivateCloseUp(null, Vector3.zero, Vector3.zero, false);
-            ShowMeshes(true);
-            controller.enabled = true;
-            closeUpEnabled = false;
-            lastGroundedTime = Time.time;
-            isGrounded = true;
-            anim.SetBool("Grounded", true);
-            VirtualCursor.instance.Activate(false);
-            GameplayCanvas.instance.HideUI(false);
-            //if (inspectedItem)
-            //{
-            //    Inventory.instance.AddItem(inspectedItem);
-            //    inspectedItem = null;
-            //}
+            DisableFirstPerson();
 
         }
+    }
+
+    void DisableFirstPerson()
+    {
+        CameraFollow.playerCam.ActivateCloseUp(null, Vector3.zero, Vector3.zero, false);
+        ShowMeshes(true);
+        controller.enabled = true;
+        closeUpEnabled = false;
+        lastGroundedTime = Time.time;
+        isGrounded = true;
+        anim.SetBool("Grounded", true);
+        VirtualCursor.instance.Activate(false);
+        GameplayCanvas.instance.HideUI(false);
+        //if (inspectedItem)
+        //{
+        //    Inventory.instance.AddItem(inspectedItem);
+        //    inspectedItem = null;
+        //}
     }
     void CheckInteractions()
     {
@@ -487,10 +530,10 @@ public class Player : MonoBehaviour
 
                                 if (Physics.Raycast(matchingObject.TransformPoint(matchingLocation), Vector3.up, 2, groundLayers, QueryTriggerInteraction.Ignore))
                                     return;
-                                
-                                if(Physics.Raycast(transform.TransformPoint(0,0.5f,0), Vector3.up,3,groundLayers, QueryTriggerInteraction.Ignore))
-                                return;
-                         
+
+                                if (Physics.Raycast(transform.TransformPoint(0, 0.5f, 0), Vector3.up, 3, groundLayers, QueryTriggerInteraction.Ignore))
+                                    return;
+
 
                                 float heightDistance = hit.point.y - transform.position.y;
 
@@ -860,6 +903,8 @@ public class Player : MonoBehaviour
         if (controller.enabled)
             controller.Move(deltaMovement);
 
+
+
     }
 
     private void OnEnable()
@@ -953,6 +998,9 @@ public class Player : MonoBehaviour
 
         if (WindowCleanerElevator.windowCleanerPowerEnabled)
             WindowCleanerElevator.LowerAllWindowCleanerElevators();
+
+
+
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -985,5 +1033,10 @@ public class Player : MonoBehaviour
             controller.center = new Vector3(0, defaultControllerOffset, 0);
             controller.height = defaultControllerHeight;
         }
+    }
+
+    public bool TakeDownAvailable()
+    {
+        return !anim.GetCurrentAnimatorStateInfo(0).IsTag("rootmotion");
     }
 }

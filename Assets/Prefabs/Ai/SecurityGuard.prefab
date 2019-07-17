@@ -410,7 +410,6 @@ GameObject:
   - component: {fileID: 95149575405456090}
   - component: {fileID: 114212180329931370}
   - component: {fileID: 143976901585017042}
-  - component: {fileID: 114743491750731852}
   m_Layer: 23
   m_Name: SecurityGuard
   m_TagString: Untagged
@@ -1158,6 +1157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec29c4ff837dcd84899b066573d7b317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tag: 
   defaultSightDistance: 40
   defaultFieldOfView: 70
   alertedSightDistance: 60
@@ -1292,17 +1292,6 @@ MonoBehaviour:
   verts_force: 0.354
   verts_force_2: 0.489
   scanLineColor: 0
---- !u!114 &114743491750731852
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1742697748236310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9aaeeb6a04d4cd4389cc4b1d3172df5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!137 &137319155110131100
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

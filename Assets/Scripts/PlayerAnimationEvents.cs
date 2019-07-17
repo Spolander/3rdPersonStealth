@@ -19,7 +19,14 @@ public class PlayerAnimationEvents : MonoBehaviour
     {
         anim = GetComponent<Animator>();
     }
-
+    public void TakeDownStartSound()
+    {
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_1",transform.position, transform,1,0);
+    }
+    public void TakeDownEndSound()
+    {
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "deathLand",transform.position, transform, 1,0);
+    }
     public void RunningFootstep()
     {
         float forward = anim.GetFloat("Forward");

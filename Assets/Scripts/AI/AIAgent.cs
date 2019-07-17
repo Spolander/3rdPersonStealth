@@ -10,6 +10,10 @@ public class AIAgent : MonoBehaviour
     protected NavMeshAgent agent;
     protected Animator anim;
 
+    [SerializeField]
+    private new string tag;
+    public string Tag { get { return this.tag; } }
+
     [Header("Default situation settings")]
     [SerializeField]
     protected float defaultSightDistance = 20;
@@ -41,6 +45,8 @@ public class AIAgent : MonoBehaviour
 
     [SerializeField]
     protected AIState state;
+
+    public AIState State { get { return state; } }
 
     [SerializeField]
     protected List<string> patrolAreas;
@@ -179,8 +185,18 @@ public class AIAgent : MonoBehaviour
     protected float guardDuration = 20;
     protected float guardTimer = 0;
 
+
+    //CHASE VARIABLES
+    protected Quaternion matchingRotation;
+    protected Vector3 matchingPosition;
+    protected Quaternion originalRotation;
+
+    protected float chasePathfindingInterval = 0.1f;
+
     [Header("Debug variables")]
     public bool cameraEnabled = false;
+
+    protected float takeDownDistance = 1f;
 
 
 
@@ -199,7 +215,11 @@ public class AIAgent : MonoBehaviour
     void Start()
     {
         //initialize the currentPath
-        currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
+        if (patrolAreas.Count > 0)
+        {
+            currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
+
+        }
 
         ChangeState(AIState.Patrol);
 
@@ -255,6 +275,12 @@ public class AIAgent : MonoBehaviour
 
     protected virtual void Patrol()
     {
+
+        //If agent is disabled we can't do anything
+        if (agent.enabled == false)
+            return;
+
+
         if (agent.remainingDistance <= agent.stoppingDistance && agent.pathPending == false)
         {
             currentWaypointIndex++;
@@ -302,8 +328,10 @@ public class AIAgent : MonoBehaviour
                     }
 
                 }
-                else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+                //if situation is alert or we are in building 2
+                if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert || tag == "Building2")
                 {
+                    AIAlpha.instance.ReportPlayerSpotted(this, Player.instance.transform.position);
                     ChangeState(AIState.Chase);
                 }
 
@@ -430,7 +458,22 @@ public class AIAgent : MonoBehaviour
                 lookAtWeightTarget = 0;
                 investigateTimer = 0;
                 investigateLocationReached = false;
-                ChangeState(AIState.Patrol);
+
+                if (searchingForPlayer)
+                {
+                    ChangeState(AIState.Patrol);
+                    //get closest floor 
+                    currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
+                    currentPathIndex++;
+                    if (currentPathIndex > patrolAreas.Count - 1)
+                        currentPathIndex = 0;
+
+                    currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
+
+                    searchingForPlayer = true;
+                    agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
+                }
+
                 return;
             }
 
@@ -470,7 +513,9 @@ public class AIAgent : MonoBehaviour
                 }
 
             }
-            else if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert)
+
+
+            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Alert || tag == "Building2")
             {
                 ChangeState(AIState.Chase);
             }
@@ -625,22 +670,40 @@ public class AIAgent : MonoBehaviour
 
     }
 
-    protected void Chase()
+    protected virtual void Chase()
     {
+
+
+
         //follow player
+        MatchAnimator();
+        SetAnimatorValues();
+
+        //If agent is disabled we can't do anything
+        if (agent.enabled == false)
+            return;
 
         playerSpotted = Awareness();
 
 
+        if (agent.enabled == false)
+            return;
 
-        if (Time.time > lastPathfindingTime + pathFindingInterval)
+        if (Time.time > lastPathfindingTime + chasePathfindingInterval && agent.isStopped == false)
         {
             NavMeshHit hit;
-            NavMesh.SamplePosition(playerLastSeenPosition, out hit, 5, NavMesh.AllAreas);
+            Vector3 samplePosition = playerSpotted ? Player.instance.transform.position + Player.instance.Velocity * Time.deltaTime : playerLastSeenPosition;
+            NavMesh.SamplePosition(samplePosition, out hit, 5, NavMesh.AllAreas);
+
+
             if (hit.hit)
             {
+                if (calculatingPath == false)
+                {
+                    StartCoroutine(CheckReachableLocation(hit.position));
+                }
                 lastPathfindingTime = Time.time;
-                agent.SetDestination(hit.position);
+               // agent.SetDestination(hit.position);
             }
 
         }
@@ -651,12 +714,26 @@ public class AIAgent : MonoBehaviour
 
             RotateTowardsSteeringTarget();
         }
-        else
+
+
+        if (Vector3.Distance(transform.position, Player.instance.transform.position) <= takeDownDistance)
         {
             animatorForwardTarget = 0;
             agent.velocity = Vector3.zero;
-
+            agent.isStopped = true;
             //Initiate takedown
+
+            if (AIAlpha.instance.PlayerTakenDown == false)
+            {
+                AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+                //Check if we can transition to takedown animation and that the player is not climbing anywhere
+                if (anim.IsInTransition(0) == false && !info.IsName("Takedown_Attacker") && Player.instance.TakeDownAvailable())
+                {
+                    Takedown();
+
+                }
+            }
+
 
         }
 
@@ -675,6 +752,11 @@ public class AIAgent : MonoBehaviour
             {
                 AIAlpha.instance.ReportPlayerOutsideArea(this);
             }
+            else
+            {
+                AIAlpha.instance.ReportPlayerSpotted(this, Player.instance.transform.position);
+            }
+
             lookingAt = true;
             lookAtWeightTarget = 1;
             lookAtPoint = Player.instance.transform.TransformPoint(0, 1.5f, 0);
@@ -687,27 +769,22 @@ public class AIAgent : MonoBehaviour
             //change to patrol current or closest floor if player hasn't been seen
             if (timeSinceLastSighting > playerLoseDuration)
             {
-                //report to AIalpha to allow other agents to escort the player
-                ChangeState(AIState.Patrol);
-
-                //get closest floor 
-                currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
-                currentPathIndex++;
-                if (currentPathIndex > patrolAreas.Count - 1)
-                    currentPathIndex = 0;
-
-                currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
-
+                SendToInvestigate(playerLastSeenPosition);
                 searchingForPlayer = true;
-                agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
+
             }
             LookAround();
         }
 
-        SetAnimatorValues();
+
     }
     protected virtual void Guard()
     {
+
+        //If agent is disabled we can't do anything
+        if (agent.enabled == false)
+            return;
+
         animatorForwardTarget = 0;
         LookLeftAndRight();
 
@@ -750,8 +827,9 @@ public class AIAgent : MonoBehaviour
         SetAnimatorValues();
     }
 
-    public void ChangeState(AIState state)
+    public virtual void ChangeState(AIState state)
     {
+
         this.state = state;
 
         //reset all timers
@@ -765,9 +843,13 @@ public class AIAgent : MonoBehaviour
             //set the action
             currentState = Patrol;
             //start the path from the beginning based on index
-            currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
+            if (patrolAreas.Count > 0)
+            {
+                currentPath = PatrolPathManager.instance.GetPathWithTag(patrolAreas[currentPathIndex]);
+
+                agent.SetDestination(NextWayPoint());
+            }
             agent.stoppingDistance = defaultStoppingDistance;
-            agent.SetDestination(NextWayPoint());
         }
         else if (state == AIState.Investigate)
         {
@@ -816,7 +898,7 @@ public class AIAgent : MonoBehaviour
     }
     //audio trigger that will be called by the player's footstep script
     public enum AudioTriggerType { Footstep, Elevator, AirDuct };
-    public void AudioTrigger(AudioTriggerType type, Vector3 position)
+    public virtual void AudioTrigger(AudioTriggerType type, Vector3 position)
     {
         bool playerSpotted = Awareness();
 
@@ -896,7 +978,8 @@ public class AIAgent : MonoBehaviour
         // angle = 0;
         // animatorTurningTarget = angle;
 
-        float multiplier = Mathf.Lerp(1, 10, 1 - (agent.remainingDistance / 5));
+        float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.z), new Vector2(agent.steeringTarget.x, agent.steeringTarget.z));
+        float multiplier = Mathf.Lerp(10, 1, distance / 5);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(rotationDirection), rotationSpeed * multiplier * Time.deltaTime);
     }
 
@@ -907,7 +990,7 @@ public class AIAgent : MonoBehaviour
 
 
     }
-    void SetAnimatorValues()
+    protected void SetAnimatorValues()
     {
         anim.SetFloat("Forward", animatorForwardTarget, animatorDampValue, Time.deltaTime);
         anim.SetFloat("TurnAngle", animatorTurningTarget, animatorDampValue, Time.deltaTime);
@@ -940,8 +1023,27 @@ public class AIAgent : MonoBehaviour
 
 
     }
+    protected void MatchAnimator()
+    {
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-    void SetLookAtDirection()
+        if (anim.IsInTransition(0) == false)
+        {
+            if (info.IsName("Takedown_Attacker"))
+            {
+                print("Here we are");
+                anim.MatchTarget(matchingPosition, matchingRotation, AvatarTarget.Root, new MatchTargetWeightMask(Vector3.one, 1), 0, 0.2f);
+                transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.2f);
+            }
+            else if (info.IsName("SitDown"))
+            {
+                anim.MatchTarget(matchingPosition, matchingRotation, AvatarTarget.Root, new MatchTargetWeightMask(Vector3.one, 1), 0, 0.4f);
+                transform.rotation = Quaternion.Lerp(originalRotation, matchingRotation, info.normalizedTime / 0.2f);
+            }
+        }
+
+    }
+    protected void SetLookAtDirection()
     {
         if (Time.time < lastLookAtTime + lookAtInterval + lookAtDuration)
         {
@@ -998,13 +1100,20 @@ public class AIAgent : MonoBehaviour
         }
 
     }
-    void OnAnimatorMove()
+    protected void OnAnimatorMove()
     {
+        if (agent.enabled == false)
+        {
+            transform.position = anim.rootPosition;
+            return;
+        }
         Vector3 velocity = anim.deltaPosition / Time.deltaTime;
         agent.velocity = velocity;
 
         if (agent.remainingDistance <= agent.stoppingDistance)
             agent.velocity = Vector3.zero;
+
+
     }
 
     void OnAnimatorIK()
@@ -1016,6 +1125,21 @@ public class AIAgent : MonoBehaviour
         anim.SetLookAtWeight(lookAtWeight, 0.2f, 1f, 0, 0.5f);
     }
 
+    protected virtual void Takedown()
+    {
+        agent.enabled = false;
+        originalRotation = transform.rotation;
+        Vector3 matchingDirection = Player.instance.transform.position - transform.position;
+        matchingDirection.y = 0;
+
+        matchingPosition = Player.instance.transform.position - (matchingDirection.normalized * takeDownDistance);
+        matchingRotation = Quaternion.LookRotation(matchingDirection);
+        anim.CrossFadeInFixedTime("Takedown_Attacker", 0.1f);
+
+        Player.instance.InitiateTakedown(transform.position - Player.instance.transform.position);
+        AIAlpha.instance.ReportPlayerTakeDown(this);
+    }
+
     //basically return everyone to their patrols, except for the one guy guarding the border
     public virtual void ReturnToPositions()
     {
@@ -1025,6 +1149,32 @@ public class AIAgent : MonoBehaviour
             ChangeState(AIState.Patrol);
         }
     }
+
+    public virtual void SendToInvestigate(Vector3 location)
+    {
+        investigateLocation = location;
+        if (state != AIState.Investigate && state != AIState.Escort)
+        {
+            ChangeState(AIState.Investigate);
+        }
+
+    }
+    public virtual void Reset()
+    {
+        //Reset agent behaviour
+
+        agent.enabled = true;
+        agent.isStopped = false;
+        investigationCount = 0;
+        footStepsHeard = 0;
+        currentWaypointIndex = 0;
+        currentPathIndex = 0;
+        escortTimer = 0;
+        guardTimer = 0;
+        timeSinceLastSighting = 0;
+        ChangeState(AIState.Patrol);
+    }
+
     void OnTriggerEnter(Collider col)
     {
         MovingDoor m = col.GetComponent<MovingDoor>();
