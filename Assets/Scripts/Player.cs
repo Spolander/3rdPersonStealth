@@ -20,7 +20,10 @@ public class Player : MonoBehaviour
     private float crawlSpaceSpeed = 2.5f;
 
     private bool inCrawlSpace = false;
+    public bool InCrawlSpace{get{return inCrawlSpace;}}
     private bool inCrawlSpaceTransition = false;
+
+    public bool InCrawlSpaceTransition{get{return inCrawlSpaceTransition;}}
     [SerializeField]
     private float crawlSpaceRotationSpeed = 150;
 
@@ -121,6 +124,12 @@ public class Player : MonoBehaviour
 
     public delegate void Restart();
     public static event Restart OnRestart;
+
+    public delegate void AirductEnter();
+    public static event AirductEnter OnAirductEnter;
+
+    public delegate void AirductExit();
+    public static event AirductExit OnAirductExit;
 
 
     private float defaultControllerOffset = 1.08f;
@@ -637,7 +646,8 @@ public class Player : MonoBehaviour
 
         if (enter)
         {
-
+            //call enter event
+            OnAirductEnter();
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }
@@ -665,6 +675,9 @@ public class Player : MonoBehaviour
             ShowMeshes(true);
 
             CrouchModeChange(anim.GetBool("crouching"));
+
+            //Call exit event
+            OnAirductExit();
         }
 
         gravity = 0;

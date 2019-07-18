@@ -21,11 +21,12 @@ public class PlayerAnimationEvents : MonoBehaviour
     }
     public void TakeDownStartSound()
     {
-        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_1",transform.position, transform,1,0);
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "playerSlide_1", transform.position, transform, 1, 0);
     }
     public void TakeDownEndSound()
     {
-        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "deathLand",transform.position, transform, 1,0);
+
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "deathLand", transform.position, transform, 1, 0);
     }
     public void RunningFootstep()
     {
@@ -74,7 +75,7 @@ public class PlayerAnimationEvents : MonoBehaviour
                 SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_walk_" + Random.Range(1, 6).ToString(), transform.position, transform, 1, 0);
             }
 
-            
+
 
         }
     }
@@ -117,7 +118,7 @@ public class PlayerAnimationEvents : MonoBehaviour
         }
 
         AudioTrigger();
-        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "land",transform.position, transform,1,0);
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "land", transform.position, transform, 1, 0);
     }
 
 
@@ -138,13 +139,17 @@ public class PlayerAnimationEvents : MonoBehaviour
     }
 
     void AudioTrigger()
-	{
-		Collider[] cols = Physics.OverlapSphere(transform.position, audioTriggerDistance, 1 << LayerMask.NameToLayer("Guard"));
+    {
+        if (Player.instance.InCrawlSpace == false && Player.instance.InCrawlSpaceTransition == false)
+        {
+            Collider[] cols = Physics.OverlapSphere(transform.position, audioTriggerDistance, 1 << LayerMask.NameToLayer("Guard"));
 
-		for(int i = 0; i < cols.Length; i++)
-		{
-			cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.Footstep,transform.position);
-		}
+            for (int i = 0; i < cols.Length; i++)
+            {
+                cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.Footstep, transform.position);
+            }
+        }
 
-	}
+
+    }
 }

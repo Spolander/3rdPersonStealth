@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33767233714531740}
   - component: {fileID: 23905236121548930}
   - component: {fileID: 65844365513411618}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: greenGlassWall (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

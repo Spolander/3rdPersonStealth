@@ -10,6 +10,8 @@ public class AIAlpha : MonoBehaviour
 
     private List<AIAgent> agents;
 
+    private List<AirductPlacement> airductPlacements;
+
     public enum SituationState { Normal, Alert };
 
     [SerializeField]
@@ -32,6 +34,7 @@ public class AIAlpha : MonoBehaviour
 
     //keep track of last investigator agent
     AIAgent lastInvestigatedAgent;
+    
 
     void Awake()
     {
@@ -53,6 +56,8 @@ public class AIAlpha : MonoBehaviour
     {
         //Find all agents and assign them to the list
         agents = (FindObjectsOfType(typeof(AIAgent)) as AIAgent[]).ToList();
+
+        airductPlacements = (FindObjectsOfType(typeof(AirductPlacement)) as AirductPlacement[]).ToList();
     }
 
     //agent calls this when a player is spotted by it
@@ -109,6 +114,18 @@ public class AIAlpha : MonoBehaviour
         return count;
     }
 
+    //how many agents are currently waiting
+    private int WaiterCount()
+    {
+        int count = 0;
+        for (int i = 0; i < agents.Count; i++)
+        {
+            if (agents[i].State == AIAgent.AIState.Wait)
+                count++;
+        }
+
+        return count;
+    }
     public void ReportPlayerTakeDown(AIAgent agent)
     {
         playerTakenDown = true;
@@ -167,6 +184,57 @@ public class AIAlpha : MonoBehaviour
         situation = SituationState.Alert;
     }
 
+    public void ReportAirductEnter(AIAgent agent)
+    {
+
+        escortInProgress = false;
+        //if there's already 2 agents waiting, ignore this
+        if(WaiterCount() >= 2)
+        {
+            return;
+        }
+
+        AIAgent otherNearest = NearestAgent(agent.transform.position, agent);
+
+        AirductPlacement placement = NearestAirduct(agent.transform.position);
+
+
+        //Send agents to wait at the nearest placement exits
+        Transform[] exits = placement.ExitPoints;
+
+        agent.SendToWait(exits[0].position);
+        otherNearest.SendToWait(exits[1].position);
+    }
+    public void ReportAirductExit(AIAgent agent)
+    {
+        escortInProgress = false;
+        for(int i = 0; i < agents.Count; i++)
+        {
+            if(agents[i].State == AIAgent.AIState.Wait)
+            {
+                agents[i].ChangeState(AIAgent.AIState.Patrol);
+            }
+        }
+    }
+    AirductPlacement NearestAirduct(Vector3 position)
+    {
+        float shortestDistance = Mathf.Infinity;
+        AirductPlacement a = airductPlacements[0];
+
+        for (int i = 0; i < airductPlacements.Count; i++)
+        {
+
+
+            float distance = Vector3.Distance(position, airductPlacements[i].transform.position);
+            if (distance <= shortestDistance)
+            {
+                shortestDistance = distance;
+                a = airductPlacements[i];
+            }
+        }
+
+        return a;
+    }
     AIAgent NearestAgent(Vector3 position)
     {
         float shortestDistance = Mathf.Infinity;
