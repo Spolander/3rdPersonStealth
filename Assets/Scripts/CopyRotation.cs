@@ -8,6 +8,13 @@ public class CopyRotation : MonoBehaviour
     [SerializeField]
     private Transform target;
 
+    public static CopyRotation instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
@@ -23,5 +30,9 @@ public class CopyRotation : MonoBehaviour
 
         }
 
+    }
+    public void SetTarget(Transform t)
+    {
+        target = t;
     }
 }

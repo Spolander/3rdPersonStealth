@@ -145,6 +145,14 @@ public class AIAgent : MonoBehaviour
 
     bool calculatingPath = false;
 
+    //vertical offset downwards to get a point on the same floor instead of the floor above the airduct
+    protected float airductAudioTriggerOffset = 3;
+
+    //how many times we have been triggered by a airduct
+    protected int airductTriggerCount = 0;
+
+    //how many times we need to be triggered in order to report to AIAlpha
+    protected int airductTriggerThreshhold = 3;
 
 
     //ESCORT VARIABLES
@@ -196,10 +204,12 @@ public class AIAgent : MonoBehaviour
 
     protected float chasePathfindingInterval = 0.1f;
 
+    protected float takeDownDistance = 1f;
+
     [Header("Debug variables")]
     public bool cameraEnabled = false;
 
-    protected float takeDownDistance = 1f;
+
 
 
 
@@ -229,6 +239,17 @@ public class AIAgent : MonoBehaviour
         GetComponentInChildren<Camera>().enabled = cameraEnabled;
         GetComponentInChildren<PostProcessVolume>().enabled = cameraEnabled;
         GetComponentInChildren<AudioListener>().enabled = cameraEnabled;
+
+
+        if (Camera.main.enabled && cameraEnabled)
+        {
+            CameraFollow.playerCam.gameObject.SetActive(false);
+            CameraFollow.playerCam.GetComponent<AudioListener>().enabled = false;
+            Camera.SetupCurrent(GetComponentInChildren<Camera>());
+            CopyRotation.instance.SetTarget(GetComponentInChildren<Camera>().transform);
+
+        }
+
     }
 
     // Update is called once per frame
@@ -315,11 +336,11 @@ public class AIAgent : MonoBehaviour
             if (Player.instance.InsideRestrictedArea)
             {
 
-                AIAlpha.instance.ReportAirductExit(this);
+
 
                 searchingForPlayer = false;
                 //if the situation has not been escalated yet, change state to escort
-                if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+                if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal && tag != "Building2")
                 {
                     if (AIAlpha.instance.EscortInProgress == false)
                     {
@@ -549,18 +570,18 @@ public class AIAgent : MonoBehaviour
             NavMeshHit lowerHit;
             NavMeshHit higherHit;
 
-            Debug.DrawRay(playerLastSeenPosition+(Vector3.down*lowerNavmeshSampleDistance), Vector3.down,Color.red, 10);
-            
+            Debug.DrawRay(playerLastSeenPosition + (Vector3.down * lowerNavmeshSampleDistance), Vector3.down, Color.red, 10);
+
             NavMesh.SamplePosition(playerLastSeenPosition + (Vector3.down * lowerNavmeshSampleDistance), out lowerHit, samplePositionDistance, NavMesh.AllAreas);
             NavMesh.SamplePosition(playerLastSeenPosition, out higherHit, samplePositionDistance, NavMesh.AllAreas);
             if (lowerHit.hit && higherHit.hit)
             {
-                float lowerDistance = Mathf.Abs(transform.position.y - lowerHit.position.y);
-                float higherDistance = Mathf.Abs(transform.position.y - higherHit.position.y);
+                float lowerDistance = Mathf.Abs(Player.instance.transform.position.y - lowerHit.position.y);
+                float higherDistance = Mathf.Abs(Player.instance.transform.position.y - higherHit.position.y);
 
                 Vector3 destination = lowerDistance < higherDistance ? lowerHit.position : higherHit.position;
                 agent.SetDestination(destination);
-                
+
             }
             else if (lowerHit.hit)
             {
@@ -613,6 +634,12 @@ public class AIAgent : MonoBehaviour
             if (Player.instance.InsideRestrictedArea == false)
             {
                 AIAlpha.instance.ReportPlayerOutsideArea(this);
+            }
+            //if we see the player inside the airduct, report to alpha
+            else if(Player.instance.InCrawlSpace || Player.instance.InCrawlSpaceTransition)
+            {
+                AIAlpha.instance.ReportAirductEnter(this);
+                return;
             }
             lookingAt = true;
             lookAtWeightTarget = 1;
@@ -778,15 +805,19 @@ public class AIAgent : MonoBehaviour
 
         if (playerSpotted)
         {
-            //if we see that the player has exited the area
-            if (Player.instance.InsideRestrictedArea == false)
+            if (tag != "Building2")
             {
-                AIAlpha.instance.ReportPlayerOutsideArea(this);
+                //if we see that the player has exited the area
+                if (Player.instance.InsideRestrictedArea == false)
+                {
+                    AIAlpha.instance.ReportPlayerOutsideArea(this);
+                }
+                else
+                {
+                    AIAlpha.instance.ReportPlayerSpotted(this, Player.instance.transform.position);
+                }
             }
-            else
-            {
-                AIAlpha.instance.ReportPlayerSpotted(this, Player.instance.transform.position);
-            }
+
 
             lookingAt = true;
             lookAtWeightTarget = 1;
@@ -1027,6 +1058,64 @@ public class AIAgent : MonoBehaviour
             }
 
         }
+        else if (type == AudioTriggerType.AirDuct)
+        {
+            if(state == AIState.Wait)
+            return;
+
+            footStepsHeard++;
+            lastFootStepTime = Time.time;
+
+            if (footStepsHeard >= footStepLimit)
+            {
+                footStepsHeard = 0;
+                airductTriggerCount++;
+
+                //if the threshhold is reached, confirm that the player is inside
+                if(airductTriggerCount >= airductTriggerThreshhold)
+                {
+                    airductTriggerCount = 0;
+                    AIAlpha.instance.ReportAirductEnter(this);
+                    return;
+                }
+                investigateLocation = position-(Vector3.up*airductAudioTriggerOffset);
+                //We have a clue where the player is
+                NavMeshHit hit;
+                NavMesh.SamplePosition(investigateLocation, out hit, 10, NavMesh.AllAreas);
+
+                if (hit.hit)
+                    investigateLocation = hit.position;
+
+
+                //if we don't see player
+                if (playerSpotted == false)
+                {
+                    if (state == AIState.Chase || state == AIState.Escort)
+                    {
+                        playerLastSeenPosition = investigateLocation;
+                        if (calculatingPath == false)
+                        {
+                            StartCoroutine(CheckReachableLocation(hit.position));
+                        }
+
+                    }
+                    else
+                    {
+                        //check if the sound is coming from the restricted area or NOT!!!!
+                        if (Player.instance.InsideRestrictedArea && AIAlpha.instance.EscortInProgress == false)
+                        {
+                            if (calculatingPath == false)
+                            {
+                                agent.ResetPath();
+                                StartCoroutine(CheckReachableLocation(hit.position));
+                            }
+                            ChangeState(AIState.Investigate);
+                        }
+
+                    }
+                }
+            }
+        }
 
 
     }
@@ -1217,6 +1306,9 @@ public class AIAgent : MonoBehaviour
     public virtual void ReturnToPositions()
     {
         timeSinceLastSighting = 0;
+        footStepsHeard = 0;
+        airductTriggerCount = 0;
+
         if (state != AIState.Guard)
         {
             ChangeState(AIState.Patrol);
@@ -1235,6 +1327,7 @@ public class AIAgent : MonoBehaviour
 
     public virtual void SendToWait(Vector3 location)
     {
+        print("send to wait");
         agent.SetDestination(location);
         ChangeState(AIState.Wait);
     }

@@ -14,6 +14,8 @@ public class PlayerAnimationEvents : MonoBehaviour
     [SerializeField]
     private float audioTriggerDistance = 25;
 
+    [SerializeField]
+    private float airductAudioDistance = 15;
 
     private void Start()
     {
@@ -151,5 +153,15 @@ public class PlayerAnimationEvents : MonoBehaviour
         }
 
 
+    }
+
+    public void AirductAudioTrigger()
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, airductAudioDistance, 1 << LayerMask.NameToLayer("Guard"));
+
+        for (int i = 0; i < cols.Length; i++)
+        {
+            cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.AirDuct, transform.position);
+        }
     }
 }

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public static Player instance;
     Animator anim;
+    PlayerAnimationEvents animEvents;
     CharacterController controller;
 
     [SerializeField]
@@ -158,7 +159,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
+        animEvents = GetComponent<PlayerAnimationEvents>();
         controller = GetComponent<CharacterController>();
         mainCam = Camera.main;
         anim = GetComponent<Animator>();
@@ -351,6 +352,7 @@ public class Player : MonoBehaviour
             {
                 lastCrawlPosition = transform.position;
                 SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+                animEvents.AirductAudioTrigger();
             }
         }
 
@@ -634,6 +636,11 @@ public class Player : MonoBehaviour
         //        }
         //    }
         //}
+
+        if(Input.GetKeyDown(KeyCode.G))
+        {
+            GuardVision.instance.ActivateVision(true);
+        }
     }
 
     IEnumerator crawlEnterAnimation(bool enter, Vector3 start, Vector3 end)
@@ -934,6 +941,8 @@ public class Player : MonoBehaviour
 
     private void PlayerDeath()
     {
+        anim.enabled = false;
+        GuardVision.instance.ActivateVision(false);
         dead = true;
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Player, "gameOver", transform.position, null, 0, 0.3f);
         DarkAmbient.darkAmbientActivated = false;
@@ -998,10 +1007,12 @@ public class Player : MonoBehaviour
     }
     public void PlayerRestart()
     {
+        print("restart bitch");
+        anim.enabled = true;
         dead = false;
         transform.position = checkPointPosition;
         transform.rotation = checkPointRotation;
-        lastGroundedHeight = transform.position.y;
+        lastGroundedHeight = checkPointPosition.y;
 
         anim.Play("Move");
 

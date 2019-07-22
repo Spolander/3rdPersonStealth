@@ -34,7 +34,7 @@ public class AIAlpha : MonoBehaviour
 
     //keep track of last investigator agent
     AIAgent lastInvestigatedAgent;
-    
+
 
     void Awake()
     {
@@ -151,6 +151,16 @@ public class AIAlpha : MonoBehaviour
     public void ReportEscort(AIAgent agent)
     {
         escortInProgress = true;
+
+
+        //return all possible waiters to their patrols
+        for (int i = 0; i < agents.Count; i++)
+        {
+            if (agents[i].State == AIAgent.AIState.Wait)
+            {
+                agents[i].ChangeState(AIAgent.AIState.Patrol);
+            }
+        }
     }
     public void ReportEscortOver(AIAgent agent)
     {
@@ -189,7 +199,7 @@ public class AIAlpha : MonoBehaviour
 
         escortInProgress = false;
         //if there's already 2 agents waiting, ignore this
-        if(WaiterCount() >= 2)
+        if (WaiterCount() >= 2)
         {
             return;
         }
@@ -202,15 +212,24 @@ public class AIAlpha : MonoBehaviour
         //Send agents to wait at the nearest placement exits
         Transform[] exits = placement.ExitPoints;
 
-        agent.SendToWait(exits[0].position);
-        otherNearest.SendToWait(exits[1].position);
+
+        if (exits.Length >= 2)
+        {
+            agent.SendToWait(exits[0].position);
+            otherNearest.SendToWait(exits[1].position);
+        }
+        else
+        {
+            agent.SendToWait(exits[0].position);
+        }
+
     }
     public void ReportAirductExit(AIAgent agent)
     {
         escortInProgress = false;
-        for(int i = 0; i < agents.Count; i++)
+        for (int i = 0; i < agents.Count; i++)
         {
-            if(agents[i].State == AIAgent.AIState.Wait)
+            if (agents[i].State == AIAgent.AIState.Wait)
             {
                 agents[i].ChangeState(AIAgent.AIState.Patrol);
             }
