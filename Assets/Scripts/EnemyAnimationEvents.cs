@@ -66,7 +66,29 @@ public class EnemyAnimationEvents : MonoBehaviour
 
         }
     }
+    public void RunningFootstep()
+    {
+        float forward = anim.GetFloat("Forward");
 
+        if (forward > joggingValueLimit)
+        {
+            string tag = GetGroundTag();
+
+            if (tag == "metal")
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "footstepMetal" + Random.Range(1, 5).ToString(), transform.position, transform, 1, 0);
+            }
+            else if (tag == "pipe")
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+            }
+            else
+            {
+                SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "concrete_run_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);
+            }
+
+        }
+    }
 
     string GetGroundTag()
     {

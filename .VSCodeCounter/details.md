@@ -1,0 +1,253 @@
+# Details
+
+Date : 2019-07-29 12:01:09
+
+Directory d:\Projects\GitHub\3rdPersonStealth
+
+Total : 238 files,  25000 codes, 1811 comments, 4632 blanks, all 31443 lines
+
+[summary](results.md)
+
+## Files
+| filename | language | code | comment | blank | total |
+| :--- | :--- | ---: | ---: | ---: | ---: |
+| [Assembly-CSharp-Editor.csproj](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assembly-CSharp-Editor.csproj) | XML | 377 | 7 | 2 | 386 |
+| [Assembly-CSharp-firstpass.csproj](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assembly-CSharp-firstpass.csproj) | XML | 327 | 7 | 0 | 334 |
+| [Assembly-CSharp.csproj](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assembly-CSharp.csproj) | XML | 529 | 7 | 2 | 538 |
+| [Assets\InControl\Editor\InControlBuilder.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/InControlBuilder.cs) | C# | 27 | 0 | 7 | 34 |
+| [Assets\InControl\Editor\InControlManagerEditor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/InControlManagerEditor.cs) | C# | 50 | 0 | 13 | 63 |
+| [Assets\InControl\Editor\InputManagerAssetGenerator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/InputManagerAssetGenerator.cs) | C# | 376 | 0 | 65 | 441 |
+| [Assets\InControl\Editor\ProfileListGenerator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ProfileListGenerator.cs) | C# | 87 | 0 | 24 | 111 |
+| [Assets\InControl\Editor\ReorderableList\GenericListAdaptor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/GenericListAdaptor.cs) | C# | 77 | 42 | 22 | 141 |
+| [Assets\InControl\Editor\ReorderableList\IReorderableListAdaptor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/IReorderableListAdaptor.cs) | C# | 18 | 70 | 9 | 97 |
+| [Assets\InControl\Editor\ReorderableList\Internal\GUIHelper.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/Internal/GUIHelper.cs) | C# | 26 | 15 | 11 | 52 |
+| [Assets\InControl\Editor\ReorderableList\Internal\ReorderableListResources.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/Internal/ReorderableListResources.cs) | C# | 123 | 65 | 28 | 216 |
+| [Assets\InControl\Editor\ReorderableList\ReorderableListControl.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/ReorderableListControl.cs) | C# | 836 | 618 | 232 | 1,686 |
+| [Assets\InControl\Editor\ReorderableList\ReorderableListFlags.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/ReorderableListFlags.cs) | C# | 16 | 41 | 4 | 61 |
+| [Assets\InControl\Editor\ReorderableList\ReorderableListGUI.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/ReorderableListGUI.cs) | C# | 351 | 227 | 94 | 672 |
+| [Assets\InControl\Editor\ReorderableList\SerializedPropertyAdaptor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Editor/ReorderableList/SerializedPropertyAdaptor.cs) | C# | 125 | 52 | 26 | 203 |
+| [Assets\InControl\Examples\Basic\CubeController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/Basic/CubeController.cs) | C# | 15 | 2 | 6 | 23 |
+| [Assets\InControl\Examples\CustomProfile\CubeController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/CustomProfile/CubeController.cs) | C# | 53 | 7 | 21 | 81 |
+| [Assets\InControl\Examples\CustomProfile\KeyboardAndMouseProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/CustomProfile/KeyboardAndMouseProfile.cs) | C# | 112 | 9 | 8 | 129 |
+| [Assets\InControl\Examples\Gyro\CubeController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/Gyro/CubeController.cs) | C# | 32 | 11 | 10 | 53 |
+| [Assets\InControl\Examples\Gyro\GyroProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/Gyro/GyroProfile.cs) | C# | 42 | 5 | 7 | 54 |
+| [Assets\InControl\Examples\InterfaceMovement\Button.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/InterfaceMovement/Button.cs) | C# | 25 | 2 | 9 | 36 |
+| [Assets\InControl\Examples\InterfaceMovement\ButtonFocus.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/InterfaceMovement/ButtonFocus.cs) | C# | 12 | 2 | 4 | 18 |
+| [Assets\InControl\Examples\InterfaceMovement\ButtonManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/InterfaceMovement/ButtonManager.cs) | C# | 32 | 2 | 12 | 46 |
+| [Assets\InControl\Examples\Multiplayer\CubeController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Examples/Multiplayer/CubeController.cs) | C# | 57 | 3 | 11 | 71 |
+| [Assets\InControl\Source\Compatibility\HeaderAttribute.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Compatibility/HeaderAttribute.cs) | C# | 38 | 0 | 12 | 50 |
+| [Assets\InControl\Source\Compatibility\RangeAttribute.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Compatibility/RangeAttribute.cs) | C# | 38 | 0 | 8 | 46 |
+| [Assets\InControl\Source\Compatibility\SpaceAttribute.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Compatibility/SpaceAttribute.cs) | C# | 35 | 0 | 10 | 45 |
+| [Assets\InControl\Source\Components\InControlManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Components/InControlManager.cs) | C# | 104 | 0 | 28 | 132 |
+| [Assets\InControl\Source\Control\InputControl.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/InputControl.cs) | C# | 154 | 1 | 60 | 215 |
+| [Assets\InControl\Source\Control\InputControlMapping.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/InputControlMapping.cs) | C# | 62 | 7 | 23 | 92 |
+| [Assets\InControl\Source\Control\InputControlSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/InputControlSource.cs) | C# | 9 | 0 | 4 | 13 |
+| [Assets\InControl\Source\Control\InputControlState.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/InputControlState.cs) | C# | 47 | 0 | 19 | 66 |
+| [Assets\InControl\Source\Control\InputControlType.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/InputControlType.cs) | C# | 83 | 9 | 17 | 109 |
+| [Assets\InControl\Source\Control\OneAxisInputControl.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/OneAxisInputControl.cs) | C# | 64 | 0 | 30 | 94 |
+| [Assets\InControl\Source\Control\TwoAxisInputControl.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Control/TwoAxisInputControl.cs) | C# | 72 | 0 | 29 | 101 |
+| [Assets\InControl\Source\Debug\Logger.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Debug/Logger.cs) | C# | 45 | 0 | 14 | 59 |
+| [Assets\InControl\Source\Device\InputDevice.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Device/InputDevice.cs) | C# | 241 | 8 | 80 | 329 |
+| [Assets\InControl\Source\Device\InputDeviceManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Device/InputDeviceManager.cs) | C# | 15 | 0 | 6 | 21 |
+| [Assets\InControl\Source\InputManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/InputManager.cs) | C# | 330 | 10 | 98 | 438 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityAnalogSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityAnalogSource.cs) | C# | 43 | 0 | 15 | 58 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityButtonSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityButtonSource.cs) | C# | 43 | 0 | 15 | 58 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityGyroAxisSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityGyroAxisSource.cs) | C# | 47 | 5 | 20 | 72 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityKeyCodeAxisSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityKeyCodeAxisSource.cs) | C# | 32 | 0 | 13 | 45 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityKeyCodeComboSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityKeyCodeComboSource.cs) | C# | 28 | 0 | 10 | 38 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityKeyCodeSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityKeyCodeSource.cs) | C# | 28 | 0 | 10 | 38 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityMouseAxisSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityMouseAxisSource.cs) | C# | 21 | 0 | 10 | 31 |
+| [Assets\InControl\Source\Unity\ControlSources\UnityMouseButtonSource.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/ControlSources/UnityMouseButtonSource.cs) | C# | 21 | 0 | 10 | 31 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\AmazonFireTVProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/AmazonFireTVProfile.cs) | C# | 131 | 1 | 8 | 140 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\AmazonFireTVRemoteProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/AmazonFireTVRemoteProfile.cs) | C# | 65 | 1 | 8 | 74 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\AndroidTVProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/AndroidTVProfile.cs) | C# | 125 | 4 | 7 | 136 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\AndroidTVRemoteProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/AndroidTVRemoteProfile.cs) | C# | 59 | 4 | 7 | 70 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\AppleMFiProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/AppleMFiProfile.cs) | C# | 110 | 1 | 9 | 120 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\ExecutionerXProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/ExecutionerXProfile.cs) | C# | 137 | 1 | 8 | 146 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GameStickLinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GameStickLinuxProfile.cs) | C# | 121 | 1 | 9 | 131 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GameStickProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GameStickProfile.cs) | C# | 123 | 1 | 8 | 132 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GenericAndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GenericAndroidProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GenericBlackberryProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GenericBlackberryProfile.cs) | C# | 142 | 1 | 8 | 151 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GenericLinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GenericLinuxProfile.cs) | C# | 141 | 1 | 9 | 151 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GoogleNexusPlayerProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GoogleNexusPlayerProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GoogleNexusPlayerRemoteProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GoogleNexusPlayerRemoteProfile.cs) | C# | 63 | 0 | 7 | 70 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\GreenThrottleAtlasAndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/GreenThrottleAtlasAndroidProfile.cs) | C# | 130 | 1 | 8 | 139 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\HamaBlackForceWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/HamaBlackForceWinProfile.cs) | C# | 135 | 1 | 9 | 145 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF310LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF310LinuxProfile.cs) | C# | 136 | 1 | 9 | 146 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF310ModeDMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF310ModeDMacProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF310ModeDWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF310ModeDWinProfile.cs) | C# | 136 | 1 | 8 | 145 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF310ModeXMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF310ModeXMacProfile.cs) | C# | 134 | 1 | 8 | 143 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF310ModeXWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF310ModeXWinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF510LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF510LinuxProfile.cs) | C# | 136 | 1 | 9 | 146 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF510WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF510WinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF710LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF710LinuxProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF710MacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF710MacProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF710ModeDWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF710ModeDWinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechF710ModeXWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechF710ModeXWinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechRumblePad2MacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechRumblePad2MacProfile.cs) | C# | 122 | 1 | 9 | 132 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechRumblePad2WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechRumblePad2WinProfile.cs) | C# | 127 | 1 | 9 | 137 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\LogitechWingManWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/LogitechWingManWinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\MaxFireBlaze5WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/MaxFireBlaze5WinProfile.cs) | C# | 139 | 1 | 8 | 148 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\MogaProLinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/MogaProLinuxProfile.cs) | C# | 131 | 1 | 10 | 142 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\MogaProMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/MogaProMacProfile.cs) | C# | 140 | 1 | 9 | 150 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\MogaProWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/MogaProWinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\NVidiaShieldAndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/NVidiaShieldAndroidProfile.cs) | C# | 133 | 7 | 9 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\NVidiaShieldWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/NVidiaShieldWinProfile.cs) | C# | 146 | 1 | 8 | 155 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\NatecGenesisP44WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/NatecGenesisP44WinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\OuyaLinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/OuyaLinuxProfile.cs) | C# | 140 | 1 | 10 | 151 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\OuyaWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/OuyaWinProfile.cs) | C# | 142 | 1 | 9 | 152 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation2WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation2WinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation3AndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation3AndroidProfile.cs) | C# | 142 | 1 | 9 | 152 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation3LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation3LinuxProfile.cs) | C# | 132 | 1 | 9 | 142 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation3MacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation3MacProfile.cs) | C# | 131 | 1 | 8 | 140 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation3ShenghicWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation3ShenghicWinProfile.cs) | C# | 130 | 1 | 8 | 139 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation3WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation3WinProfile.cs) | C# | 150 | 1 | 8 | 159 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4AndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4AndroidProfile.cs) | C# | 139 | 2 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4LinuxProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4MacBTProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4MacBTProfile.cs) | C# | 179 | 3 | 10 | 192 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4MacUSBProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4MacUSBProfile.cs) | C# | 149 | 1 | 8 | 158 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4Profile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4Profile.cs) | C# | 131 | 1 | 8 | 140 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStation4WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStation4WinProfile.cs) | C# | 151 | 1 | 8 | 160 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\PlayStationVitaPSMProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/PlayStationVitaPSMProfile.cs) | C# | 118 | 1 | 7 | 126 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SamsungGP20AndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SamsungGP20AndroidProfile.cs) | C# | 115 | 1 | 8 | 124 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SpeedlinkStrikeMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SpeedlinkStrikeMacProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SpeedlinkStrikeWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SpeedlinkStrikeWinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SteelSeriesFreeLinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SteelSeriesFreeLinuxProfile.cs) | C# | 116 | 1 | 9 | 126 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SteelSeriesFreeMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SteelSeriesFreeMacProfile.cs) | C# | 141 | 1 | 8 | 150 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\SteelSeriesFreeWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/SteelSeriesFreeWinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\ValveStreamingWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/ValveStreamingWinProfile.cs) | C# | 140 | 1 | 8 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\Xbox360AndroidProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/Xbox360AndroidProfile.cs) | C# | 136 | 1 | 9 | 146 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\Xbox360LinuxProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/Xbox360LinuxProfile.cs) | C# | 165 | 1 | 10 | 176 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\Xbox360MacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/Xbox360MacProfile.cs) | C# | 139 | 1 | 9 | 149 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\Xbox360WinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/Xbox360WinProfile.cs) | C# | 164 | 1 | 9 | 174 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\XboxOneMacProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/XboxOneMacProfile.cs) | C# | 136 | 1 | 8 | 145 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\XboxOneProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/XboxOneProfile.cs) | C# | 141 | 1 | 8 | 150 |
+| [Assets\InControl\Source\Unity\DeviceProfiles\XboxOneWinProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/DeviceProfiles/XboxOneWinProfile.cs) | C# | 135 | 1 | 8 | 144 |
+| [Assets\InControl\Source\Unity\UnityInputDevice.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/UnityInputDevice.cs) | C# | 114 | 3 | 32 | 149 |
+| [Assets\InControl\Source\Unity\UnityInputDeviceManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/UnityInputDeviceManager.cs) | C# | 199 | 6 | 44 | 249 |
+| [Assets\InControl\Source\Unity\UnityInputDeviceProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/UnityInputDeviceProfile.cs) | C# | 228 | 0 | 67 | 295 |
+| [Assets\InControl\Source\Unity\UnityInputDeviceProfileList.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/UnityInputDeviceProfileList.cs) | C# | 76 | 0 | 2 | 78 |
+| [Assets\InControl\Source\Unity\UnityUnknownDeviceProfile.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Unity/UnityUnknownDeviceProfile.cs) | C# | 46 | 0 | 10 | 56 |
+| [Assets\InControl\Source\Utility\SingletonMonoBehavior.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Utility/SingletonMonoBehavior.cs) | C# | 31 | 0 | 6 | 37 |
+| [Assets\InControl\Source\Utility\Utility.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/Utility/Utility.cs) | C# | 123 | 0 | 30 | 153 |
+| [Assets\InControl\Source\VersionInfo.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/VersionInfo.cs) | C# | 104 | 0 | 30 | 134 |
+| [Assets\InControl\Source\XInput\XInputDevice.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/XInput/XInputDevice.cs) | C# | 79 | 0 | 29 | 108 |
+| [Assets\InControl\Source\XInput\XInputDeviceManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/XInput/XInputDeviceManager.cs) | C# | 85 | 1 | 18 | 104 |
+| [Assets\InControl\Source\XInput\XInputDotNetPure\GamePad.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/XInput/XInputDotNetPure/GamePad.cs) | C# | 296 | 0 | 91 | 387 |
+| [Assets\InControl\Source\XInput\XInputDotNetPure\Utils.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/InControl/Source/XInput/XInputDotNetPure/Utils.cs) | C# | 81 | 1 | 19 | 101 |
+| [Assets\Scripts\AI\AIAgent.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/AIAgent.cs) | C# | 1,008 | 142 | 343 | 1,493 |
+| [Assets\Scripts\AI\AIAlpha.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/AIAlpha.cs) | C# | 225 | 18 | 64 | 307 |
+| [Assets\Scripts\AI\AirductPlacement.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/AirductPlacement.cs) | C# | 19 | 0 | 8 | 27 |
+| [Assets\Scripts\AI\AudioTriggerTest.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/AudioTriggerTest.cs) | C# | 18 | 2 | 10 | 30 |
+| [Assets\Scripts\AI\PatrolPath.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/PatrolPath.cs) | C# | 35 | 0 | 10 | 45 |
+| [Assets\Scripts\AI\PatrolPathManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/PatrolPathManager.cs) | C# | 36 | 0 | 15 | 51 |
+| [Assets\Scripts\AI\StabilizeCamera.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/StabilizeCamera.cs) | C# | 11 | 0 | 3 | 14 |
+| [Assets\Scripts\AI\SurveillanceArea.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/SurveillanceArea.cs) | C# | 17 | 0 | 4 | 21 |
+| [Assets\Scripts\AI\SurveillanceRoomAgent.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AI/SurveillanceRoomAgent.cs) | C# | 117 | 11 | 36 | 164 |
+| [Assets\Scripts\AgentBehaviour.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AgentBehaviour.cs) | C# | 25 | 22 | 12 | 59 |
+| [Assets\Scripts\AnimatorTest.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/AnimatorTest.cs) | C# | 22 | 2 | 8 | 32 |
+| [Assets\Scripts\BreathActivator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/BreathActivator.cs) | C# | 39 | 1 | 16 | 56 |
+| [Assets\Scripts\CameraFollow.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/CameraFollow.cs) | C# | 133 | 5 | 54 | 192 |
+| [Assets\Scripts\Checkpoint.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Checkpoint.cs) | C# | 12 | 0 | 4 | 16 |
+| [Assets\Scripts\CloseUpObject.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/CloseUpObject.cs) | C# | 35 | 0 | 19 | 54 |
+| [Assets\Scripts\CollectableItem.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/CollectableItem.cs) | C# | 14 | 0 | 5 | 19 |
+| [Assets\Scripts\CopyRotation.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/CopyRotation.cs) | C# | 28 | 1 | 10 | 39 |
+| [Assets\Scripts\CrawlSpaceEntrance.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/CrawlSpaceEntrance.cs) | C# | 17 | 0 | 6 | 23 |
+| [Assets\Scripts\DarkAmbient.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/DarkAmbient.cs) | C# | 23 | 1 | 8 | 32 |
+| [Assets\Scripts\DarkAmbientActivator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/DarkAmbientActivator.cs) | C# | 6 | 0 | 2 | 8 |
+| [Assets\Scripts\DecayTimer.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/DecayTimer.cs) | C# | 66 | 4 | 21 | 91 |
+| [Assets\Scripts\DisableOnStart.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/DisableOnStart.cs) | C# | 15 | 1 | 5 | 21 |
+| [Assets\Scripts\Editor\PlayFromHereInitData.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Editor/PlayFromHereInitData.cs) | C# | 133 | 12 | 21 | 166 |
+| [Assets\Scripts\Elevator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Elevator.cs) | C# | 125 | 6 | 46 | 177 |
+| [Assets\Scripts\ElevatorButton.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/ElevatorButton.cs) | C# | 37 | 0 | 11 | 48 |
+| [Assets\Scripts\ElevatorDoors.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/ElevatorDoors.cs) | C# | 20 | 0 | 6 | 26 |
+| [Assets\Scripts\ElevatorIndicator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/ElevatorIndicator.cs) | C# | 15 | 0 | 4 | 19 |
+| [Assets\Scripts\EnemyAnimationEvents.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/EnemyAnimationEvents.cs) | C# | 85 | 0 | 24 | 109 |
+| [Assets\Scripts\FreeLookCamera.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/FreeLookCamera.cs) | C# | 21 | 2 | 14 | 37 |
+| [Assets\Scripts\GameplayCanvas.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/GameplayCanvas.cs) | C# | 62 | 0 | 17 | 79 |
+| [Assets\Scripts\GlassReflector.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/GlassReflector.cs) | C# | 20 | 1 | 10 | 31 |
+| [Assets\Scripts\GuardVision.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/GuardVision.cs) | C# | 84 | 0 | 28 | 112 |
+| [Assets\Scripts\InteractUIManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/InteractUIManager.cs) | C# | 161 | 1 | 38 | 200 |
+| [Assets\Scripts\Interactable.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Interactable.cs) | C# | 13 | 0 | 7 | 20 |
+| [Assets\Scripts\InteractableDrawer.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/InteractableDrawer.cs) | C# | 36 | 0 | 15 | 51 |
+| [Assets\Scripts\Intermission.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Intermission.cs) | C# | 50 | 1 | 23 | 74 |
+| [Assets\Scripts\Inventory.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Inventory.cs) | C# | 114 | 0 | 32 | 146 |
+| [Assets\Scripts\Item.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Item.cs) | C# | 11 | 0 | 7 | 18 |
+| [Assets\Scripts\KeycardReader.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/KeycardReader.cs) | C# | 23 | 1 | 9 | 33 |
+| [Assets\Scripts\Keypad.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Keypad.cs) | C# | 69 | 1 | 16 | 86 |
+| [Assets\Scripts\KeypadButton.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/KeypadButton.cs) | C# | 44 | 0 | 20 | 64 |
+| [Assets\Scripts\LastNotesMusic.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/LastNotesMusic.cs) | C# | 35 | 1 | 12 | 48 |
+| [Assets\Scripts\MainMenuAnimator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/MainMenuAnimator.cs) | C# | 42 | 2 | 24 | 68 |
+| [Assets\Scripts\MainMenuUI.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/MainMenuUI.cs) | C# | 61 | 0 | 18 | 79 |
+| [Assets\Scripts\MovingDoor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/MovingDoor.cs) | C# | 97 | 4 | 34 | 135 |
+| [Assets\Scripts\MyInputManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/MyInputManager.cs) | C# | 149 | 0 | 32 | 181 |
+| [Assets\Scripts\OperatingTable.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/OperatingTable.cs) | C# | 28 | 0 | 10 | 38 |
+| [Assets\Scripts\OperatingTableLoop.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/OperatingTableLoop.cs) | C# | 38 | 0 | 9 | 47 |
+| [Assets\Scripts\OutdoorManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/OutdoorManager.cs) | C# | 110 | 0 | 41 | 151 |
+| [Assets\Scripts\OverTheShoulder.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/OverTheShoulder.cs) | C# | 19 | 5 | 4 | 28 |
+| [Assets\Scripts\Phone.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Phone.cs) | C# | 24 | 0 | 10 | 34 |
+| [Assets\Scripts\Player.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Player.cs) | C# | 790 | 42 | 236 | 1,068 |
+| [Assets\Scripts\PlayerAnimationEvents.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/PlayerAnimationEvents.cs) | C# | 136 | 0 | 35 | 171 |
+| [Assets\Scripts\PlayerBehaviour.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/PlayerBehaviour.cs) | C# | 32 | 22 | 12 | 66 |
+| [Assets\Scripts\PowerSwitch.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/PowerSwitch.cs) | C# | 29 | 1 | 18 | 48 |
+| [Assets\Scripts\RestrictedAreaManager.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/RestrictedAreaManager.cs) | C# | 21 | 0 | 7 | 28 |
+| [Assets\Scripts\ScreenShotCamera.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/ScreenShotCamera.cs) | C# | 26 | 1 | 7 | 34 |
+| [Assets\Scripts\SecretAreaTrigger.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SecretAreaTrigger.cs) | C# | 76 | 0 | 26 | 102 |
+| [Assets\Scripts\SecretDoorSwitch.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SecretDoorSwitch.cs) | C# | 18 | 0 | 7 | 25 |
+| [Assets\Scripts\SecretMusic.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SecretMusic.cs) | C# | 35 | 1 | 12 | 48 |
+| [Assets\Scripts\Shaders\CRTEffect.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/CRTEffect.cs) | C# | 39 | 0 | 5 | 44 |
+| [Assets\Scripts\Shaders\CRTShader.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/CRTShader.shader) | ShaderLab | 62 | 1 | 13 | 76 |
+| [Assets\Scripts\Shaders\ContrastEffect.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/ContrastEffect.cs) | C# | 37 | 0 | 6 | 43 |
+| [Assets\Scripts\Shaders\ContrastShader.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/ContrastShader.shader) | ShaderLab | 48 | 1 | 8 | 57 |
+| [Assets\Scripts\Shaders\Dissolve 1.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/Dissolve%201.shader) | ShaderLab | 70 | 3 | 15 | 88 |
+| [Assets\Scripts\Shaders\DoubleSided.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/DoubleSided.shader) | ShaderLab | 34 | 8 | 7 | 49 |
+| [Assets\Scripts\Shaders\GlitchEffect.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/GlitchEffect.cs) | C# | 75 | 1 | 17 | 93 |
+| [Assets\Scripts\Shaders\GlitchShader.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/GlitchShader.shader) | ShaderLab | 55 | 1 | 19 | 75 |
+| [Assets\Scripts\Shaders\GuardVision.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/GuardVision.shader) | ShaderLab | 53 | 1 | 10 | 64 |
+| [Assets\Scripts\Shaders\GuardVisionEffect.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/GuardVisionEffect.cs) | C# | 46 | 0 | 10 | 56 |
+| [Assets\Scripts\Shaders\Interact.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/Interact.shader) | ShaderLab | 63 | 3 | 10 | 76 |
+| [Assets\Scripts\Shaders\InverseSphericalDissolve 1.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/InverseSphericalDissolve%201.shader) | ShaderLab | 51 | 6 | 10 | 67 |
+| [Assets\Scripts\Shaders\Outline.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/Outline.shader) | ShaderLab | 81 | 1 | 18 | 100 |
+| [Assets\Scripts\Shaders\RetroSize.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/RetroSize.cs) | C# | 65 | 15 | 15 | 95 |
+| [Assets\Scripts\Shaders\SphericalDissolve.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/SphericalDissolve.shader) | ShaderLab | 51 | 6 | 10 | 67 |
+| [Assets\Scripts\Shaders\SphericalDissolveEmission.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/SphericalDissolveEmission.shader) | ShaderLab | 51 | 6 | 10 | 67 |
+| [Assets\Scripts\Shaders\VerticalFog.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/VerticalFog.shader) | ShaderLab | 55 | 0 | 16 | 71 |
+| [Assets\Scripts\Shaders\fog.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Shaders/fog.shader) | ShaderLab | 24 | 0 | 0 | 24 |
+| [Assets\Scripts\SimpleMovement.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SimpleMovement.cs) | C# | 23 | 2 | 12 | 37 |
+| [Assets\Scripts\SoundEngine.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SoundEngine.cs) | C# | 60 | 3 | 19 | 82 |
+| [Assets\Scripts\SphereMaskController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/SphereMaskController.cs) | C# | 13 | 0 | 3 | 16 |
+| [Assets\Scripts\UIVideo.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/UIVideo.cs) | C# | 24 | 1 | 0 | 25 |
+| [Assets\Scripts\VictoryVision.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/VictoryVision.cs) | C# | 44 | 1 | 20 | 65 |
+| [Assets\Scripts\VirtualCursor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/VirtualCursor.cs) | C# | 48 | 2 | 23 | 73 |
+| [Assets\Scripts\VisionAnimator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/VisionAnimator.cs) | C# | 79 | 2 | 25 | 106 |
+| [Assets\Scripts\Water.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/Water.cs) | C# | 79 | 1 | 9 | 89 |
+| [Assets\Scripts\WindowCleanerElevator.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/WindowCleanerElevator.cs) | C# | 110 | 0 | 46 | 156 |
+| [Assets\Scripts\firstPersonCamera.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Scripts/firstPersonCamera.cs) | C# | 113 | 3 | 30 | 146 |
+| [Assets\Shared\Ramps\Editor\RampAssetEditor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Ramps/Editor/RampAssetEditor.cs) | C# | 31 | 0 | 3 | 34 |
+| [Assets\Shared\Ramps\Runtime\RampAsset.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Ramps/Runtime/RampAsset.cs) | C# | 11 | 0 | 3 | 14 |
+| [Assets\Shared\Scripts\AdjustTimeScale.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Scripts/AdjustTimeScale.cs) | C# | 43 | 0 | 10 | 53 |
+| [Assets\Shared\Scripts\ProximityActivate.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Scripts/ProximityActivate.cs) | C# | 76 | 0 | 9 | 85 |
+| [Assets\Shared\Scripts\SimpleCameraController.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Scripts/SimpleCameraController.cs) | C# | 125 | 8 | 27 | 160 |
+| [Assets\Shared\Scripts\SimpleCharacterMotor.cs](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Shared/Scripts/SimpleCharacterMotor.cs) | C# | 66 | 0 | 11 | 77 |
+| [Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAdd.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Standard%20Assets/ParticleSystems/Shaders/PriorityParticleAdd.shader) | ShaderLab | 88 | 3 | 15 | 106 |
+| [Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAddSoft.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Standard%20Assets/ParticleSystems/Shaders/PriorityParticleAddSoft.shader) | ShaderLab | 87 | 3 | 14 | 104 |
+| [Assets\Standard Assets\ParticleSystems\Shaders\PriorityParticleAlpha.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/Standard%20Assets/ParticleSystems/Shaders/PriorityParticleAlpha.shader) | ShaderLab | 88 | 3 | 15 | 106 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_Bitmap-Mobile.shader) | ShaderLab | 111 | 3 | 30 | 144 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_Bitmap.shader) | ShaderLab | 108 | 3 | 33 | 144 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF%20Overlay.shader) | ShaderLab | 235 | 4 | 67 | 306 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF-Mobile%20Masking.shader) | ShaderLab | 185 | 11 | 48 | 244 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF-Mobile%20Overlay.shader) | ShaderLab | 174 | 8 | 48 | 230 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF-Mobile.shader) | ShaderLab | 174 | 8 | 48 | 230 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF-Surface-Mobile.shader) | ShaderLab | 101 | 8 | 28 | 137 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF-Surface.shader) | ShaderLab | 120 | 4 | 32 | 156 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_SDF.shader) | ShaderLab | 235 | 4 | 67 | 306 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMP_Sprite.shader) | ShaderLab | 92 | 0 | 22 | 114 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMPro.cginc) | HLSL | 63 | 2 | 20 | 85 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMPro_Properties.cginc) | HLSL | 61 | 10 | 14 | 85 |
+| [Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Resources/Shaders/TMPro_Surface.cginc) | HLSL | 84 | 9 | 23 | 116 |
+| [Assets\TextMesh Pro\Sprites\EmojiOne.json](file:///d%3A/Projects/GitHub/3rdPersonStealth/Assets/TextMesh%20Pro/Sprites/EmojiOne.json) | JSON | 155 | 0 | 2 | 157 |
+| [NavMeshComponents.csproj](file:///d%3A/Projects/GitHub/3rdPersonStealth/NavMeshComponents.csproj) | XML | 323 | 7 | 2 | 332 |
+| [NavMeshComponentsEditor.csproj](file:///d%3A/Projects/GitHub/3rdPersonStealth/NavMeshComponentsEditor.csproj) | XML | 331 | 7 | 2 | 340 |
+| [Packages\manifest.json](file:///d%3A/Projects/GitHub/3rdPersonStealth/Packages/manifest.json) | JSON | 39 | 0 | 1 | 40 |
+
+[summary](results.md)

@@ -33,6 +33,16 @@ public class Elevator : MonoBehaviour
 
     public static Elevator instance;
 
+    ElevatorIndicator[] indicators;
+
+    private bool playerInside;
+
+    public delegate void ElevatorCalled(int floor);
+    public static event ElevatorCalled OnElevatorCalled;
+
+    [SerializeField]
+    private Vector3[] floorLocations;
+
     void Start()
     {
         for (int i = 0; i < elevatorPoints.Length; i++)
@@ -48,11 +58,23 @@ public class Elevator : MonoBehaviour
 
         elevatorPowered = eEnabled;
 
+        indicators = FindObjectsOfType(typeof(ElevatorIndicator)) as ElevatorIndicator[];
+
+         for(int i = 0; i < indicators.Length; i++)
+        {
+            indicators[i].UpdateText(currentFloor.ToString());
+        }
+
     }
 
     void Awake()
     {
         instance = this;
+
+        for(int i = 0; i < floorLocations.Length; i++)
+        {
+            floorLocations[i] = transform.TransformPoint(floorLocations[i]);
+        }
     }
 
     public void ResetElevators()
@@ -70,6 +92,13 @@ public class Elevator : MonoBehaviour
         if (floor == currentFloor || moving || !elevatorPowered)
             return;
 
+        for(int i = 0; i < indicators.Length; i++)
+        {
+            indicators[i].UpdateText(floor.ToString());
+        }
+
+
+       
         targetFloor = floor;
         StartCoroutine(MoveElevator());
 
@@ -87,6 +116,13 @@ public class Elevator : MonoBehaviour
 
         SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "elevatorDoorClose", doors.getDoor(currentFloor).transform.TransformPoint(-1.76f, 1, 0), null, 1, 0);
         moving = true;
+
+         //Don't bother firing the event when the elevator is going to the top floor
+        if(OnElevatorCalled != null && targetFloor != 6)
+        {
+            OnElevatorCalled(targetFloor);
+        }
+
         yield return new WaitForSeconds(2);
 
         float targetY = elevatorPoints[targetFloor];
@@ -122,6 +158,46 @@ public class Elevator : MonoBehaviour
         door.GetComponent<Collider>().enabled = false;
 
 
+    }
+    
+    public bool playerInsideElevator()
+    {
+        if(moving == false)
+        {
+            return false;
+        }
+
+        return playerInside;
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if(col.tag == "Player")
+        {
+            playerInside = true;
+        }
+    }
+    void OnTriggerExit(Collider col)
+    {
+        if(col.tag == "Player")
+        {
+            playerInside = false;
+        }
+    }
+    
+    public Vector3 GetFloorLocation(int floor)
+    {
+        return floorLocations[floor];
+    }
+    void OnDrawGizmos()
+    {
+        if(floorLocations != null)
+        {
+            for(int i = 0; i < floorLocations.Length; i++)
+            {
+                Gizmos.DrawCube(transform.TransformPoint(floorLocations[i]),Vector3.one*0.4f);
+            }
+        }
     }
 
 }

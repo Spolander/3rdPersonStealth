@@ -129,6 +129,9 @@ public class AIAgent : MonoBehaviour
 
     protected bool investigateLocationReached = false;
 
+    [SerializeField]
+    protected bool searchOutsideOwnArea = false;
+
     //how many times has this agent investigated an area
     protected int investigationCount = 0;
 
@@ -157,6 +160,16 @@ public class AIAgent : MonoBehaviour
 
     //ESCORT VARIABLES
     protected Vector3 playerLastSeenPosition;
+
+    //last player position that we DEFINITELY CAN REACH
+    protected Vector3 lastReachableLocation;
+
+    protected bool playerUnreachable = false;
+
+    protected float lastPlayerSighting;
+
+    //how long the AI sees the player when line of sight has been lost
+    protected float playerSightingMemory = 1;
 
     protected float pathFindingInterval = 0.3f;
 
@@ -223,6 +236,7 @@ public class AIAgent : MonoBehaviour
         head = anim.GetBoneTransform(HumanBodyBones.Head);
 
         randomIdleTime = UnityEngine.Random.Range(randomIdleMin, randomIdleMax);
+        lastPlayerSighting = -playerSightingMemory;
     }
 
     void Start()
@@ -344,6 +358,7 @@ public class AIAgent : MonoBehaviour
                 {
                     if (AIAlpha.instance.EscortInProgress == false)
                     {
+                        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "alert", transform.position, null, 0, 0);
                         AIAlpha.instance.ReportEscort(this);
                         ChangeState(AIState.Escort);
                     }
@@ -440,12 +455,21 @@ public class AIAgent : MonoBehaviour
     }
     protected virtual bool Awareness()
     {
+
+        if (Time.time < lastPlayerSighting + playerSightingMemory)
+        {
+            playerLastSeenPosition = Player.instance.transform.position;
+        }
+
         //return the latest updated value if it isn't time yet
         if (Time.time < lastAwarenessCheck + awarenessInterval)
+        {
             return lastPlayerSpotted;
+        }
+
 
         lastAwarenessCheck = Time.time;
-        Vector3 playerCenterPoint = Player.instance.transform.TransformPoint(0, 1.8f, 0);
+        Vector3 playerCenterPoint = Player.instance.PlayerCenter;
 
 
         if (!Physics.Linecast(head.position, playerCenterPoint, visionBlockingLayers, QueryTriggerInteraction.Ignore))
@@ -458,6 +482,7 @@ public class AIAgent : MonoBehaviour
 
             if (angle <= fov && distance <= sightDistance)
             {
+                lastPlayerSighting = Time.time;
                 lastPlayerSpotted = true;
                 playerLastSeenPosition = Player.instance.transform.position;
                 timeSinceLastSighting = 0;
@@ -490,9 +515,11 @@ public class AIAgent : MonoBehaviour
                 investigateTimer = 0;
                 investigateLocationReached = false;
 
-                if (searchingForPlayer)
+                searchingForPlayer = true;
+                ChangeState(AIState.Patrol);
+
+                if (searchOutsideOwnArea)
                 {
-                    ChangeState(AIState.Patrol);
                     //get closest floor 
                     currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
                     currentPathIndex++;
@@ -501,9 +528,10 @@ public class AIAgent : MonoBehaviour
 
                     currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
 
-                    searchingForPlayer = true;
                     agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
                 }
+
+
 
                 return;
             }
@@ -520,6 +548,13 @@ public class AIAgent : MonoBehaviour
         {
             //choose moving speed based on the current situation
             animatorForwardTarget = AIAlpha.instance.Situation == AIAlpha.SituationState.Normal ? 25 : 50;
+
+
+            //run if the player is in the elevator
+            if(Elevator.instance.playerInsideElevator())
+            {
+                animatorForwardTarget = 50;
+            }
             RotateTowardsSteeringTarget();
             LookAround();
         }
@@ -527,7 +562,7 @@ public class AIAgent : MonoBehaviour
 
         playerSpotted = Awareness();
 
-        if (playerSpotted)
+        if (playerSpotted && Elevator.instance.playerInsideElevator() == false)
         {
             //stop animator from looking around
             anim.SetBool("LookingAround", false);
@@ -565,7 +600,7 @@ public class AIAgent : MonoBehaviour
 
 
 
-        if (Time.time > lastPathfindingTime + pathFindingInterval)
+        if (Time.time > lastPathfindingTime + pathFindingInterval && playerUnreachable == false)
         {
             NavMeshHit lowerHit;
             NavMeshHit higherHit;
@@ -580,23 +615,60 @@ public class AIAgent : MonoBehaviour
                 float higherDistance = Mathf.Abs(Player.instance.transform.position.y - higherHit.position.y);
 
                 Vector3 destination = lowerDistance < higherDistance ? lowerHit.position : higherHit.position;
-                agent.SetDestination(destination);
+
+                if (calculatingPath == false)
+                {
+
+                    StartCoroutine(CheckReachableLocation(destination));
+                }
+                // agent.SetDestination(destination);
 
             }
             else if (lowerHit.hit)
             {
-                agent.SetDestination(lowerHit.position);
+                //agent.SetDestination(lowerHit.position);
+                if (calculatingPath == false)
+                {
+
+                    StartCoroutine(CheckReachableLocation(lowerHit.position));
+                }
             }
             else if (higherHit.hit)
             {
-                agent.SetDestination(higherHit.position);
+                //agent.SetDestination(higherHit.position);
+                if (calculatingPath == false)
+                {
+
+                    StartCoroutine(CheckReachableLocation(higherHit.position));
+                }
             }
             else
             {
-                agent.SetDestination(playerLastSeenPosition);
+                // agent.SetDestination(playerLastSeenPosition);
+                if (calculatingPath == false)
+                {
+
+                    StartCoroutine(CheckReachableLocation(playerLastSeenPosition));
+                }
             }
             lastPathfindingTime = Time.time;
+
+
+
         }
+        //if the player is in a unreachable location, stand still if we still see him
+        if (agent.pathPending == false && agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathComplete)
+        {
+            playerUnreachable = true;
+            agent.SetDestination(lastReachableLocation);
+
+
+        }
+        else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+        {
+            lastReachableLocation = agent.destination;
+        }
+        Debug.DrawRay(lastReachableLocation, Vector3.up * 100, Color.yellow, 15);
 
         if (agent.remainingDistance >= agent.stoppingDistance)
         {
@@ -613,19 +685,15 @@ public class AIAgent : MonoBehaviour
         }
         else
         {
+
             animatorForwardTarget = 0;
+            playerUnreachable = false;
             agent.velocity = Vector3.zero;
 
             //Rotate towards player
 
         }
 
-        //if the player is in a unreachable location, stand still if we still see him
-        if (agent.pathPending == false && agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathComplete)
-        {
-            animatorForwardTarget = 0;
-            agent.ResetPath();
-        }
 
 
         if (playerSpotted)
@@ -636,7 +704,7 @@ public class AIAgent : MonoBehaviour
                 AIAlpha.instance.ReportPlayerOutsideArea(this);
             }
             //if we see the player inside the airduct, report to alpha
-            else if(Player.instance.InCrawlSpace || Player.instance.InCrawlSpaceTransition)
+            else if (Player.instance.InCrawlSpace || Player.instance.InCrawlSpaceTransition)
             {
                 AIAlpha.instance.ReportAirductEnter(this);
                 return;
@@ -711,15 +779,19 @@ public class AIAgent : MonoBehaviour
                 ChangeState(AIState.Patrol);
 
                 //get closest floor 
-                currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
-                currentPathIndex++;
-                if (currentPathIndex > patrolAreas.Count - 1)
-                    currentPathIndex = 0;
+                if (searchOutsideOwnArea)
+                {
+                    currentPath = PatrolPathManager.instance.GetClosestFloorPath(playerLastSeenPosition.y);
+                    currentPathIndex++;
+                    if (currentPathIndex > patrolAreas.Count - 1)
+                        currentPathIndex = 0;
 
-                currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
+                    currentWaypointIndex = currentPath.GetClosestWaypointIndex(transform.position);
 
-                searchingForPlayer = true;
-                agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
+                    searchingForPlayer = true;
+                    agent.SetDestination(currentPath.transform.TransformPoint(currentPath.Waypoints[currentWaypointIndex]));
+                }
+
             }
             LookAround();
         }
@@ -800,6 +872,10 @@ public class AIAgent : MonoBehaviour
         {
             animatorForwardTarget = 0;
             agent.ResetPath();
+        }
+        else
+        {
+            lastReachableLocation = agent.destination;
         }
 
 
@@ -936,6 +1012,7 @@ public class AIAgent : MonoBehaviour
         guardTimer = 0;
         investigateTimer = 0;
         investigateLocationReached = false;
+        playerUnreachable = false;
 
         if (state == AIState.Patrol)
         {
@@ -995,7 +1072,7 @@ public class AIAgent : MonoBehaviour
         }
         else
         {
-            agent.destination = playerLastSeenPosition;
+            agent.destination = lastReachableLocation;
         }
         calculatingPath = false;
 
@@ -1005,6 +1082,8 @@ public class AIAgent : MonoBehaviour
     public virtual void AudioTrigger(AudioTriggerType type, Vector3 position)
     {
         bool playerSpotted = Awareness();
+
+
 
         //if we hear a player's footstep
         if (type == AudioTriggerType.Footstep)
@@ -1060,8 +1139,8 @@ public class AIAgent : MonoBehaviour
         }
         else if (type == AudioTriggerType.AirDuct)
         {
-            if(state == AIState.Wait)
-            return;
+            if (state == AIState.Wait)
+                return;
 
             footStepsHeard++;
             lastFootStepTime = Time.time;
@@ -1072,13 +1151,13 @@ public class AIAgent : MonoBehaviour
                 airductTriggerCount++;
 
                 //if the threshhold is reached, confirm that the player is inside
-                if(airductTriggerCount >= airductTriggerThreshhold)
+                if (airductTriggerCount >= airductTriggerThreshhold)
                 {
                     airductTriggerCount = 0;
                     AIAlpha.instance.ReportAirductEnter(this);
                     return;
                 }
-                investigateLocation = position-(Vector3.up*airductAudioTriggerOffset);
+                investigateLocation = position - (Vector3.up * airductAudioTriggerOffset);
                 //We have a clue where the player is
                 NavMeshHit hit;
                 NavMesh.SamplePosition(investigateLocation, out hit, 10, NavMesh.AllAreas);
@@ -1318,7 +1397,7 @@ public class AIAgent : MonoBehaviour
     public virtual void SendToInvestigate(Vector3 location)
     {
         investigateLocation = location;
-        if (state != AIState.Investigate && state != AIState.Escort)
+        if (state != AIState.Investigate)
         {
             ChangeState(AIState.Investigate);
         }
@@ -1384,15 +1463,43 @@ public class AIAgent : MonoBehaviour
         }
     }
 
+    private void OnElevatorCalled(int floor)
+    {
+        //Send to investigate the target floor elevator door areas
+        if (timeSinceLastSighting < playerSightingMemory && Elevator.instance.playerInsideElevator())
+        {
+            print("time and place");
+            if (AIAlpha.instance.Situation == AIAlpha.SituationState.Normal)
+            {
+                if (state == AIState.Escort)
+                {
+                    AIAlpha.instance.ReportEscortOver(this);
+                    print("send to investigate");
+                    Vector3 location = Elevator.instance.GetFloorLocation(floor);
+                    SendToInvestigate(location);
+                    // SendToInvestigate();
+                }
+            }
+            else
+            {
+                Vector3 location = Elevator.instance.GetFloorLocation(floor);
+                SendToInvestigate(location);
+            }
+        }
+    }
     void OnEnable()
     {
         Player.OnAirductEnter += OnAirDuctEnter;
         Player.OnAirductExit += OnAirDuctExit;
+
+        Elevator.OnElevatorCalled += OnElevatorCalled;
     }
 
     void OnDisable()
     {
         Player.OnAirductEnter -= OnAirDuctEnter;
         Player.OnAirductExit -= OnAirDuctExit;
+
+        Elevator.OnElevatorCalled -= OnElevatorCalled;
     }
 }

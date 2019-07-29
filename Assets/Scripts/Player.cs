@@ -136,14 +136,15 @@ public class Player : MonoBehaviour
     private float defaultControllerOffset = 1.08f;
     private float defaultControllerHeight = 2;
 
-    private float crouchingControllerOffset = 0.9f;
-    private float crouchingControllerHeight = 1.66f;
+    private float crouchingControllerOffset = 0.65f;
+    private float crouchingControllerHeight = 1.3f;
 
 
     private float airDamping = 0.5f;
 
 
     //VARIABLES FOR AI
+    public Vector3 PlayerCenter{get{return anim.GetBoneTransform(HumanBodyBones.Chest).position;}}
     private bool insideRestrictedArea = false;
     public bool InsideRestrictedArea { get { return insideRestrictedArea; } }
 

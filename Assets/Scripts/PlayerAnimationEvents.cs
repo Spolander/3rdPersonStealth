@@ -144,11 +144,14 @@ public class PlayerAnimationEvents : MonoBehaviour
     {
         if (Player.instance.InCrawlSpace == false && Player.instance.InCrawlSpaceTransition == false)
         {
-            Collider[] cols = Physics.OverlapSphere(transform.position, audioTriggerDistance, 1 << LayerMask.NameToLayer("Guard"));
-
-            for (int i = 0; i < cols.Length; i++)
+            if (Elevator.instance.playerInsideElevator() == false)
             {
-                cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.Footstep, transform.position);
+                Collider[] cols = Physics.OverlapSphere(transform.position, audioTriggerDistance, 1 << LayerMask.NameToLayer("Guard"));
+
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    cols[i].GetComponent<AIAgent>().AudioTrigger(AIAgent.AudioTriggerType.Footstep, transform.position);
+                }
             }
         }
 
