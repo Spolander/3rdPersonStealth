@@ -599,7 +599,6 @@ public class AIAgent : MonoBehaviour
         playerSpotted = Awareness();
 
 
-
         if (Time.time > lastPathfindingTime + pathFindingInterval && playerUnreachable == false)
         {
             NavMeshHit lowerHit;
@@ -691,6 +690,7 @@ public class AIAgent : MonoBehaviour
             agent.velocity = Vector3.zero;
 
             //Rotate towards player
+            RotateTowardsPlayer();
 
         }
 

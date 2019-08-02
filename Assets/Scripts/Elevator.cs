@@ -35,7 +35,7 @@ public class Elevator : MonoBehaviour
 
     ElevatorIndicator[] indicators;
 
-    private bool playerInside;
+    private bool playerInside = false;
 
     public delegate void ElevatorCalled(int floor);
     public static event ElevatorCalled OnElevatorCalled;

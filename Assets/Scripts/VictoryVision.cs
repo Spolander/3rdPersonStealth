@@ -3,62 +3,156 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class VictoryVision : MonoBehaviour {
+using TMPro;
+public class VictoryVision : MonoBehaviour
+{
 
-	public RawImage red;
+    public TMP_Text text;
 
-    private float sinTimer;
+    [TextArea(1, 5)]
+    public string programInfo;
 
-    private float sinSpeed = 4;
+    [TextArea(1, 5)]
+    public string copyright;
 
-	public AudioSource vision;
+	//1
+    private float beepDuration = 1f;
 
-	public AudioSource visionLoop;
+	//0.06
+    private float letterDuration = 0.06f;
 
-	
-	// Update is called once per frame
-	void Update () {
+	private float enterDuration = 0.02f;
 
-		FlashImages();
-		
-	}
-	void Start()
-	{
-		StartCoroutine(visionRoutine());
-	}
-	void FlashImages()
+	private float pauseDuration = 2.5f;
+
+
+    void Start()
     {
-        sinTimer += Time.deltaTime * sinSpeed;
-        red.uvRect = new Rect(Random.insideUnitCircle, Vector2.one);
+        print(System.Environment.UserName);
+        print(System.Environment.CurrentDirectory);
+        print(System.Environment.Version);
 
-        Color c = red.color;
-        c.a = Mathf.Lerp(0.5f,1, (Mathf.Sin(sinTimer) + 1) / 2);
-        red.color = c;
-
-
+        StartCoroutine(TextAnimation());
 
     }
 
-	IEnumerator visionRoutine()
-	{
-		VisionAnimator.visionReached = false;
-		vision.Play();
-		yield return new WaitForSeconds(vision.clip.length);
-		
-		sinTimer = 0;
+    IEnumerator TextAnimation()
+    {
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = programInfo;
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
+        text.text = text.text + copyright;
 
-		float timer = 0;
-		float max = visionLoop.volume;
-		while(timer < 1)
-		{
-			visionLoop.volume = (1-timer)*max;
-			timer += Time.deltaTime/3;
-			yield return null;
-		}
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
 
-		yield return new WaitForSeconds(1);
 
-		Application.Quit();
+        //Show user path to directory 
+        string directory = System.Environment.CurrentDirectory;
+        for (int i = 0; i < directory.Length; i++)
+        {
+            text.text = text.text + directory[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
 
-	}
+        text.text = text.text + "<br>";
+        text.text = text.text + "<br>" + "<";
+        yield return new WaitForSecondsRealtime(beepDuration);
+
+        //start showing commmands
+        string exitCommand = "exit";
+        for (int i = 0; i < exitCommand.Length; i++)
+        {
+            text.text = text.text + exitCommand[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
+        text.text = text.text + "No such command 'exit'";
+
+
+        text.text = text.text + "<br>" + "<";
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+
+
+
+        for (int i = 0; i < exitCommand.Length; i++)
+        {
+            text.text = text.text + exitCommand[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
+        text.text = text.text + "No such command 'exit'";
+
+        text.text = text.text + "<br>" + "<";
+        yield return new WaitForSecondsRealtime(beepDuration);
+        //End exit commands
+
+        string shutdown = "shutdown";
+
+        for (int i = 0; i < shutdown.Length; i++)
+        {
+            text.text = text.text + shutdown[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
+        text.text = text.text + "No such command 'shutdown'";
+
+        text.text = text.text + "<br>" + "<";
+        yield return new WaitForSecondsRealtime(beepDuration);
+        //End exit commands
+
+        string stop = "stop";
+
+        for (int i = 0; i < stop.Length; i++)
+        {
+            text.text = text.text + stop[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+        text.text = text.text + "<br>";
+        text.text = text.text + "No such command 'stop'";
+
+        text.text = text.text + "<br>" + "<";
+
+        yield return new WaitForSecondsRealtime(beepDuration);
+        string help = "help";
+
+        for (int i = 0; i < help.Length; i++)
+        {
+            text.text = text.text + help[i];
+            yield return new WaitForSecondsRealtime(letterDuration);
+        }
+
+        yield return new WaitForSecondsRealtime(beepDuration * 3);
+        text.text = text.text + "<br>";
+        text.text = text.text + "No such command 'help'";
+        text.text = text.text + "<br>";
+
+		yield return new WaitForSecondsRealtime(beepDuration);
+        //smash enter
+
+        for (int i = 0; i < 50; i++)
+        {
+            text.text = text.text+"<" + "<br>";
+			yield return new WaitForSecondsRealtime(enterDuration);
+
+        }
+
+		text.text = "";
+		text.gameObject.SetActive(false);
+
+		yield return new WaitForSecondsRealtime(pauseDuration);
+
+		SceneManager.LoadScene("Credits");
+    }
+
 }

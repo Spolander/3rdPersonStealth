@@ -65,7 +65,8 @@ public class AIAlpha : MonoBehaviour
     {
         //in normal situation send the closest agent to investigate if no one is investigating right now
 
-        if (situation == SituationState.Normal)
+
+        if (situation == SituationState.Normal && escortInProgress == false)
         {
             AIAgent nearest = NearestAgent(position);
             nearest.SendToInvestigate(position);
@@ -152,6 +153,7 @@ public class AIAlpha : MonoBehaviour
     {
         escortInProgress = true;
 
+        print(agent.gameObject.name);
 
         //return all possible waiters to their patrols
         for (int i = 0; i < agents.Count; i++)
