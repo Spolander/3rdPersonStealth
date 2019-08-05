@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 [RequireComponent(typeof(Camera))]
-public class Inventory : MonoBehaviour {
+public class Inventory : MonoBehaviour
+{
 
     [SerializeField]
     private List<Item> items;
@@ -48,11 +49,11 @@ public class Inventory : MonoBehaviour {
         float lastFrame = System.DateTime.Now.Millisecond;
         while (activated)
         {
-            deltaTime = (System.DateTime.Now.Millisecond - lastFrame)/1000;
+            deltaTime = (System.DateTime.Now.Millisecond - lastFrame) / 1000;
             deltaTime = Mathf.Clamp(deltaTime, 0, 1);
             if (currentItem)
             {
-                currentItem.transform.Rotate(0, -Input.GetAxisRaw("KeyboardHorizontal") * deltaTime * inspectRotationSpeed, -Input.GetAxisRaw("KeyboardVertical")*deltaTime*inspectRotationSpeed);
+                currentItem.transform.Rotate(0, -Input.GetAxisRaw("KeyboardHorizontal") * deltaTime * inspectRotationSpeed, -Input.GetAxisRaw("KeyboardVertical") * deltaTime * inspectRotationSpeed);
 
 
                 if (Input.GetKeyDown(KeyCode.Q))
@@ -72,10 +73,21 @@ public class Inventory : MonoBehaviour {
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false && VisionAnimator.instance.Activated == false && Player.instance.Dead == false)
+        if (VisionAnimator.instance == null)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false  && Player.instance.Dead == false)
+            {
+                Activate();
+            }
+        }
+        else
+        {
+             if (Input.GetKeyDown(KeyCode.Tab) && Player.instance.CloseUpEnabled == false && VisionAnimator.instance.Activated == false && Player.instance.Dead == false)
         {
             Activate();
         }
+        }
+
     }
     public void AddItem(Item item)
     {
@@ -100,7 +112,7 @@ public class Inventory : MonoBehaviour {
             Time.timeScale = 1;
             inventoryCamera.enabled = false;
             if (dof)
-                dof.enabled.value= false;
+                dof.enabled.value = false;
         }
         else
         {
@@ -122,7 +134,7 @@ public class Inventory : MonoBehaviour {
         if (currentItem)
             currentItem.gameObject.SetActive(false);
 
-        if (index > items.Count-1)
+        if (index > items.Count - 1)
             index = 0;
         else if (index < 0)
             index = items.Count - 1;

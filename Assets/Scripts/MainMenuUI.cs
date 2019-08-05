@@ -16,6 +16,7 @@ public class MainMenuUI : MonoBehaviour
 
     public AudioSource breath;
 
+    public AudioSource highlightSound;
     void Start()
     {
         for (int i = 0; i < buttons.Length; i++)
@@ -33,6 +34,13 @@ public class MainMenuUI : MonoBehaviour
         buttons[1].SetActive(true);
         yield return new WaitForSecondsRealtime(60f / 182f * 8);
         buttons[2].SetActive(true);
+        yield return new WaitForSecondsRealtime(60f / 182f * 8);
+        buttons[3].SetActive(true);
+    }
+
+    public void OnHighlighted()
+    {
+        highlightSound.Play();
     }
     public void Initiate()
     {
@@ -40,9 +48,16 @@ public class MainMenuUI : MonoBehaviour
         for (int i = 0; i < buttons.Length; i++)
             buttons[i].SetActive(false);
         if (loading == false)
-            StartCoroutine(loadLevel());
+            StartCoroutine(loadLevel("GameIntro"));
 
 
+    }
+    public void Training()
+    {
+       for (int i = 0; i < buttons.Length; i++)
+            buttons[i].SetActive(false);
+        if (loading == false)
+            StartCoroutine(loadLevel("TrainingIntro")); 
     }
 
     public void ExitGame()
@@ -62,12 +77,12 @@ public class MainMenuUI : MonoBehaviour
         Application.Quit();
     }
 
-    IEnumerator loadLevel()
+    IEnumerator loadLevel(string level)
     {
         print("Yea boiii");
         loading = true;
 
-        AsyncOperation a = SceneManager.LoadSceneAsync(1);
+        AsyncOperation a = SceneManager.LoadSceneAsync(level);
         while (a.isDone == false)
         {
             print("Loading");

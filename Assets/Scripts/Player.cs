@@ -136,8 +136,11 @@ public class Player : MonoBehaviour
     private float defaultControllerOffset = 1.08f;
     private float defaultControllerHeight = 2;
 
-    private float crouchingControllerOffset = 0.65f;
-    private float crouchingControllerHeight = 1.3f;
+    private float crouchingControllerOffset = 0.88f;
+    private float crouchingControllerHeight = 1.66f;
+
+    private float crawlControllerOffset = 0.6f;
+    private float crawlControllerHeight = 1.2f;
 
 
     private float airDamping = 0.5f;
@@ -417,6 +420,10 @@ public class Player : MonoBehaviour
     }
     void CheckRestrictedArea()
     {
+        if(RestrictedAreaManager.instance == null)
+        return;
+
+
         if (Time.time > lastRestrictedAreaCheck + restrictedAreaCheckInterval)
         {
             lastRestrictedAreaCheck = Time.time;
@@ -437,7 +444,7 @@ public class Player : MonoBehaviour
                     hit.collider.GetComponent<Interactable>().Interact();
             }
         }
-        else if (input.InteractButtonDown)
+        else if (input.InteractButtonDown || Input.GetKeyDown(KeyCode.Escape))
         {
             DisableFirstPerson();
 
@@ -668,8 +675,8 @@ public class Player : MonoBehaviour
 
             yield return null;
         }
-        controller.height = 0.8f;
-        controller.center = new Vector3(0, 0.4f, 0);
+        controller.height = 0.6f;
+        controller.center = new Vector3(0, 0.2f, 0);
         lastGroundedTime = Time.time;
         isGrounded = true;
         inCrawlSpaceTransition = false;
@@ -1040,6 +1047,16 @@ public class Player : MonoBehaviour
             {
                 VisionAnimator.visionReached = true;
             }
+        }
+        else if(other.tag == "tutorial")
+        {
+            transform.position = checkPointPosition;
+            transform.rotation = checkPointRotation;
+            lastGroundedHeight = checkPointPosition.y;
+        }
+        else if(other.tag == "tutorialend")
+        {
+            SceneManager.LoadScene("GameIntro");
         }
         else if (other.tag == "sea" && !dead)
         {

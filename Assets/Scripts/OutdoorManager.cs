@@ -49,8 +49,17 @@ public class OutdoorManager : MonoBehaviour
 
         cloth = GetComponentInChildren<Cloth>();
 
-        externalWind = Vector3.Scale(windZone.transform.forward, externalWind);
-        randomWind = Vector3.Scale(windZone.transform.forward + windZone.transform.right, randomWind);
+        if (windZone)
+        {
+            externalWind = Vector3.Scale(windZone.transform.forward, externalWind);
+            randomWind = Vector3.Scale(windZone.transform.forward + windZone.transform.right, randomWind);
+        }
+        else
+        {
+            cloth.externalAcceleration = Vector3.zero;
+            cloth.randomAcceleration = Vector3.zero;
+        }
+
 
 
         startOutside = !Physics.Raycast(transform.TransformPoint(0, 1, 0), Vector3.up, 100, 1 << LayerMask.NameToLayer("Default"), QueryTriggerInteraction.Ignore);
@@ -59,20 +68,25 @@ public class OutdoorManager : MonoBehaviour
 
     private void Update()
     {
-        if (cloth)
+        if (windZone)
         {
-            cloth.externalAcceleration = Vector3.MoveTowards(cloth.externalAcceleration, windTarget, Time.deltaTime * 25);
-            cloth.randomAcceleration = Vector3.MoveTowards(cloth.randomAcceleration, randomTarget, Time.deltaTime * 15);
+            if (cloth)
+            {
+                cloth.externalAcceleration = Vector3.MoveTowards(cloth.externalAcceleration, windTarget, Time.deltaTime * 25);
+                cloth.randomAcceleration = Vector3.MoveTowards(cloth.randomAcceleration, randomTarget, Time.deltaTime * 15);
 
+            }
+
+            if (windAudio)
+            {
+                if (outside)
+                    windAudio.volume = Mathf.MoveTowards(windAudio.volume, 1, Time.deltaTime * areaChangeSpeed);
+                else
+                    windAudio.volume = Mathf.MoveTowards(windAudio.volume, 0.06f, Time.deltaTime * areaChangeSpeed);
+            }
         }
 
-        if (windAudio)
-        {
-            if (outside)
-                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 1, Time.deltaTime*areaChangeSpeed);
-            else
-                windAudio.volume = Mathf.MoveTowards(windAudio.volume, 0.06f, Time.deltaTime*areaChangeSpeed);
-        }
+
 
 
     }

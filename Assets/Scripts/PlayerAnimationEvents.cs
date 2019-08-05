@@ -142,6 +142,9 @@ public class PlayerAnimationEvents : MonoBehaviour
 
     void AudioTrigger()
     {
+        if (Elevator.instance == null)
+            return;
+
         if (Player.instance.InCrawlSpace == false && Player.instance.InCrawlSpaceTransition == false)
         {
             if (Elevator.instance.playerInsideElevator() == false)
