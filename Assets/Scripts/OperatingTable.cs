@@ -5,6 +5,11 @@ using Assets.Scripts.Cam.Effects;
 using UnityEngine.SceneManagement;
 public class OperatingTable : CloseUpObject {
 
+	private float timer;
+	void Update()
+	{
+		timer += Time.deltaTime;
+	}
 	public override void OnInteract()
 	{	
 		GetComponent<AudioSource>().Play();
@@ -25,7 +30,7 @@ public class OperatingTable : CloseUpObject {
 
 		string levelToLoad = "Intermission";
 
-		if(Time.time < 60f*15f)
+		if(timer < 60f*10f)
 		levelToLoad = "Victory";
 		
 		AsyncOperation a = SceneManager.LoadSceneAsync(levelToLoad);

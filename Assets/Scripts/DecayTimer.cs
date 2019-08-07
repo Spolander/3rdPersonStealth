@@ -14,18 +14,10 @@ public class DecayTimer : MonoBehaviour
 
     private bool updating = true;
 
-    [SerializeField]
-    private GameObject deadPlayer;
-
-    [SerializeField]
-    private GameObject alivePlayer;
-
     public static bool timeChallengeSuccess = true;
 
     void Awake()
     {
-        alivePlayer.SetActive(true);
-        deadPlayer.SetActive(false);
         timeChallengeSuccess = true;
     }
 
@@ -46,8 +38,6 @@ public class DecayTimer : MonoBehaviour
                     //failed the time challenge
                     updating = false;
                     timerText.text = "00:00";
-                    deadPlayer.SetActive(true);
-                    alivePlayer.SetActive(false);
                     timeChallengeSuccess = false;
                 }
                 else

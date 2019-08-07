@@ -36,7 +36,7 @@ public class OperatingTableLoop : CloseUpObject
 
         yield return new WaitForSeconds(10);
 
-		string levelToLoad = DecayTimer.timeChallengeSuccess ? "Victory":"Intermission";
+		string levelToLoad = DecayTimer.timeChallengeSuccess ? "Victory":"IntermissionText";
         AsyncOperation a = SceneManager.LoadSceneAsync(levelToLoad);
 
         while (a.isDone == false)

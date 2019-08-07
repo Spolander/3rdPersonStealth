@@ -11,10 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Intermission.unity
     guid: ccbc2d09c3c11144d9ec0f1b20a53610
   - enabled: 1
+    path: Assets/Scenes/IntermissionText.unity
+    guid: d7a2ea0fa5d489942bc69815eda892fc
+  - enabled: 0
     path: Assets/Scenes/Loop2.unity
     guid: b2baa7a37a6e6644da3bcb5774ca72d3
   - enabled: 1
@@ -32,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameIntro.unity
     guid: 2aaf44019de98de44a1bde488715aed9
+  - enabled: 1
+    path: Assets/Scenes/Recursion.unity
+    guid: ecb14ce10994c3b4b9bd7fcc1694517b
   m_configObjects: {}

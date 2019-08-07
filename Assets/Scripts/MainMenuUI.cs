@@ -19,6 +19,9 @@ public class MainMenuUI : MonoBehaviour
     public AudioSource highlightSound;
     void Start()
     {
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         for (int i = 0; i < buttons.Length; i++)
             buttons[i].SetActive(false);
 

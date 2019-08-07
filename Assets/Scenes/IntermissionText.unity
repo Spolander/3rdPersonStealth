@@ -857,10 +857,10 @@ MonoBehaviour:
   - Done
   - 'Warning: recursion detected'
   - 'Warning: detected memory decay'
-  - 'Estimated time until total decay: 15 min 0 seconds'
+  - 'Estimated time until total decay: 10 minutes 0 seconds'
   - Rebooting.........
   - Restarting module.............
-  levelToLoad: Loop2
+  levelToLoad: Recursion
 --- !u!114 &1685916700
 MonoBehaviour:
   m_ObjectHideFlags: 0
