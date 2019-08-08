@@ -134,6 +134,7 @@ public class AIAlpha : MonoBehaviour
 
     public void ResetAgents()
     {
+        escortInProgress = false;
         playerTakenDown = false;
 
         for (int i = 0; i < agents.Count; i++)

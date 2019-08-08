@@ -92,4 +92,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 63265e7ab9235664c892219cc13f1b58, type: 3}
   - {fileID: 8300000, guid: e91f73a8346b2ce4ca18d99f08738a1e, type: 3}
   - {fileID: 8300000, guid: bc930e7bb3526eb43939b8624e31d752, type: 3}
+  guard:
+  - {fileID: 8300000, guid: 4220f27d98b1ba14f8d39d0b8461ef29, type: 3}
+  - {fileID: 8300000, guid: 502a205457347754f85fd165b4a7f1a2, type: 3}
+  - {fileID: 8300000, guid: f4ba823f55a711543b35d6b791dd9493, type: 3}
+  - {fileID: 8300000, guid: 7242e27e00c76184cb8f6b91e5733053, type: 3}
+  - {fileID: 8300000, guid: a38ad7c5ac73ab045905f51e981fd1bd, type: 3}
   mixer: {fileID: 24100000, guid: 038708c480814df49a2a09266471d95d, type: 2}

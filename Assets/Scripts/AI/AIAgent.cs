@@ -51,6 +51,8 @@ public class AIAgent : MonoBehaviour
     [SerializeField]
     protected List<string> patrolAreas;
 
+    //Starting position
+    protected Vector3 startingPosition;
     //index that represents the current path from patrolAreas list
     protected int currentPathIndex = 0;
 
@@ -219,6 +221,15 @@ public class AIAgent : MonoBehaviour
 
     protected float takeDownDistance = 1f;
 
+
+    //SOUND VARIABLES
+    protected AudioSource breathing;
+    protected float suggestionInterval = 15;
+    protected float lastSpeakingTime;
+    protected float stopInterval = 10;
+
+
+
     [Header("Debug variables")]
     public bool cameraEnabled = false;
 
@@ -237,6 +248,12 @@ public class AIAgent : MonoBehaviour
 
         randomIdleTime = UnityEngine.Random.Range(randomIdleMin, randomIdleMax);
         lastPlayerSighting = -playerSightingMemory;
+
+        startingPosition = transform.position;
+
+        breathing = GetComponentInChildren<AudioSource>();
+
+        lastSpeakingTime = -suggestionInterval;
     }
 
     void Start()
@@ -287,7 +304,65 @@ public class AIAgent : MonoBehaviour
         }
     }
 
+    protected virtual void Speaking()
+    {
+        if (state == AIState.Escort)
+        {
+            if (Time.time > lastSpeakingTime + suggestionInterval)
+            {
+                SuggestionVoice();
+            }
+        }
+        else if (state == AIState.Chase)
+        {
+            if (Time.time > lastSpeakingTime + stopInterval)
+            {
+                StoppingVoice();
+            }
+        }
+    }
+    protected virtual void SuggestionVoice()
+    {
+        lastSpeakingTime = Time.time;
+        breathing.Stop();
+        breathing.PlayDelayed(4);
+        float value = UnityEngine.Random.value;
+        string clip = "";
+        if (value <= 0.333f)
+        {
+            clip = "idontwanttohurtyou";
+        }
+        else if (value <= 0.666f)
+        {
+            clip = "iwillremoveyou";
+        }
+        else
+        {
+            clip = "restrictedarea";
+        }
 
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Guard, clip, transform.position, transform, 1, 0);
+    }
+
+    protected virtual void StoppingVoice()
+    {
+        breathing.Stop();
+        breathing.PlayDelayed(4);
+        lastSpeakingTime = Time.time;
+
+        float value = UnityEngine.Random.value;
+        string clip = "";
+        if (value <= 0.5f)
+        {
+            clip = "goingdown";
+        }
+        else
+        {
+            clip = "stop";
+        }
+
+        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Guard, clip, transform.position, transform, 1, 0);
+    }
     protected virtual void Idle()
     {
         //stay still and only do awareness
@@ -358,7 +433,6 @@ public class AIAgent : MonoBehaviour
                 {
                     if (AIAlpha.instance.EscortInProgress == false)
                     {
-                        SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Misc, "alert", transform.position, null, 0, 0);
                         AIAlpha.instance.ReportEscort(this);
                         ChangeState(AIState.Escort);
                     }
@@ -551,7 +625,7 @@ public class AIAgent : MonoBehaviour
 
 
             //run if the player is in the elevator
-            if(Elevator.instance.playerInsideElevator())
+            if (Elevator.instance.playerInsideElevator())
             {
                 animatorForwardTarget = 50;
             }
@@ -823,7 +897,7 @@ public class AIAgent : MonoBehaviour
         {
             NavMeshHit hit;
             Vector3 samplePosition = playerSpotted ? Player.instance.transform.position + Player.instance.Velocity * Time.deltaTime : playerLastSeenPosition;
-            NavMesh.SamplePosition(samplePosition, out hit, 5, NavMesh.AllAreas);
+            NavMesh.SamplePosition(samplePosition, out hit, 1, NavMesh.AllAreas);
 
 
             if (hit.hit)
@@ -843,6 +917,11 @@ public class AIAgent : MonoBehaviour
             animatorForwardTarget = 100;
 
             RotateTowardsSteeringTarget();
+        }
+        else
+        {
+            animatorForwardTarget = 0;
+            RotateTowardsPlayer();
         }
 
 
@@ -1038,6 +1117,7 @@ public class AIAgent : MonoBehaviour
         {
             agent.stoppingDistance = escortStoppingDistance;
             currentState = Escort;
+            currentState += Speaking;
             agent.SetDestination(playerLastSeenPosition);
         }
         else if (state == AIState.Guard)
@@ -1050,7 +1130,9 @@ public class AIAgent : MonoBehaviour
         {
             agent.stoppingDistance = defaultStoppingDistance;
             currentState = Chase;
+            currentState += Speaking;
             agent.destination = playerLastSeenPosition;
+            lastSpeakingTime = -suggestionInterval;
         }
         else if (state == AIState.Wait)
         {
@@ -1072,6 +1154,7 @@ public class AIAgent : MonoBehaviour
         }
         else
         {
+            print("last reachable location");
             agent.destination = lastReachableLocation;
         }
         calculatingPath = false;
@@ -1415,6 +1498,7 @@ public class AIAgent : MonoBehaviour
     {
         //Reset agent behaviour
 
+        playerSpotted = false;
         agent.enabled = true;
         agent.isStopped = false;
         investigationCount = 0;
@@ -1424,7 +1508,16 @@ public class AIAgent : MonoBehaviour
         escortTimer = 0;
         guardTimer = 0;
         timeSinceLastSighting = 0;
+
+        if (tag == "Building2")
+        {
+            agent.SetDestination(currentPath.Waypoints[currentWaypointIndex]);
+            agent.nextPosition = startingPosition;
+            transform.position = startingPosition;
+        }
         ChangeState(AIState.Patrol);
+
+
     }
 
     protected virtual void OnAirDuctEnter()

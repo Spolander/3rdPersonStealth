@@ -65,6 +65,7 @@ public class GuardVision : MonoBehaviour
                 mixer.SetFloat("Lowpass1", 22000);
                 mixer.SetFloat("Lowpass2", 22000);
                 mixer.SetFloat("Lowpass3", 22000);
+                mixer.SetFloat("Lowpass4",22000);
 
                 visionEffect = null;
             }
@@ -80,7 +81,7 @@ public class GuardVision : MonoBehaviour
         mixer.SetFloat("Lowpass1", 500);
         mixer.SetFloat("Lowpass2", 500);
         mixer.SetFloat("Lowpass3", 500);
-
+        mixer.SetFloat("Lowpass4", 500);
 
         yield return new WaitForSecondsRealtime(duration);
         camera.enabled = false;
@@ -91,7 +92,7 @@ public class GuardVision : MonoBehaviour
         mixer.SetFloat("Lowpass1", 22000);
         mixer.SetFloat("Lowpass2", 22000);
         mixer.SetFloat("Lowpass3", 22000);
-
+        mixer.SetFloat("Lowpass4", 22000);
         float lerp = 0;
         sources[0].Stop();
         sources[1].Play();

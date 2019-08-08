@@ -13,11 +13,13 @@ public class SoundEngine : MonoBehaviour
 
     public AudioClip[] misc;
 
+    public AudioClip[] guard;
+
     [Space(15)]
 
     public AudioMixer mixer;
 
-    public enum SoundType { Player, Footstep, Misc };
+    public enum SoundType { Player, Footstep, Misc, Guard };
 
 
     private float footStepPlayTime;
@@ -60,6 +62,12 @@ public class SoundEngine : MonoBehaviour
                 if (misc[i].name == clipName)
                     a = misc[i];
         }
+         else if (soundType == SoundType.Guard)
+        {
+            for (int i = 0; i < guard.Length; i++)
+                if (guard[i].name == clipName)
+                    a = guard[i];
+        }
 
         if (a == null)
         {
@@ -72,7 +80,17 @@ public class SoundEngine : MonoBehaviour
         AS.maxDistance = 25;
         AS.minDistance = 3;
         AS.rolloffMode = AudioRolloffMode.Linear;
-        AS.outputAudioMixerGroup = mixer.FindMatchingGroups("FX")[0];
+
+        if (soundType != SoundType.Guard)
+        {
+            AS.outputAudioMixerGroup = mixer.FindMatchingGroups("FX")[0];
+        }
+        else
+        {
+
+            AS.outputAudioMixerGroup = mixer.FindMatchingGroups("GuardVoice")[0];
+        }
+
         AS.PlayDelayed(delay);
         g.transform.SetParent(parent);
         Destroy(g, a.length + delay);

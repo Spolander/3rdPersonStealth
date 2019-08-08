@@ -147,7 +147,8 @@ public class Player : MonoBehaviour
 
 
     //VARIABLES FOR AI
-    public Vector3 PlayerCenter{get{return anim.GetBoneTransform(HumanBodyBones.Chest).position;}}
+    private Transform head;
+    public Vector3 PlayerCenter{get{return head.position;}}
     private bool insideRestrictedArea = false;
     public bool InsideRestrictedArea { get { return insideRestrictedArea; } }
 
@@ -176,6 +177,8 @@ public class Player : MonoBehaviour
 
         checkPointPosition = transform.position;
         checkPointRotation = transform.rotation;
+
+        head = anim.GetBoneTransform(HumanBodyBones.Neck);
 
 
     }
