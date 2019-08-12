@@ -355,7 +355,7 @@ public class Player : MonoBehaviour
             moveVector.y = -gravity;
             controller.Move(moveVector * Time.deltaTime * crawlSpaceSpeed);
 
-            if (Vector3.Distance(transform.position, lastCrawlPosition) > crawlSpaceStepDistance)
+            if (Vector3.Distance(transform.position, lastCrawlPosition) > crawlSpaceStepDistance && controller.isGrounded)
             {
                 lastCrawlPosition = transform.position;
                 SoundEngine.instance.PlaySoundAt(SoundEngine.SoundType.Footstep, "airduct_" + Random.Range(1, 7).ToString(), transform.position, transform, 1, 0);

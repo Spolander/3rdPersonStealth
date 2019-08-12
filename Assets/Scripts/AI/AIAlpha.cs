@@ -136,6 +136,7 @@ public class AIAlpha : MonoBehaviour
     {
         escortInProgress = false;
         playerTakenDown = false;
+        situation = SituationState.Normal;
 
         for (int i = 0; i < agents.Count; i++)
         {

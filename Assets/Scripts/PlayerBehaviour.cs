@@ -17,7 +17,7 @@ public class PlayerBehaviour : StateMachineBehaviour
             animator.SetBool("landRoll", false);
         }
 
-        if (stateInfo.IsTag("crouch"))
+        if (stateInfo.IsTag("crouch") && Player.instance.InCrawlSpace == false && Player.instance.InCrawlSpaceTransition == false)
         {
             Player.instance.CrouchModeChange(true);
 

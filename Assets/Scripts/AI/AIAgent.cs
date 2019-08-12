@@ -834,6 +834,8 @@ public class AIAgent : MonoBehaviour
                 escortTimer += Time.deltaTime * wrongDirectionPenalty;
             }
 
+            Turpasauna.instance.UpdateProgress(escortTimer/maximumEscortDuration);
+
             if (escortTimer > maximumEscortDuration)
             {
                 AIAlpha.instance.ReportChase(this);
