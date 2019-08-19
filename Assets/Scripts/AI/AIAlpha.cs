@@ -57,6 +57,16 @@ public class AIAlpha : MonoBehaviour
         //Find all agents and assign them to the list
         agents = (FindObjectsOfType(typeof(AIAgent)) as AIAgent[]).ToList();
 
+        if (DifficultySettings.GameDifficulty == DifficultySettings.Difficulty.Exploration)
+        {
+            for (int i = 0; i < agents.Count; i++)
+            {
+                agents[i].gameObject.SetActive(false);
+            }
+        }
+
+        print(DifficultySettings.GameDifficulty);
+
         airductPlacements = (FindObjectsOfType(typeof(AirductPlacement)) as AirductPlacement[]).ToList();
     }
 
@@ -136,7 +146,14 @@ public class AIAlpha : MonoBehaviour
     {
         escortInProgress = false;
         playerTakenDown = false;
-        situation = SituationState.Normal;
+
+
+        //difficulty setting determines if the situation will be lifted
+        if (DifficultySettings.GameDifficulty != DifficultySettings.Difficulty.Nightmare)
+        {
+            situation = SituationState.Normal;
+        }
+
 
         for (int i = 0; i < agents.Count; i++)
         {

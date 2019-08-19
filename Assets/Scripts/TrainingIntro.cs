@@ -33,6 +33,17 @@ public class TrainingIntro : MonoBehaviour
 
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            beepDuration = 0;
+            letterDuration = 0;
+            enterDuration = 0;
+            pauseDuration = 0;
+        }
+    }
+
     IEnumerator TextAnimation()
     {
 
@@ -41,10 +52,22 @@ public class TrainingIntro : MonoBehaviour
             for (int j = 0; j < lines[i].Length; j++)
             {
                 text.text = text.text + lines[i][j];
-                yield return new WaitForSecondsRealtime(letterDuration);
+
+                //if we have chosen to skip the text, don't wait for delay
+                if (letterDuration > 0)
+                {
+                    yield return new WaitForSecondsRealtime(letterDuration);
+                }
+
             }
             text.text = text.text + "<br>";
-            yield return new WaitForSecondsRealtime(beepDuration);
+
+            //if we have chosen to skip the text, don't wait for delay
+            if (beepDuration > 0)
+            {
+                yield return new WaitForSecondsRealtime(beepDuration);
+            }
+
 
         }
 

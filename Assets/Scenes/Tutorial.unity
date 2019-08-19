@@ -15509,7 +15509,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: C to crouch
+  m_text: C to sneak
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45436f7c564518d4197bc761bd37ca41, type: 2}
   m_sharedMaterial: {fileID: 21559792247378478, guid: 45436f7c564518d4197bc761bd37ca41,
@@ -15578,7 +15578,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 10.520835, w: 4.161457}
   m_textInfo:
     textComponent: {fileID: 2018970010}
-    characterCount: 11
+    characterCount: 10
     spriteCount: 0
     spaceCount: 2
     wordCount: 3
