@@ -21,10 +21,10 @@ public class Player : MonoBehaviour
     private float crawlSpaceSpeed = 2.5f;
 
     private bool inCrawlSpace = false;
-    public bool InCrawlSpace{get{return inCrawlSpace;}}
+    public bool InCrawlSpace { get { return inCrawlSpace; } }
     private bool inCrawlSpaceTransition = false;
 
-    public bool InCrawlSpaceTransition{get{return inCrawlSpaceTransition;}}
+    public bool InCrawlSpaceTransition { get { return inCrawlSpaceTransition; } }
     [SerializeField]
     private float crawlSpaceRotationSpeed = 150;
 
@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
 
     //VARIABLES FOR AI
     private Transform head;
-    public Vector3 PlayerCenter{get{return head.position;}}
+    public Vector3 PlayerCenter { get { return head.position; } }
     private bool insideRestrictedArea = false;
     public bool InsideRestrictedArea { get { return insideRestrictedArea; } }
 
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
     private float restrictedAreaCheckInterval = 1;
     private float lastRestrictedAreaCheck;
 
-    public Vector3 Velocity{get{return controller.velocity;}}
+    public Vector3 Velocity { get { return controller.velocity; } }
 
 
     void Start()
@@ -423,8 +423,8 @@ public class Player : MonoBehaviour
     }
     void CheckRestrictedArea()
     {
-        if(RestrictedAreaManager.instance == null)
-        return;
+        if (RestrictedAreaManager.instance == null)
+            return;
 
 
         if (Time.time > lastRestrictedAreaCheck + restrictedAreaCheckInterval)
@@ -648,7 +648,7 @@ public class Player : MonoBehaviour
         //    }
         //}
 
-        if(Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             GuardVision.instance.ActivateVision(true);
         }
@@ -665,7 +665,11 @@ public class Player : MonoBehaviour
         if (enter)
         {
             //call enter event
-            OnAirductEnter();
+            if (OnAirductEnter != null)
+            {
+                OnAirductEnter();
+            }
+
             CameraFollow.playerCam.ActivateCrawlSpaceMode(enter);
             ShowMeshes(false);
         }
@@ -695,7 +699,11 @@ public class Player : MonoBehaviour
             CrouchModeChange(anim.GetBool("crouching"));
 
             //Call exit event
-            OnAirductExit();
+            if (OnAirductExit != null)
+            {
+                OnAirductExit();
+            }
+          
         }
 
         gravity = 0;
@@ -1051,13 +1059,13 @@ public class Player : MonoBehaviour
                 VisionAnimator.visionReached = true;
             }
         }
-        else if(other.tag == "tutorial")
+        else if (other.tag == "tutorial")
         {
             transform.position = checkPointPosition;
             transform.rotation = checkPointRotation;
             lastGroundedHeight = checkPointPosition.y;
         }
-        else if(other.tag == "tutorialend")
+        else if (other.tag == "tutorialend")
         {
             SceneManager.LoadScene("GameIntro");
         }
